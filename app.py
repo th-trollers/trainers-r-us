@@ -42,8 +42,6 @@ def loginPage():
 def homePage():
     return render_template("HomePage.html")
 
-<<<<<<< HEAD
-=======
 @app.route('/trainerPage', methods = ["POST", "GET"])
 def TrainerPage():
     return render_template("TrainerPage.html")
@@ -53,7 +51,6 @@ def homePagetwo():
     return render_template("HomePage.html")
 
 
->>>>>>> e07e5e879036c2206b081a2694ff2458cf04df94
 if __name__ == "__main__":
     app.run()
 
