@@ -40,6 +40,9 @@ def loginPage():
 def homePage():
     return render_template("HomePage.html")
 
+@app.route('/trainerPage', methods = ["POST", "GET"])
+def TrainerPage():
+    return render_template("TrainerPage.html")
 
 if __name__ == "__main__":
     app.run()
