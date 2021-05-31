@@ -4,13 +4,13 @@ from flask import *
 from datetime import datetime, timedelta, date
 from dateutil.relativedelta import relativedelta
 app = Flask(__name__, template_folder="html")
-app.secret_key= "trainersrus"
-app.permanent_session_lifetime = timedelta(minutes = 60)
+app.secret_key = "trainersrus"
+app.permanent_session_lifetime = timedelta(minutes=60)
 config = {
     "apiKey": "AIzaSyCRQLgByC3jG5YbDViv1i_9KnckWEgePC0",
     "authDomain": "trainers-r-us.firebaseapp.com",
     "projectId": "trainers-r-us",
-    "databaseURL" : "",
+    "databaseURL": "",
     "storageBucket": "trainers-r-us.appspot.com",
     "messagingSenderId": "128175027453",
     "appId": "1:128175027453:web:4b91f00815ac01c4747a94",
@@ -21,7 +21,8 @@ firebase = pyrebase.initialize_app(config)
 
 auth = firebase.auth()
 
-@app.route('/', methods = ["POST", "GET"])
+
+@app.route('/', methods=["POST", "GET"])
 def loginPage():
     unsuccessful = "Please check your credentials"
     successful = "Login successful"
@@ -36,13 +37,19 @@ def loginPage():
             return render_template("LoginPage.html")
     return render_template("LoginPage.html")
 
-@app.route('/', methods = ["POST", "GET"])
+
+@app.route('/', methods=["POST", "GET"])
 def homePage():
     return render_template("HomePage.html")
 
 @app.route('/trainerPage', methods = ["POST", "GET"])
 def TrainerPage():
     return render_template("TrainerPage.html")
+
+@app.route('/home', methods=["POST", "GET"])
+def homePagetwo():
+    return render_template("HomePage.html")
+
 
 if __name__ == "__main__":
     app.run()
@@ -60,5 +67,3 @@ if __name__ == "__main__":
 # auth.send_email_verification(user["idToken"])
 
 # print(auth.get_account_info(user["idToken"]))
-
-
