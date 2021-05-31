@@ -40,7 +40,6 @@ def loginPage():
 def homePage():
     return render_template("HomePage.html")
 
-
 if __name__ == "__main__":
     app.run()
 
