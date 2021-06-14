@@ -21,6 +21,8 @@ firebase = pyrebase.initialize_app(config)
 
 auth = firebase.auth()
 
+database =
+
 
 @app.route('/', methods=["POST", "GET"])
 def loginPage():
@@ -42,9 +44,11 @@ def loginPage():
 def homePage():
     return render_template("HomePage.html")
 
-@app.route('/trainerPage', methods = ["POST", "GET"])
+
+@app.route('/trainerPage', methods=["POST", "GET"])
 def TrainerPage():
     return render_template("TrainerPage.html")
+
 
 @app.route('/home', methods=["POST", "GET"])
 def homePagetwo():
