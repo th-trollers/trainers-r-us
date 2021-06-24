@@ -28,12 +28,17 @@
             <h1 style="color:white; font-size:100px"> Trainers R Us</h1>
             <p1 style="color:white; font-size:70px">Select User Type</p1>
             <br>
+            {%with messages = get_flashed_messages()%}
+            {%if messages %}
+                {% for msg in messages%}
+                    <b style="color:red; font-size:20px">{{msg}}</b>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
             <a href="http://127.0.0.1:5000/memberLogin"><button type="button" class="btn btn-primary btn-lg">Member</button></a>
             <a href="http://127.0.0.1:5000/trainerLogin"><button type="button" class="btn btn-primary btn-lg">Trainer</button></a>
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
         </center>
     </body>
-    
-   
 </html>
 

@@ -39,11 +39,14 @@ def memberLogin():
     unsuccessful = "Please check your credentials"
     successful = "Login successful"
     if request.method == "POST":
-        email = request.form["name"]
+        session.permanent = True
+        username = request.form["name"]
         password = request.form["pass"]
         try:
-            user = auth.sign_in_with_email_and_password(email, password)
+            user = auth.sign_in_with_email_and_password(username, password)
             print(successful)
+            usernameTwo = username.replace(".", "_DOT_")
+            session["username"] = usernameTwo
             return redirect(url_for("memberHome"))
         except:
             flash(unsuccessful)
@@ -54,6 +57,10 @@ def memberLogin():
 
 @app.route('/memberHome', methods=["POST", "GET"])
 def memberHome():
+    if "username" in session:
+        username = str(session["username"])
+        flash("Welcome " +
+              database.child("Users").child(username).get().val()["Name"])
     return render_template("MemberHome.html")
 
 
@@ -64,6 +71,18 @@ def createNewMember():
             # getting the email and pw
             email = str(request.form["email"])
             pw = str(request.form["userpassword"])
+            name = str(request.form["membername"])
+            number = str(request.form["number"])
+            gender = str(request.form["gender"])
+            trglvl = str(request.form["trglvl"])
+            trgtype = str(request.form["trgtype"])
+            print(email)
+            print(pw)
+            print(name)
+            print(number)
+            print(gender)
+            print(trglvl)
+            print(trgtype)
             if len(pw) < 6:
                 flash("Password too short please try a new one")
                 return render_template("CreateNewMember.html")
@@ -72,30 +91,60 @@ def createNewMember():
                 print("Successfully created an account")
                 flash("Please go to your email to verify your account")
                 auth.send_email_verification(user["idToken"])
+                emailTwo = email.replace(".", "_DOT_")
+                data = {"Email": emailTwo, "Name": name, "Number": number,
+                        "Gender": gender, "Training Level": trglvl, "Training Type": trgtype}
+                database.child("Users").child(emailTwo).set(data)
+                print("data has been created")
         except:
+            print("went to except")
             flash("Please enter valid details")
-        return redirect(url_for("memberDetails"))
+            return render_template("CreateNewMember.html")
+        return redirect(url_for("memberLogin"))
     else:
         return render_template("CreateNewMember.html")
 
 
-@app.route('/memberDetails', methods=["POST", "GET"])
+@app.route('/memberDetails', methods=["GET"])
 def memberDetails():
-    if request.method == "POST":
-        try:
-            name = request.form["membername"]
-            age = request.form["age"]
-            location = request.form["location"]
-            # still need to settle the lvl of trg and type of trg part
-            data = {"Name": name, "Age": age, "Location": location}
-            database.child("Users").child(name).set(data)
-            print("data has been created")
-        except:
-            print("smth is wrong")
-        flash("Please key in your details")
-        return redirect(url_for("memberLogin"))
-    else:
-        return render_template("MemberDetails.html")
+    if "username" in session:
+        username = str(session["username"])
+        dict = database.child("Users").child(username).get()
+        lst = []
+        for value in dict.val().values():
+            lst.append(value)
+        print(lst)
+    return render_template("MemberDetails.html", details=lst)
+
+
+@app.route("/memberDetailUpdate", methods=["POST", "GET"])
+def memberDetailUpdate():
+    if "username" in session:
+        username = str(session["username"])
+        new = request.form.get("new")
+        print(new)
+        print(type(new))
+        old = request.form.get("old")
+        print(old)
+        print(type(old))
+        dict = database.child("Users").child(username).get().val()
+        lst = []
+        for value in dict.values():
+            lst.append(value)
+        for key, value in dict.items():
+            if old == value:
+                database.child("Users").child(username).update({key: new})
+                flash("Please refresh page to see changes")
+                break
+    return render_template("MemberDetailUpdate.html", details=lst)
+
+
+@app.route("/logout")
+def logout():
+    flash(f"You have been logged out")
+    session.pop("email", None)
+    session.pop("name", None)
+    return redirect(url_for("homePage"))
 
 
 # to take data out of database
