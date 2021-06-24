@@ -76,6 +76,7 @@ def createNewMember():
             gender = str(request.form["gender"])
             trglvl = str(request.form["trglvl"])
             trgtype = str(request.form["trgtype"])
+            print('test')
             print(email)
             print(pw)
             print(name)
