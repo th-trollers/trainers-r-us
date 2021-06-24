@@ -1,0 +1,28 @@
+<html>
+
+    <head>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+        <title> Test Document </title>
+    </head>
+    <body>
+        <form method="POST" action="http://127.0.0.1:5000/submitForm"> <!-- note action -->
+            <select id="price" name="price"> <!-- note the name -->
+                <option value="None">Price Range</option>
+                <option value="$">Low</option>
+                <option value="$$">Medium</option>
+                <option value="$$$">High</option>
+            </select>
+
+            <select id="type" name="type"> <!-- note the name -->
+                <option value="None">Type of Training</option>
+                <option value="Kettlebell">Kettlebell</option>
+                <option value="Body weight">Body Weight</option>
+                <option value="Barbell">Barbelll</option>    
+            </select>
+
+            <div class="btn-block">
+                <button type="submit" href="http://127.0.0.1:5000/submitForm">SEND</button>
+            </div>
+        </form>
+
+    </body>
