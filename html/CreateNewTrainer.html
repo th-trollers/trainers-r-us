@@ -1,0 +1,41 @@
+<html>
+<head>
+    <title> Create Trainer </title>
+    </head>
+
+    <body>
+        <center>
+            <h1>CREATE NEW ACCOUNT</h1>
+            <p1>Please Enter Email and Password</p1>
+            <form action = "#" method = "post">
+            {%with messages = get_flashed_messages()%}
+            {%if messages %}
+                {% for msg in messages%}
+                    <b style="color:red; font-size:20px">{{msg}}</b>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+                <table>
+                    <tr>
+                        <td>Email: </td>
+                        <td>
+                        <input type = "text" name = "email">
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td> Password: </td>
+                        <td>
+                            <input type="password" name="userpassword">
+                        </td>
+                    </tr>
+                </table>
+                <div class="row">
+                    <div class="col-md-12 form-group">
+                        <input type="submit" class="btn btn-block btn-primary" value = "Create New User">
+                    </div>
+                </div>
+            </form>
+        </center>
+    </body>
+</html>

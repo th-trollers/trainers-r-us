@@ -1,7 +1,7 @@
 <html>
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
-    <title> Member Home </title>
+    <title> Trainer Home </title>
 </head>
     <body>
         <center>
@@ -18,13 +18,6 @@
             <br>
             <h1 style="color:white; font-size:70px"> Welcome to the Trainers "R" Us </h1>
             <h1 style="color:white; font-size:60px">eServices</h1>
-            {%with messages = get_flashed_messages()%}
-            {%if messages %}
-                {% for msg in messages%}
-                    <b style="color:red; font-size:20px">{{msg}}</b>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
             <br>
             <br>
             <a href="http://127.0.0.1:5000/simpleSearch" ><button type="button" class="btn btn-primary btn-lg">Home</button></a>
@@ -37,15 +30,6 @@
             <br>
             <br>
             <a href="http://127.0.0.1:5000/bookTransactions"><button type="button" class="btn btn-primary btn-lg">Contact Us</button></a>
-            <br>
-            <br>
-            <a href="http://127.0.0.1:5000/viewAllTrainers"><button type="button" class="btn btn-primary btn-lg">View All Trainers</button></a>
-            <br>
-            <br>
-            <a href="http://127.0.0.1:5000/viewFilteredTrainers"><button type="button" class="btn btn-primary btn-lg">View Filtered Trainers</button></a>
-            <br>
-            <br>
-            <a href="http://127.0.0.1:5000/memberDetails"><button type="button" class="btn btn-primary btn-lg">Account Details</button></a>
             <br>
             <br>
             <a href="http://127.0.0.1:5000/" ><button type="button" class="btn btn-primary">Logout</button></a>
