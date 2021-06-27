@@ -25,8 +25,6 @@ firebase = pyrebase.initialize_app(config)
 auth = firebase.auth()
 database = firebase.database()
 
-print(database.child("Users").child("gabe_DOT_yong4@gmail_DOT_com").get().val())
-
 # need to fix the part where the email is not valid or
 # he did not use a proper email
 
@@ -86,7 +84,6 @@ def trainerLogin():
     return render_template("trainerLogin.html")
 
 # Member and Trainer Home Page
-
 
 @app.route('/memberHome', methods=["POST", "GET"])
 def memberHome():
@@ -157,6 +154,7 @@ def createNewTrainer():
             number = request.form["contact"]
             gender = request.form["gender"]
             description = request.form["description"]
+            location = request.form["location"]
             experience = request.form["experience"]
             trgtype = request.form["trgtype"]
             # need to allow the users to click multiple values 
@@ -171,7 +169,7 @@ def createNewTrainer():
                 flash("Please go to your email to verify your account")
                 auth.send_email_verification(user["idToken"])
                 emailTwo = email.replace(".", "_DOT_")
-                data = {"Email": emailTwo, "Name": name, "Number": number,
+                data = {"Email": emailTwo, "Name": name, "Number": number, "Location": location,
                         "Gender": gender, "Description": description, "Experience": experience, "Training Type": trgtype, "Price Range": pricerange}
                 # rmb to try to create a range slider for the price range
                 database.child("Trainers").child(emailTwo).set(data)
@@ -222,15 +220,17 @@ def memberDetailUpdate():
         print(old)
         print(type(old))
         dict = database.child("Users").child(username).get().val()
-        lst = []
-        for value in dict.values():
-            lst.append(value)
+        valLst = []
+        keyLst = []
+        for key, value in dict.items():
+            valLst.append(value)
+            keyLst.append(key)
         for key, value in dict.items():
             if old == value:
                 database.child("Users").child(username).update({key: new})
                 flash("Please refresh page to see changes")
                 break
-    return render_template("MemberDetailUpdate.html", details=lst)
+    return render_template("MemberDetailUpdate.html", valDetails = valLst, keyDetails = keyLst)
 
 @app.route("/trainerDetailUpdate", methods=["POST", "GET"])
 def trainerDetailUpdate():
@@ -243,15 +243,17 @@ def trainerDetailUpdate():
         print(old)
         print(type(old))
         dict = database.child("Trainers").child(username).get().val()
-        lst = []
-        for value in dict.values():
-            lst.append(value)
+        valLst = []
+        keyLst = []
+        for key,value in dict.items():
+            valLst.append(value)
+            keyLst.append(key)
         for key, value in dict.items():
             if old == value:
                 database.child("Trainers").child(username).update({key: new})
                 flash("Please refresh page to see changes")
                 break
-    return render_template("TrainerDetailUpdate.html", details=lst)
+    return render_template("TrainerDetailUpdate.html", valDetails = valLst, keyDetails = keyLst)
 
 
 @app.route("/logout")
