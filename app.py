@@ -152,74 +152,65 @@ def logout():
 # add in parsing or data pulling and settle what headers to display
 # consider adding more but should be generic
 
-data = ()
+@app.route('/filterTrainers', methods=['POST', 'GET'])
+def filterTrainers():
+    data = ()
 
-# to read all trainers
-trainers = database.child("Trainers").get()
-
-for i in trainers.each():
-    headings = ()
-    for head in i.val():
-        headings += (head,)
-
-for i in trainers.each():
-    personaldata = ()
-    for a in i.val():
-        personaldata += (i.val()[a],)
-    data += (personaldata,)
-
-
-@app.route('/viewFilteredTrainers', methods=["POST", "GET"])
-def viewFilteredTrainers():
-    return render_template('FilterTrainers.html')
-
-
-@app.route('/viewAllTrainers', methods=["POST", "GET"])
-def viewAllTrainers():
-    return render_template("ViewTrainers.html", headings=headings, data=data)
-
-
-@app.route('/submitForm', methods=['POST', 'GET'])
-def submitForm():
-    gender = request.form.getlist("gender")
-    print(gender)
-    location = request.form.getlist("location")
-    price = request.form.getlist("price")
-    level = request.form.getlist("trglvl")
-    print(level)
-    trgtype = request.form.getlist("trgtype")
-
-    data1 = ()
-    # to read data
+    # to read all trainers
     trainers = database.child("Trainers").get()
-    for i in trainers.each():
-        headings = ()
-        for head in i.val():
-            headings += (head,)
-    for i in trainers.each():
-        personaldata = ()
-        if (i.val()['Gender'] == [] or i.val()['Gender'] in gender):
-            # if (i.val()['Location'] == [] or i.val()['Location'] in trgtype):
-            # if (i.val()['Price'] == [] or i.val()['Gender'] in trgtype):
-            # if (i.val()['Level'] == [] or i.val()['Level'] in trgtype):
-            if (i.val()['Training Type'] == [] or i.val()['Training Type'] in trgtype):
-                for a in i.val():
-                    personaldata += (i.val()[a],)
-        if personaldata:
-            data1 += (personaldata,)
 
-    return render_template("ViewTrainers.html", headings=headings, data=data1)
+    # to check if trainers are present in database
+    if trainers.each():
+        for i in trainers.each():
+            headings = ()
+            for head in i.val():
+                headings += (head,)
+
+        for i in trainers.each():
+            personaldata = ()
+            for a in i.val():
+                personaldata += (i.val()[a],)
+            data += (personaldata,)
+
+        # to check if trainers are being filtered
+        if request.method == 'POST':
+            gender = request.form.getlist("gender")
+            location = request.form.getlist("location")
+            price = request.form.getlist("price")
+            trgtype = request.form.getlist("trgtype")
+
+            data1 = ()
+            # to read data
+            for i in trainers.each():
+                personaldata = ()
+                if gender == [] or i.val()['Gender'] in gender:
+                    if location == [] or i.val()['Location'] in location):
+                    # if (i.val()['Price'] == [] or i.val()['Gender'] in trgtype):
+                        if trgtype == [] or i.val()['Training Type'] in trgtype:
+                            for a in i.val():
+                                personaldata += (i.val()[a],)
+                if personaldata:
+                    data1 += (personaldata,)
+            if data1:
+                return render_template("FilterTrainers.html", headings = headings, data = data1)
+            else:
+                flash("No such trainer exists. Please try again!")
+                return render_template("FilterTrainers.html")
+        return render_template("FilterTrainers.html", headings = headings, data = data)
+    else:
+        flash("No trainers in the database!")
+        return render_template("FilterTrainers.html")
 
 
-@app.route('/trainerLogin', methods=["POST", "GET"])
+@ app.route('/trainerLogin', methods = ["POST", "GET"])
 def trainerLogin():
-    unsuccessful = "Please check your credentials"
-    successful = "Login successful"
+    unsuccessful="Please check your credentials"
+    successful="Login successful"
     if request.method == "POST":
-        email = request.form["name"]
-        password = request.form["pass"]
+        email=request.form["name"]
+        password=request.form["pass"]
         try:
-            user = auth.sign_in_with_email_and_password(email, password)
+            user=auth.sign_in_with_email_and_password(email, password)
             print(successful)
             return redirect(url_for("trainerHome"))
         except:
@@ -229,23 +220,23 @@ def trainerLogin():
     return render_template("trainerLogin.html")
 
 
-@app.route('/trainerHome', methods=["POST", "GET"])
+@ app.route('/trainerHome', methods = ["POST", "GET"])
 def trainerHome():
     return render_template("trainerHome.html")
 
 
-@app.route('/createNewTrainer', methods=["POST", "GET"])
+@ app.route('/createNewTrainer', methods = ["POST", "GET"])
 def createNewTrainer():
     if request.method == "POST":
         try:
             # getting the email and pw
-            email = str(request.form["email"])
-            pw = str(request.form["userpassword"])
+            email=str(request.form["email"])
+            pw=str(request.form["userpassword"])
             if len(pw) < 6:
                 flash("Password too short please try a new one")
                 return render_template("CreateNewTrainer.html")
             else:
-                user = auth.create_user_with_email_and_password(email, pw)
+                user=auth.create_user_with_email_and_password(email, pw)
                 print("Successfully created an account")
                 flash("Please go to your email to verify your account")
                 auth.send_email_verification(user["idToken"])
@@ -256,16 +247,16 @@ def createNewTrainer():
         return render_template("CreateNewTrainer.html")
 
 
-@app.route('/trainerDetails', methods=["POST", "GET"])
+@ app.route('/trainerDetails', methods = ["POST", "GET"])
 def trainerDetails():
     if request.method == "POST":
         try:
-            name = request.form["trainername"]
-            gender = request.form["gender"]
-            description = request.form["description"]
-            experience = request.form["experience"]
+            name=request.form["trainername"]
+            gender=request.form["gender"]
+            description=request.form["description"]
+            experience=request.form["experience"]
             # still need to settle the lvl of trg and type of trg part
-            data = {"Name": name, "Gender": gender,
+            data={"Name": name, "Gender": gender,
                     "Description": description, "Years of Experience": experience, }
             database.child("Trainers").child(name).set(data)
             print("data has been created")

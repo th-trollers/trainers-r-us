@@ -5,7 +5,7 @@
         <title> Test Document </title>
     </head>
     <body>
-        <form method="POST" action="http://127.0.0.1:5000/submitForm">
+        <form method="POST" action="http://127.0.0.1:5000/filterTrainers">
 
             <tr>
                 <td>Gender: </td>
@@ -47,7 +47,7 @@
                 <label for="Beginner"> Beginner</label><br>
                 <input type="checkbox" name="trglvl" value="Intermediate">
                 <label for="Intermediate"> Intermediate</label><br>
-                <input type="checkbox" name="trglvl" value="Advanced" checked>
+                <input type="checkbox" name="trglvl" value="Advanced">
                 <label for="Advanced"> Advanced </label><br><br>
             </tr>
 
@@ -58,13 +58,36 @@
                 <label for="Kettlebell"> Kettlbell</label><br>
                 <input type="checkbox" name="trgtype" value="Body weight">
                 <label for="Body Weight"> Body Weight</label><br>
-                <input type="checkbox" name="trgtype" value="Barbell" checked>
+                <input type="checkbox" name="trgtype" value="Barbell">
                 <label for="Barbell"> Barbell </label><br><br>
             </tr>
 
             <div class="btn-block">
-                <button type="submit" href="http://127.0.0.1:5000/submitForm">SEND</button>
+                <button type="submit" href="http://127.0.0.1:5000/filterTrainers">SEND</button>
             </div>
         </form>
+        
+        {%with messages = get_flashed_messages()%}
+        {%if messages %}
+            {% for msg in messages%}
+                <b style="color:red; font-size:20px">{{msg}}</b>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
 
+        <table> 
+            <tr>
+                {% for header in headings %}
+                <th>{{ header }}</th>
+                {% endfor %}
+            </tr>
+            {% for row in data %}
+            <tr>
+                {% for cell in row %}
+                <td>{{ cell }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </table>
     </body>
+</html>
