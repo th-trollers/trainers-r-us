@@ -14,6 +14,13 @@
             </style>
             <br>
             <br>
+            {%with messages = get_flashed_messages()%}
+            {%if messages %}
+                {% for msg in messages%}
+                    <b style="color:red; font-size:20px">{{msg}}</b>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
             <br>
             <br>
             <h1 style="color:white; font-size:70px"> Welcome to the Trainers "R" Us </h1>
@@ -30,6 +37,9 @@
             <br>
             <br>
             <a href="http://127.0.0.1:5000/bookTransactions"><button type="button" class="btn btn-primary btn-lg">Contact Us</button></a>
+            <br>
+            <br>
+            <a href="http://127.0.0.1:5000/trainerDetails"><button type="button" class="btn btn-primary btn-lg">Account Details</button></a>
             <br>
             <br>
             <a href="http://127.0.0.1:5000/" ><button type="button" class="btn btn-primary">Logout</button></a>
