@@ -5,20 +5,62 @@
         <title> Test Document </title>
     </head>
     <body>
-        <form method="POST" action="http://127.0.0.1:5000/submitForm"> <!-- note action -->
-            <select id="price" name="price"> <!-- note the name -->
-                <option value="None">Price Range</option>
-                <option value="$">Low</option>
-                <option value="$$">Medium</option>
-                <option value="$$$">High</option>
-            </select>
+        <form method="POST" action="http://127.0.0.1:5000/submitForm">
 
-            <select id="type" name="type"> <!-- note the name -->
-                <option value="None">Type of Training</option>
-                <option value="Kettlebell">Kettlebell</option>
-                <option value="Body weight">Body Weight</option>
-                <option value="Barbell">Barbelll</option>    
-            </select>
+            <tr>
+                <td>Gender: </td>
+                <td>
+                <input type="checkbox" name="gender" value="Male">
+                <label for="Male"> Male</label><br>
+                <input type="checkbox" name="gender" value="Female">
+                <label for="Female"> Female</label><br><br>
+            </tr>
+
+            <tr>
+                <td>Location: </td>
+                <td>
+                <input type="checkbox" name="location" value="North">
+                <label for="North"> North</label><br>
+                <input type="checkbox" name="location" value="South">
+                <label for="South"> South</label><br>
+                <input type="checkbox" name="location" value="East">
+                <label for="East"> East</label><br>
+                <input type="checkbox" name="location" value="West">
+                <label for="West"> West</label><br><br>
+            </tr>
+            
+            <tr>
+                <td>Price Range: </td>
+                <td>
+                <input type="checkbox" name="price" value="$">
+                <label for="$"> $</label><br>
+                <input type="checkbox" name="price" value="$$">
+                <label for="$$"> $$</label><br>
+                <input type="checkbox" name="price" value="$$$">
+                <label for="$$$"> $$$</label><br><br>
+            </tr>
+
+            <tr>
+                <td>Level of Training: </td>
+                <td>
+                <input type="checkbox" name="trglvl" value="Beginner">
+                <label for="Beginner"> Beginner</label><br>
+                <input type="checkbox" name="trglvl" value="Intermediate">
+                <label for="Intermediate"> Intermediate</label><br>
+                <input type="checkbox" name="trglvl" value="Advanced" checked>
+                <label for="Advanced"> Advanced </label><br><br>
+            </tr>
+
+            <tr>
+                <td>Type of Training: </td>
+                <td>
+                <input type="checkbox" name="trgtype" value="Kettlebell">
+                <label for="Kettlebell"> Kettlbell</label><br>
+                <input type="checkbox" name="trgtype" value="Body weight">
+                <label for="Body Weight"> Body Weight</label><br>
+                <input type="checkbox" name="trgtype" value="Barbell" checked>
+                <label for="Barbell"> Barbell </label><br><br>
+            </tr>
 
             <div class="btn-block">
                 <button type="submit" href="http://127.0.0.1:5000/submitForm">SEND</button>
