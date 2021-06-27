@@ -1,12 +1,12 @@
 <html>
 <head>
-    <title> Create Trainer </title>
+    <title> Key in User Details </title>
     </head>
 
     <body>
         <center>
-            <h1>CREATE NEW ACCOUNT</h1>
-            <p1>Please Enter Email and Password</p1>
+            <h1>TRAINER DETAILS</h1>
+            <p1>Please enter the details down below </p1>
             <form action = "#" method = "post">
             {%with messages = get_flashed_messages()%}
             {%if messages %}
@@ -16,26 +16,83 @@
                 {% endif %}
             {% endwith %}
                 <table>
-                    <tr>
+                <tr>
                         <td>Email: </td>
                         <td>
                         <input type = "text" name = "email">
                         </td>
                     </tr>
 
-                    <tr>
+                     <tr>
                         <td> Password: </td>
                         <td>
-                            <input type="password" name="userpassword">
+                            <input type="password" name="trainerpw">
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>Name: </td>
+                        <td>
+                        <input type = "text" name = "trainername">
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Contact Number: </td>
+                        <td>
+                        <input type = "text" name = "contact">
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>Gender: (M/F) </td>
+                        <td>
+                        <input type="checkbox" name="gender" value="Male">
+                        <label for="Male"> Male</label><br>
+                        <input type="checkbox" name="gender" value="Female">
+                        <label for="Female"> Female</label><br>
+                    </tr>
+
+                    <tr>
+                        <td>Years of Experience: </td>
+                        <td>
+                        <input type = "text" name = "experience">
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>Short Description: </td>
+                        <td>
+                        <input type = "text" name = "description">
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>Type of Training: </td>
+                        <td>
+                        <input type="checkbox" name="trgtype" value="Kettlebell">
+                        <label for="Kettlebell"> Kettlebell</label><br>
+                        <input type="checkbox" name="trgtype" value="Body weight">
+                        <label for="Body Weight"> Body Weight</label><br>
+                        <input type="checkbox" name="trgtype" value="Barbell" checked>
+                        <label for="Barbell"> Barbell </label><br><br>
+                    </tr>
+
+                    <tr>
+                        <td>Price Range: </td>
+                        <td>
+                        <input type = "text" name = "pricerange">
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <input type= "submit" name= "submit" value = "Create New User">
                         </td>
                     </tr>
                 </table>
-                <div class="row">
-                    <div class="col-md-12 form-group">
-                        <input type="submit" class="btn btn-block btn-primary" value = "Create New User">
-                    </div>
-                </div>
             </form>
         </center>
     </body>
+    <a href="http://127.0.0.1:5000/trainerLogin" ><button type="button" class="btn btn-primary">Back</button></a>
 </html>
