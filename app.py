@@ -25,17 +25,18 @@ firebase = pyrebase.initialize_app(config)
 auth = firebase.auth()
 database = firebase.database()
 
-print(database.child("Users").child("gabe_DOT_yong4@gmail_DOT_com").get().val())
-
 # need to fix the part where the email is not valid or
 # he did not use a proper email
 
 # Main Home Page
+
+
 @app.route('/')
 def homePage():
     return render_template("HomePage.html")
 
 # Login Pages
+
 
 @app.route('/memberLogin', methods=["POST", "GET"])
 def memberLogin():
@@ -60,6 +61,7 @@ def memberLogin():
             print(unsuccessful)
             return redirect(url_for("memberLogin"))
     return render_template("MemberLogin.html")
+
 
 @app.route('/trainerLogin', methods=["POST", "GET"])
 def trainerLogin():
@@ -90,18 +92,11 @@ def trainerLogin():
 
 @app.route('/memberHome', methods=["POST", "GET"])
 def memberHome():
-    if "username" in session:
-        username = str(session["username"])
-        flash("Welcome " +
-              database.child("Users").child(username).get().val()["Name"])
     return render_template("MemberHome.html")
+
 
 @app.route('/trainerHome', methods=["POST", "GET"])
 def trainerHome():
-    if "username" in session:
-        print("username in session")
-        username = str(session["username"])
-        flash("Welcome trainer " + database.child("Trainers").child(username).get().val()["Name"])
     return render_template("trainerHome.html")
 
 
@@ -135,8 +130,7 @@ def createNewMember():
                 flash("Please go to your email to verify your account")
                 auth.send_email_verification(user["idToken"])
                 emailTwo = email.replace(".", "_DOT_")
-                data = {"Email": emailTwo, "Name": name, "Number": number,
-                        "Gender": gender, "Training Level": trglvl, "Training Type": trgtype}
+                data = {"Email": emailTwo, "Name": name, "Number": number, "Gender": gender, "Training Level": trglvl, "Training Type": trgtype}
                 database.child("Users").child(emailTwo).set(data)
                 print("data has been created")
         except:
@@ -146,6 +140,7 @@ def createNewMember():
         return redirect(url_for("memberLogin"))
     else:
         return render_template("CreateNewMember.html")
+
 
 @app.route('/createNewTrainer', methods=["POST", "GET"])
 def createNewTrainer():
@@ -157,11 +152,12 @@ def createNewTrainer():
             number = request.form["contact"]
             gender = request.form["gender"]
             description = request.form["description"]
+            location = request.form["location"]
             experience = request.form["experience"]
             trgtype = request.form["trgtype"]
-            # need to allow the users to click multiple values 
+            # need to allow the users to click multiple values
             pricerange = request.form["pricerange"]
-            
+
             if len(pw) < 6:
                 flash("Password too short please try a new one")
                 return render_template("CreateNewTrainer.html")
@@ -171,7 +167,7 @@ def createNewTrainer():
                 flash("Please go to your email to verify your account")
                 auth.send_email_verification(user["idToken"])
                 emailTwo = email.replace(".", "_DOT_")
-                data = {"Email": emailTwo, "Name": name, "Number": number,
+                data = {"Email": emailTwo, "Name": name, "Number": number, "Location": location,
                         "Gender": gender, "Description": description, "Experience": experience, "Training Type": trgtype, "Price Range": pricerange}
                 # rmb to try to create a range slider for the price range
                 database.child("Trainers").child(emailTwo).set(data)
@@ -186,6 +182,7 @@ def createNewTrainer():
 
 # Details Pages
 
+
 @app.route('/memberDetails', methods=["GET"])
 def memberDetails():
     if "username" in session:
@@ -196,6 +193,7 @@ def memberDetails():
             lst.append(value)
         print(lst)
     return render_template("MemberDetails.html", details=lst)
+
 
 @app.route('/trainerDetails', methods=["POST", "GET"])
 def trainerDetails():
@@ -211,6 +209,7 @@ def trainerDetails():
 
 # Update Pages
 
+
 @app.route("/memberDetailUpdate", methods=["POST", "GET"])
 def memberDetailUpdate():
     if "username" in session:
@@ -222,15 +221,19 @@ def memberDetailUpdate():
         print(old)
         print(type(old))
         dict = database.child("Users").child(username).get().val()
-        lst = []
-        for value in dict.values():
-            lst.append(value)
+        valLst = []
+        keyLst = []
+        for key, value in dict.items():
+            valLst.append(value)
+            keyLst.append(key)
+        print(keyLst)
         for key, value in dict.items():
             if old == value:
                 database.child("Users").child(username).update({key: new})
                 flash("Please refresh page to see changes")
                 break
-    return render_template("MemberDetailUpdate.html", details=lst)
+    return render_template("MemberDetailUpdate.html", valDetails=valLst, keyDetails=keyLst)
+
 
 @app.route("/trainerDetailUpdate", methods=["POST", "GET"])
 def trainerDetailUpdate():
@@ -243,15 +246,17 @@ def trainerDetailUpdate():
         print(old)
         print(type(old))
         dict = database.child("Trainers").child(username).get().val()
-        lst = []
-        for value in dict.values():
-            lst.append(value)
+        valLst = []
+        keyLst = []
+        for key, value in dict.items():
+            valLst.append(value)
+            keyLst.append(key)
         for key, value in dict.items():
             if old == value:
                 database.child("Trainers").child(username).update({key: new})
                 flash("Please refresh page to see changes")
                 break
-    return render_template("TrainerDetailUpdate.html", details=lst)
+    return render_template("TrainerDetailUpdate.html", valDetails=valLst, keyDetails=keyLst)
 
 
 @app.route("/logout")
@@ -266,63 +271,54 @@ def logout():
 # add in parsing or data pulling and settle what headers to display
 # consider adding more but should be generic
 
-data = ()
+@app.route('/filterTrainers', methods=['POST', 'GET'])
+def filterTrainers():
+    data = ()
 
-# to read all trainers
-trainers = database.child("Trainers").get()
-
-for i in trainers.each():
-    headings = ()
-    for head in i.val():
-        headings += (head,)
-
-for i in trainers.each():
-    personaldata = ()
-    for a in i.val():
-        personaldata += (i.val()[a],)
-    data += (personaldata,)
-
-
-@app.route('/viewFilteredTrainers', methods=["POST", "GET"])
-def viewFilteredTrainers():
-    return render_template('FilterTrainers.html')
-
-
-@app.route('/viewAllTrainers', methods=["POST", "GET"])
-def viewAllTrainers():
-    return render_template("ViewTrainers.html", headings=headings, data=data)
-
-
-@app.route('/submitForm', methods=['POST', 'GET'])
-def submitForm():
-    gender = request.form.getlist("gender")
-    print(gender)
-    location = request.form.getlist("location")
-    price = request.form.getlist("price")
-    level = request.form.getlist("trglvl")
-    print(level)
-    trgtype = request.form.getlist("trgtype")
-
-    data1 = ()
-    # to read data
+    # to read all trainers
     trainers = database.child("Trainers").get()
-    for i in trainers.each():
-        headings = ()
-        for head in i.val():
-            headings += (head,)
-    for i in trainers.each():
-        personaldata = ()
-        if (i.val()['Gender'] == [] or i.val()['Gender'] in gender):
-            # if (i.val()['Location'] == [] or i.val()['Location'] in trgtype):
-            # if (i.val()['Price'] == [] or i.val()['Gender'] in trgtype):
-            # if (i.val()['Level'] == [] or i.val()['Level'] in trgtype):
-            if (i.val()['Training Type'] == [] or i.val()['Training Type'] in trgtype):
-                for a in i.val():
-                    personaldata += (i.val()[a],)
-        if personaldata:
-            data1 += (personaldata,)
 
-    return render_template("ViewTrainers.html", headings=headings, data=data1)
+    # to check if trainers are present in database
+    if trainers.each():
+        for i in trainers.each():
+            headings = ()
+            for head in i.val():
+                headings += (head,)
+
+        for i in trainers.each():
+            personaldata = ()
+            for a in i.val():
+                personaldata += (i.val()[a],)
+            data += (personaldata,)
+
+        # to check if trainers are being filtered
+        if request.method == 'POST':
+            gender = request.form.getlist("gender")
+            location = request.form.getlist("location")
+            price = request.form.getlist("price")
+            trgtype = request.form.getlist("trgtype")
+
+            data1 = ()
+            # to read data
+            for i in trainers.each():
+                personaldata = ()
+                if gender == [] or i.val()['Gender'] in gender:
+                    if location == [] or i.val()['Location'] in location:
+                        # if (i.val()['Price'] == [] or i.val()['Gender'] in trgtype):
+                        if trgtype == [] or i.val()['Training Type'] in trgtype:
+                            for a in i.val():
+                                personaldata += (i.val()[a],)
+                if personaldata:
+                    data1 += (personaldata,)
+            if data1:
+                return render_template("FilterTrainers.html", headings=headings, data=data1)
+            else:
+                flash("No such trainer exists. Please try again!")
+                return render_template("FilterTrainers.html")
+        return render_template("FilterTrainers.html", headings=headings, data=data)
+    else:
+        flash("No trainers in the database!")
+        return render_template("FilterTrainers.html")
 
 if __name__ == "__main__":
     app.run()
