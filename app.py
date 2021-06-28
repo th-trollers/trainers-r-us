@@ -3,8 +3,6 @@ import pyrebase
 from flask import *
 from datetime import datetime, timedelta, date
 from dateutil.relativedelta import relativedelta
-from flask_wtf import FlaskForm
-from wtforms import SelectField
 
 app = Flask(__name__, template_folder="html")
 app.secret_key = "trainersrus"
