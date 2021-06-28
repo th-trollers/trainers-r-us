@@ -1,12 +1,20 @@
 <html>
 <head>
     <title> Create Member </title>
+    <link rel="stylesheet" type="text/css" href="../static/css/memberDetails.css" />
     </head>
-
     <body>
+        <div class = "banner">
+        <div class = "navbar">
+            <img src = "../static/img/trainers_logo_two.png" class = "logo">
+            <ul>
+                <li><a href = "http://127.0.0.1:5000/">Home</a></li>
+                <li><a href = "http://127.0.0.1:5000/memberLogin">Login Page</a></li>
+            </ul>
+        </div>
         <center>
-            <h1>CREATE NEW MEMBER</h1>
-            <p1>Please Enter Email and Password</p1>
+            <h1 style="color:white; font-size:60px">CREATE NEW MEMBER</h1>
+            <p1 style="color:white; font-size:40px">Please enter the respective details</p1>
             <form action = "#" method = "post">
             {%with messages = get_flashed_messages()%}
             {%if messages %}
@@ -15,31 +23,36 @@
                     {% endfor %}
                 {% endif %}
             {% endwith %}
+            <br>
+            <br>
+            <br>
+            <br>
                 <table>
                     <tr>
-                        <td>Email: </td>
+                        <td style = "color: white; font-size:30px">Email: </td>
                         <td>
                         <input type = "text" name = "email">
                         </td>
                     </tr>
+                    
 
                     <tr>
-                        <td> Password: </td>
+                        <td style = "color: white; font-size:30px"> Password: </td>
                         <td>
                             <input type="password" name="userpassword">
                         </td>
                     </tr>
 
                     <tr>
-                        <td>Name: </td>
+                        <td style = "color: white; font-size:30px">Name: </td>
                         <td>
                         <input type = "text" name = "membername">
                         </td>
                     </tr>
 
                     <tr>
-                        <td>Gender: </td>
-                        <td>
+                        <td style = "color: white; font-size:30px">Gender: </td>
+                        <td style = "color: white; font-size:20px">
                         <input type="checkbox" name="gender" value="Male">
                         <label for="Male"> Male</label><br>
                         <input type="checkbox" name="gender" value="Female">
@@ -47,15 +60,15 @@
                     </tr>
 
                     <tr>
-                        <td>Number: </td>
+                        <td style = "color: white; font-size:30px">Number: </td>
                         <td>
                         <input type = "text" name = "number">
                         </td>
                     </tr>
 
                     <tr>
-                        <td>Level of Training: </td>
-                        <td>
+                        <td style = "color: white; font-size:30px">Level of Training: </td>
+                        <td style = "color: white; font-size:20px">
                         <input type="checkbox" name="trglvl" value="Beginner">
                         <label for="Beginner"> Beginner</label><br>
                         <input type="checkbox" name="trglvl" value="Intermediate">
@@ -65,8 +78,8 @@
                     </tr>
 
                     <tr>
-                        <td>Type of Training: </td>
-                        <td>
+                        <td style = "color: white; font-size:30px">Type of Training: </td>
+                        <td style = "color: white; font-size:20px">
                         <input type="checkbox" name="trgtype" value="Kettlebell">
                         <label for="Kettlebell"> Kettlebell</label><br>
                         <input type="checkbox" name="trgtype" value="Body weight">
@@ -85,5 +98,4 @@
             </form>
         </center>
     </body>
-    <a href="http://127.0.0.1:5000/memberLogin" ><button type="button" class="btn btn-primary">Back</button></a>
 </html>

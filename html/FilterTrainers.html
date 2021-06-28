@@ -1,71 +1,100 @@
 <html>
-
-    <head>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
-        <title> Test Document </title>
+<head>
+    <title> Filer Trainers </title>
+    <link rel="stylesheet" type="text/css" href="../static/css/filterTrainer.css" />
     </head>
     <body>
-        <form method="POST" action="http://127.0.0.1:5000/submitForm">
+        <div class = "banner">
+        <div class = "navbar">
+            <img src = "../static/img/trainers_logo_two.png" class = "logo">
+        </div>
+        <center>
+            <h1 style="color:white; font-size:60px">FILTER TRAINERS</h1>
+            <p1 style="color:white; font-size:40px">Please tick the boxes</p1>
+            <form method="POST" action="http://127.0.0.1:5000/filterTrainers">
 
-            <tr>
-                <td>Gender: </td>
-                <td>
-                <input type="checkbox" name="gender" value="Male">
-                <label for="Male"> Male</label><br>
-                <input type="checkbox" name="gender" value="Female">
-                <label for="Female"> Female</label><br><br>
-            </tr>
+                <tr>
+                    <td "color: white; font-size:30px">Gender: </td>
+                    <td "color: white; font-size:20px">
+                    <input type="checkbox" name="gender" value="Male">
+                    <label for="Male"> Male</label><br>
+                    <input type="checkbox" name="gender" value="Female">
+                    <label for="Female"> Female</label><br><br>
+                </tr>
 
-            <tr>
-                <td>Location: </td>
-                <td>
-                <input type="checkbox" name="location" value="North">
-                <label for="North"> North</label><br>
-                <input type="checkbox" name="location" value="South">
-                <label for="South"> South</label><br>
-                <input type="checkbox" name="location" value="East">
-                <label for="East"> East</label><br>
-                <input type="checkbox" name="location" value="West">
-                <label for="West"> West</label><br><br>
-            </tr>
-            
-            <tr>
-                <td>Price Range: </td>
-                <td>
-                <input type="checkbox" name="price" value="$">
-                <label for="$"> $</label><br>
-                <input type="checkbox" name="price" value="$$">
-                <label for="$$"> $$</label><br>
-                <input type="checkbox" name="price" value="$$$">
-                <label for="$$$"> $$$</label><br><br>
-            </tr>
+                <tr>
+                    <td>Location: </td>
+                    <td>
+                    <input type="checkbox" name="location" value="North">
+                    <label for="North"> North</label><br>
+                    <input type="checkbox" name="location" value="South">
+                    <label for="South"> South</label><br>
+                    <input type="checkbox" name="location" value="East">
+                    <label for="East"> East</label><br>
+                    <input type="checkbox" name="location" value="West">
+                    <label for="West"> West</label><br><br>
+                </tr>
+                
+                <tr>
+                    <td>Price Range: </td>
+                    <td>
+                    <input type="checkbox" name="price" value="$">
+                    <label for="$"> $</label><br>
+                    <input type="checkbox" name="price" value="$$">
+                    <label for="$$"> $$</label><br>
+                    <input type="checkbox" name="price" value="$$$">
+                    <label for="$$$"> $$$</label><br><br>
+                </tr>
 
-            <tr>
-                <td>Level of Training: </td>
-                <td>
-                <input type="checkbox" name="trglvl" value="Beginner">
-                <label for="Beginner"> Beginner</label><br>
-                <input type="checkbox" name="trglvl" value="Intermediate">
-                <label for="Intermediate"> Intermediate</label><br>
-                <input type="checkbox" name="trglvl" value="Advanced" checked>
-                <label for="Advanced"> Advanced </label><br><br>
-            </tr>
+                <tr>
+                    <td>Level of Training: </td>
+                    <td>
+                    <input type="checkbox" name="trglvl" value="Beginner">
+                    <label for="Beginner"> Beginner</label><br>
+                    <input type="checkbox" name="trglvl" value="Intermediate">
+                    <label for="Intermediate"> Intermediate</label><br>
+                    <input type="checkbox" name="trglvl" value="Advanced">
+                    <label for="Advanced"> Advanced </label><br><br>
+                </tr>
 
-            <tr>
-                <td>Type of Training: </td>
-                <td>
-                <input type="checkbox" name="trgtype" value="Kettlebell">
-                <label for="Kettlebell"> Kettlbell</label><br>
-                <input type="checkbox" name="trgtype" value="Body weight">
-                <label for="Body Weight"> Body Weight</label><br>
-                <input type="checkbox" name="trgtype" value="Barbell" checked>
-                <label for="Barbell"> Barbell </label><br><br>
-            </tr>
+                <tr>
+                    <td>Type of Training: </td>
+                    <td>
+                    <input type="checkbox" name="trgtype" value="Kettlebell">
+                    <label for="Kettlebell"> Kettlbell</label><br>
+                    <input type="checkbox" name="trgtype" value="Body weight">
+                    <label for="Body Weight"> Body Weight</label><br>
+                    <input type="checkbox" name="trgtype" value="Barbell">
+                    <label for="Barbell"> Barbell </label><br><br>
+                </tr>
 
-            <div class="btn-block">
-                <button type="submit" href="http://127.0.0.1:5000/submitForm">SEND</button>
-            </div>
-        </form>
+                <div class="btn-block">
+                    <button type="submit" href="http://127.0.0.1:5000/filterTrainers">SEND</button>
+                </div>
+            </form>
+        
+            {%with messages = get_flashed_messages()%}
+            {%if messages %}
+                {% for msg in messages%}
+                    <b style="color:red; font-size:20px">{{msg}}</b>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <table> 
+                <tr >
+                    {% for header in headings %}
+                    <th "color: white; font-size:20px">{{ header }}</th>
+                    {% endfor %}
+                </tr>
+                {% for row in data %}
+                <tr>
+                    {% for cell in row %}
+                    <td "color: white; font-size:20px">{{ cell }}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </table>
+        </center>
     </body>
-    <a href="http://127.0.0.1:5000/memberHome" ><button type="button" class="btn btn-primary">Back</button></a>
 </html>

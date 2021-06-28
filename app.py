@@ -92,10 +92,6 @@ def trainerLogin():
 
 @app.route('/memberHome', methods=["POST", "GET"])
 def memberHome():
-    if "username" in session:
-        username = str(session["username"])
-        flash("Welcome " +
-              database.child("Users").child(username).get().val()["Name"])
     return render_template("MemberHome.html")
 
 
@@ -236,6 +232,7 @@ def memberDetailUpdate():
         for key, value in dict.items():
             valLst.append(value)
             keyLst.append(key)
+        print(keyLst)
         for key, value in dict.items():
             if old == value:
                 database.child("Users").child(username).update({key: new})
@@ -280,63 +277,54 @@ def logout():
 # add in parsing or data pulling and settle what headers to display
 # consider adding more but should be generic
 
-data = ()
+@app.route('/filterTrainers', methods=['POST', 'GET'])
+def filterTrainers():
+    data = ()
 
-# to read all trainers
-trainers = database.child("Trainers").get()
-
-for i in trainers.each():
-    headings = ()
-    for head in i.val():
-        headings += (head,)
-
-for i in trainers.each():
-    personaldata = ()
-    for a in i.val():
-        personaldata += (i.val()[a],)
-    data += (personaldata,)
-
-
-@app.route('/viewFilteredTrainers', methods=["POST", "GET"])
-def viewFilteredTrainers():
-    return render_template('FilterTrainers.html')
-
-
-@app.route('/viewAllTrainers', methods=["POST", "GET"])
-def viewAllTrainers():
-    return render_template("ViewTrainers.html", headings=headings, data=data)
-
-
-@app.route('/submitForm', methods=['POST', 'GET'])
-def submitForm():
-    gender = request.form.getlist("gender")
-    print(gender)
-    location = request.form.getlist("location")
-    price = request.form.getlist("price")
-    level = request.form.getlist("trglvl")
-    print(level)
-    trgtype = request.form.getlist("trgtype")
-
-    data1 = ()
-    # to read data
+    # to read all trainers
     trainers = database.child("Trainers").get()
-    for i in trainers.each():
-        headings = ()
-        for head in i.val():
-            headings += (head,)
-    for i in trainers.each():
-        personaldata = ()
-        if (i.val()['Gender'] == [] or i.val()['Gender'] in gender):
-            # if (i.val()['Location'] == [] or i.val()['Location'] in trgtype):
-            # if (i.val()['Price'] == [] or i.val()['Gender'] in trgtype):
-            # if (i.val()['Level'] == [] or i.val()['Level'] in trgtype):
-            if (i.val()['Training Type'] == [] or i.val()['Training Type'] in trgtype):
-                for a in i.val():
-                    personaldata += (i.val()[a],)
-        if personaldata:
-            data1 += (personaldata,)
 
-    return render_template("ViewTrainers.html", headings=headings, data=data1)
+    # to check if trainers are present in database
+    if trainers.each():
+        for i in trainers.each():
+            headings = ()
+            for head in i.val():
+                headings += (head,)
+
+        for i in trainers.each():
+            personaldata = ()
+            for a in i.val():
+                personaldata += (i.val()[a],)
+            data += (personaldata,)
+
+        # to check if trainers are being filtered
+        if request.method == 'POST':
+            gender = request.form.getlist("gender")
+            location = request.form.getlist("location")
+            price = request.form.getlist("price")
+            trgtype = request.form.getlist("trgtype")
+
+            data1 = ()
+            # to read data
+            for i in trainers.each():
+                personaldata = ()
+                if gender == [] or i.val()['Gender'] in gender:
+                    if location == [] or i.val()['Location'] in location:
+                        # if (i.val()['Price'] == [] or i.val()['Gender'] in trgtype):
+                        if trgtype == [] or i.val()['Training Type'] in trgtype:
+                            for a in i.val():
+                                personaldata += (i.val()[a],)
+                if personaldata:
+                    data1 += (personaldata,)
+            if data1:
+                return render_template("FilterTrainers.html", headings=headings, data=data1)
+            else:
+                flash("No such trainer exists. Please try again!")
+                return render_template("FilterTrainers.html")
+        return render_template("FilterTrainers.html", headings=headings, data=data)
+    else:
+        flash("No trainers in the database!")
+        return render_template("FilterTrainers.html")
 
 
 if __name__ == "__main__":
