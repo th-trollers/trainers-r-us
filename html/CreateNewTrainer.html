@@ -1,12 +1,20 @@
 <html>
 <head>
-    <title> Key in User Details </title>
+    <title> Create Trainer </title>
+    <link rel="stylesheet" type="text/css" href="../static/css/memberDetails.css" />
     </head>
-
     <body>
+        <div class = "banner">
+        <div class = "navbar">
+            <img src = "../static/img/trainers_logo_two.png" class = "logo">
+            <ul>
+                <li><a href = "http://127.0.0.1:5000/">Home</a></li>
+                <li><a href = "http://127.0.0.1:5000/trainerLogin">Login Page</a></li>
+            </ul>
+        </div>
         <center>
-            <h1>TRAINER DETAILS</h1>
-            <p1>Please enter the details down below </p1>
+            <h1 style="color:white; font-size:60px">TRAINER DETAILS</h1>
+            <p1 style="color:white; font-size:40px">Please enter the details down below </p1>
             <form action = "#" method = "post">
             {%with messages = get_flashed_messages()%}
             {%if messages %}
@@ -15,38 +23,42 @@
                     {% endfor %}
                 {% endif %}
             {% endwith %}
+            <br>
+            <br>
+            <br>
+            <br>
                 <table>
                 <tr>
-                        <td>Email: </td>
+                        <td style = "color: white; font-size:30px">Email: </td>
                         <td>
                         <input type = "text" name = "email">
                         </td>
                     </tr>
 
                      <tr>
-                        <td> Password: </td>
+                        <td style = "color: white; font-size:30px"> Password: </td>
                         <td>
                             <input type="password" name="trainerpw">
                         </td>
                     </tr>
 
                     <tr>
-                        <td>Name: </td>
+                        <td style = "color: white; font-size:30px">Name: </td>
                         <td>
                         <input type = "text" name = "trainername">
                         </td>
                     </tr>
                     
                     <tr>
-                        <td>Contact Number: </td>
+                        <td style = "color: white; font-size:30px">Contact Number: </td>
                         <td>
                         <input type = "text" name = "contact">
                         </td>
                     </tr>
 
                     <tr>
-                        <td>Gender: (M/F) </td>
-                        <td>
+                        <td style = "color: white; font-size:30px">Gender: (M/F) </td>
+                        <td style = "color: white; font-size:20px">
                         <input type="checkbox" name="gender" value="Male">
                         <label for="Male"> Male</label><br>
                         <input type="checkbox" name="gender" value="Female">
@@ -54,29 +66,29 @@
                     </tr>
 
                     <tr>
-                        <td>Years of Experience: </td>
+                        <td style = "color: white; font-size:30px">Years of Experience: </td>
                         <td>
                         <input type = "text" name = "experience">
                         </td>
                     </tr>
 
                     <tr>
-                        <td>Short Description: </td>
+                        <td style = "color: white; font-size:30px">Short Description: </td>
                         <td>
                         <input type = "text" name = "description">
                         </td>
                     </tr>
 
                     <tr>
-                        <td>Location: </td>
+                        <td style = "color: white; font-size:30px">Location: </td>
                         <td>
                         <input type = "text" name = "location">
                         </td>
                     </tr>
 
                     <tr>
-                        <td>Type of Training: </td>
-                        <td>
+                        <td style = "color: white; font-size:30px">Type of Training: </td>
+                        <td style = "color: white; font-size:20px">
                         <input type="checkbox" name="trgtype" value="Kettlebell">
                         <label for="Kettlebell"> Kettlebell</label><br>
                         <input type="checkbox" name="trgtype" value="Body weight">
@@ -86,7 +98,7 @@
                     </tr>
 
                     <tr>
-                        <td>Price Range: </td>
+                        <td style = "color: white; font-size:30px">Price Range: </td>
                         <td>
                         <input type = "text" name = "pricerange">
                         </td>
@@ -101,5 +113,4 @@
             </form>
         </center>
     </body>
-    <a href="http://127.0.0.1:5000/trainerLogin" ><button type="button" class="btn btn-primary">Back</button></a>
 </html>
