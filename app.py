@@ -100,7 +100,7 @@ def trainerHome():
         username = str(session["username"])
         flash("Welcome trainer " +
               database.child("Trainers").child(username).get().val()["Name"])
-    return render_template("trainerHome.html")
+    return render_template("TrainerHome.html")
 
 
 # Creating New Users Page
