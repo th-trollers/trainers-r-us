@@ -1,19 +1,23 @@
 <html>
 <head>
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <title> Member Details Page </title>
+    <link rel="stylesheet" type="text/css" href="../static/css/memberDetails.css" />
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
-    <title> Book Transactions </title>
-    </head>
-
-    <body>
+</head>
+<body>
+    <div class = "banner">
+        <div class = "navbar">
+            <img src = "../static/img/trainers_logo_two.png" class = "logo">
+            <ul>
+                <li><a href = "http://127.0.0.1:5000/memberHome">Home</a></li>
+                <li><a href = "http://127.0.0.1:5000/memberDetailUpdate">Update Account</a></li>
+                <li><a href = "http://127.0.0.1:5000/">Logout</a></li>
+            </ul>
+        </div>
         <center>
             <style> 
-                body {
-                  background-image: url("https://wallpaperaccess.com/full/84248.png");
-                  backdrop-filter: blur(5px);
-                }
                 table, th, td {
                     border: 5px solid white;
                 }
@@ -29,7 +33,6 @@
             
             </form>
             <div style ="height:200px;overflow:auto;">
-            <h1 style="color:white; font-size:45px">Personal Details</h1>
             <table bordercolor="#f5f5dc"; style="width:100%"> 
                 <tr>
                     <th style = "color: white; font-size:40px">Name</th>
@@ -41,17 +44,17 @@
                 </tr>
                 <tr>
                     <td style = "color: white; font-size:30px">
+                        <b>{{details[2]}}</b>
+                    </td>
+                    <td style = "color: white; font-size:30px">
                         <b>{{details[0]}}</b>
                     </td>
                     <td style = "color: white; font-size:30px">
-                        <b>{{details[1]}}</b>
-                    </td>
-                    <td style = "color: white; font-size:30px">
-                        <b>{{details[2]}}</b>
+                        <b>{{details[3]}}</b>
                     </td>
                      </td>
                     <td style = "color: white; font-size:30px">
-                        <b>{{details[3]}}</b>
+                        <b>{{details[1]}}</b>
                     </td>
                      </td>
                     <td style = "color: white; font-size:30px">
@@ -63,18 +66,7 @@
                     </td>
                 </tr>
             </div>
-            
-            {%with messages = get_flashed_messages()%}
-            {%if messages %}
-                {% for msg in messages%}
-                    <b style="color:red; font-size:20px">{{msg}}</b>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
         </center>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
-    </body>   
-    <a href="http://127.0.0.1:5000/memberHome" ><button type="button" class="btn btn-primary">Back</button></a>
-    <a href="http://127.0.0.1:5000/" ><button type="button" class="btn btn-primary">Logout</button></a> 
-    <a href="http://127.0.0.1:5000/memberDetailUpdate" ><button type="button" class="btn btn-primary">Update</button></a> 
+</body>
 </html>

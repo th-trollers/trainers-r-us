@@ -92,20 +92,11 @@ def trainerLogin():
 
 @app.route('/memberHome', methods=["POST", "GET"])
 def memberHome():
-    if "username" in session:
-        username = str(session["username"])
-        flash("Welcome " +
-              database.child("Users").child(username).get().val()["Name"])
     return render_template("MemberHome.html")
 
 
 @app.route('/trainerHome', methods=["POST", "GET"])
 def trainerHome():
-    if "username" in session:
-        print("username in session")
-        username = str(session["username"])
-        flash("Welcome trainer " +
-              database.child("Trainers").child(username).get().val()["Name"])
     return render_template("trainerHome.html")
 
 
@@ -139,8 +130,7 @@ def createNewMember():
                 flash("Please go to your email to verify your account")
                 auth.send_email_verification(user["idToken"])
                 emailTwo = email.replace(".", "_DOT_")
-                data = {"Email": emailTwo, "Name": name, "Number": number,
-                        "Gender": gender, "Training Level": trglvl, "Training Type": trgtype}
+                data = {"Email": emailTwo, "Name": name, "Number": number, "Gender": gender, "Training Level": trglvl, "Training Type": trgtype}
                 database.child("Users").child(emailTwo).set(data)
                 print("data has been created")
         except:
@@ -236,6 +226,7 @@ def memberDetailUpdate():
         for key, value in dict.items():
             valLst.append(value)
             keyLst.append(key)
+        print(keyLst)
         for key, value in dict.items():
             if old == value:
                 database.child("Users").child(username).update({key: new})
@@ -328,73 +319,6 @@ def filterTrainers():
     else:
         flash("No trainers in the database!")
         return render_template("FilterTrainers.html")
-
-
-@ app.route('/trainerLogin', methods=["POST", "GET"])
-def trainerLogin():
-    unsuccessful = "Please check your credentials"
-    successful = "Login successful"
-    if request.method == "POST":
-        email = request.form["name"]
-        password = request.form["pass"]
-        try:
-            user = auth.sign_in_with_email_and_password(email, password)
-            print(successful)
-            return redirect(url_for("trainerHome"))
-        except:
-            flash(unsuccessful)
-            print(unsuccessful)
-            return redirect(url_for("trainerLogin"))
-    return render_template("trainerLogin.html")
-
-
-@ app.route('/trainerHome', methods=["POST", "GET"])
-def trainerHome():
-    return render_template("trainerHome.html")
-
-
-@ app.route('/createNewTrainer', methods=["POST", "GET"])
-def createNewTrainer():
-    if request.method == "POST":
-        try:
-            # getting the email and pw
-            email = str(request.form["email"])
-            pw = str(request.form["userpassword"])
-            if len(pw) < 6:
-                flash("Password too short please try a new one")
-                return render_template("CreateNewTrainer.html")
-            else:
-                user = auth.create_user_with_email_and_password(email, pw)
-                print("Successfully created an account")
-                flash("Please go to your email to verify your account")
-                auth.send_email_verification(user["idToken"])
-        except:
-            flash("Please enter valid details")
-        return redirect(url_for("trainerDetails"))
-    else:
-        return render_template("CreateNewTrainer.html")
-
-
-@ app.route('/trainerDetails', methods=["POST", "GET"])
-def trainerDetails():
-    if request.method == "POST":
-        try:
-            name = request.form["trainername"]
-            gender = request.form["gender"]
-            description = request.form["description"]
-            experience = request.form["experience"]
-            # still need to settle the lvl of trg and type of trg part
-            data = {"Name": name, "Gender": gender,
-                    "Description": description, "Years of Experience": experience, }
-            database.child("Trainers").child(name).set(data)
-            print("data has been created")
-        except:
-            print("smth is wrong")
-        flash("Please key in your details")
-        return redirect(url_for("trainerLogin"))
-    else:
-        return render_template("TrainerDetails.html")
-
 
 if __name__ == "__main__":
     app.run()
