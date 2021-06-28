@@ -29,11 +29,14 @@ database = firebase.database()
 # he did not use a proper email
 
 # Main Home Page
+
+
 @app.route('/')
 def homePage():
     return render_template("HomePage.html")
 
 # Login Pages
+
 
 @app.route('/memberLogin', methods=["POST", "GET"])
 def memberLogin():
@@ -58,6 +61,7 @@ def memberLogin():
             print(unsuccessful)
             return redirect(url_for("memberLogin"))
     return render_template("MemberLogin.html")
+
 
 @app.route('/trainerLogin', methods=["POST", "GET"])
 def trainerLogin():
@@ -85,6 +89,7 @@ def trainerLogin():
 
 # Member and Trainer Home Page
 
+
 @app.route('/memberHome', methods=["POST", "GET"])
 def memberHome():
     if "username" in session:
@@ -93,12 +98,14 @@ def memberHome():
               database.child("Users").child(username).get().val()["Name"])
     return render_template("MemberHome.html")
 
+
 @app.route('/trainerHome', methods=["POST", "GET"])
 def trainerHome():
     if "username" in session:
         print("username in session")
         username = str(session["username"])
-        flash("Welcome trainer " + database.child("Trainers").child(username).get().val()["Name"])
+        flash("Welcome trainer " +
+              database.child("Trainers").child(username).get().val()["Name"])
     return render_template("trainerHome.html")
 
 
@@ -144,6 +151,7 @@ def createNewMember():
     else:
         return render_template("CreateNewMember.html")
 
+
 @app.route('/createNewTrainer', methods=["POST", "GET"])
 def createNewTrainer():
     if request.method == "POST":
@@ -157,9 +165,9 @@ def createNewTrainer():
             location = request.form["location"]
             experience = request.form["experience"]
             trgtype = request.form["trgtype"]
-            # need to allow the users to click multiple values 
+            # need to allow the users to click multiple values
             pricerange = request.form["pricerange"]
-            
+
             if len(pw) < 6:
                 flash("Password too short please try a new one")
                 return render_template("CreateNewTrainer.html")
@@ -184,6 +192,7 @@ def createNewTrainer():
 
 # Details Pages
 
+
 @app.route('/memberDetails', methods=["GET"])
 def memberDetails():
     if "username" in session:
@@ -194,6 +203,7 @@ def memberDetails():
             lst.append(value)
         print(lst)
     return render_template("MemberDetails.html", details=lst)
+
 
 @app.route('/trainerDetails', methods=["POST", "GET"])
 def trainerDetails():
@@ -208,6 +218,7 @@ def trainerDetails():
     return render_template("TrainerDetails.html", details=lst)
 
 # Update Pages
+
 
 @app.route("/memberDetailUpdate", methods=["POST", "GET"])
 def memberDetailUpdate():
@@ -230,7 +241,8 @@ def memberDetailUpdate():
                 database.child("Users").child(username).update({key: new})
                 flash("Please refresh page to see changes")
                 break
-    return render_template("MemberDetailUpdate.html", valDetails = valLst, keyDetails = keyLst)
+    return render_template("MemberDetailUpdate.html", valDetails=valLst, keyDetails=keyLst)
+
 
 @app.route("/trainerDetailUpdate", methods=["POST", "GET"])
 def trainerDetailUpdate():
@@ -245,7 +257,7 @@ def trainerDetailUpdate():
         dict = database.child("Trainers").child(username).get().val()
         valLst = []
         keyLst = []
-        for key,value in dict.items():
+        for key, value in dict.items():
             valLst.append(value)
             keyLst.append(key)
         for key, value in dict.items():
@@ -253,7 +265,7 @@ def trainerDetailUpdate():
                 database.child("Trainers").child(username).update({key: new})
                 flash("Please refresh page to see changes")
                 break
-    return render_template("TrainerDetailUpdate.html", valDetails = valLst, keyDetails = keyLst)
+    return render_template("TrainerDetailUpdate.html", valDetails=valLst, keyDetails=keyLst)
 
 
 @app.route("/logout")
@@ -325,6 +337,7 @@ def submitForm():
             data1 += (personaldata,)
 
     return render_template("ViewTrainers.html", headings=headings, data=data1)
+
 
 if __name__ == "__main__":
     app.run()
