@@ -83,7 +83,7 @@ def trainerLogin():
             flash(unsuccessful)
             print(unsuccessful)
             return redirect(url_for("trainerLogin"))
-    return render_template("trainerLogin.html")
+    return render_template("TrainerLogin.html")
 
 # Member and Trainer Home Page
 
