@@ -3,9 +3,12 @@ import pyrebase
 from flask import *
 from datetime import datetime, timedelta, date
 from dateutil.relativedelta import relativedelta
+from flask_socketio import SocketIO, join_room, leave_room
+from requests.api import get
 
 app = Flask(__name__, template_folder="html")
 app.secret_key = "trainersrus"
+socketio = SocketIO(app)
 app.permanent_session_lifetime = timedelta(minutes=60)
 config = {
     "apiKey": "AIzaSyCRQLgByC3jG5YbDViv1i_9KnckWEgePC0",
@@ -53,6 +56,7 @@ def memberLogin():
             user = auth.sign_in_with_email_and_password(username, password)
             print(successful)
             session["username"] = usernameTwo
+            session["check"] = "User"
             return redirect(url_for("memberHome"))
         except:
             flash(unsuccessful)
@@ -78,6 +82,7 @@ def trainerLogin():
             user = auth.sign_in_with_email_and_password(email, password)
             print(successful)
             session["username"] = usernameTwo
+            session["check"] = "Trainer"
             return redirect(url_for("trainerHome"))
         except:
             flash(unsuccessful)
@@ -266,8 +271,8 @@ def trainerDetailUpdate():
 @app.route("/logout")
 def logout():
     flash(f"You have been logged out")
-    session.pop("email", None)
-    session.pop("name", None)
+    session.pop("username", None)
+    session.pop("check", None)
     return redirect(url_for("homePage"))
 
 
@@ -278,10 +283,8 @@ def logout():
 @app.route('/filterTrainers', methods=['POST', 'GET'])
 def filterTrainers():
     data = ()
-
     # to read all trainers
     trainers = database.child("Trainers").get()
-
     # to check if trainers are present in database
     if trainers.each():
         for i in trainers.each():
@@ -325,8 +328,316 @@ def filterTrainers():
         return render_template("FilterTrainers.html")
 
 
+# booking module --------------------------------------------------------------------------
+
+@app.route("/bookings")
+def bookings():
+    return render_template("Bookings.html")
+
+
+# chat functions--------------------------------------------------------------------------------
+
+# get trainer info from his username (returns tuple of info)
+def get_trainer(email):
+    print("getting trainer")
+    print(email)
+    trainer = ()
+    trainers = database.child("Trainers").get()
+    if trainers.each():
+        for i in trainers.each():
+            if email == i.val()["Email"]:
+                for a in i.val():
+                    trainer += (i.val()[a],)
+        if trainer:
+            return trainer
+        else:
+            return None
+    else:
+        return None
+
+
+# to check whether chat between trainer and user exists and return messages
+# if it does exist return messages
+def check_chats(user, trainer):
+    print("checking chats")
+    chats = database.child("Chats").get()
+    messages = ()
+    store = ()
+    newstore = ()
+    boolean = False
+    if chats.each():
+        for i in chats.each():
+
+            if session["check"] == "User":
+                if user == i.val()["Username"]:
+                    if trainer == i.val()["Trainer"]:
+                        boolean = True
+                        keys = list(i.val().keys())
+                        if "Messages" in keys:
+                            for a in i.val()["Messages"]:
+                                msg = ()
+                                msg += (i.val()
+                                        ["Messages"].get(a).get("Content"),)
+                                msg += (i.val()
+                                        ["Messages"].get(a).get("Sender"),)
+                                msg += (i.val()
+                                        ["Messages"].get(a).get("Date"),)
+                                if len(a) < 10:
+                                    messages += (msg,)
+                                elif len(a) == 10:
+                                    store += (msg,)
+                                else:
+                                    newstore += (msg,)
+                            if store:
+                                for x in store:
+                                    messages += (x,)
+                            if newstore:
+                                for y in newstore:
+                                    messages += (y,)
+                            return messages
+                        else:
+                            return "No messages"
+
+            if session["check"] == "Trainer":
+                if user == i.val()["Trainer"]:
+                    if trainer == i.val()["Username"]:
+                        boolean = True
+                        keys = list(i.val().keys())
+                        if "Messages" in keys:
+                            for a in i.val()["Messages"]:
+                                msg = ()
+                                msg += (i.val()
+                                        ["Messages"].get(a).get("Content"),)
+                                msg += (i.val()
+                                        ["Messages"].get(a).get("Sender"),)
+                                msg += (i.val()
+                                        ["Messages"].get(a).get("Date"),)
+                                if len(a) < 10:
+                                    messages += (msg,)
+                                elif len(a) == 10:
+                                    store += (msg,)
+                                else:
+                                    newstore += (msg,)
+                            if store:
+                                for x in store:
+                                    messages += (x,)
+                            if newstore:
+                                for y in newstore:
+                                    messages += (y,)
+                            return messages
+                        else:
+                            return "No messages"
+        if boolean == False:
+            return None
+    else:
+        return None
+
+
+# to check room number of room
+def check_roomnum(user, trainer):
+    print("checking room num")
+    chats = database.child("Chats").get()
+    if chats.each():
+        if session["check"] == "User":
+            for i in chats.each():
+                if user == i.val()["Username"]:
+                    if trainer == i.val()["Trainer"]:
+                        return i.val()["Room Number"]
+        else:
+            for i in chats.each():
+                if user == i.val()["Trainer"]:
+                    if trainer == i.val()["Username"]:
+                        return i.val()["Room Number"]
+    else:
+        return None
+
+
+# given user's email return his name for display
+def get_user_name(email):
+    users = database.child("Users").get()
+    if users.each():
+        for i in users.each():
+            if email == i.val()["Email"]:
+                return i.val()["Name"]
+    else:
+        return None
+
+
+# get all chats for user/trainer (returns tuple of emails with whom user has existing chat history)
+def get_chat(username):
+    print("getting chat")
+    print(username)
+    chats = database.child("Chats").get()
+    if chats.each():
+        chat = ()
+        for i in chats.each():
+            if username == i.val()["Username"]:
+                print("useracc found")
+                keys = list(i.val().keys())
+                if "Messages" in keys:
+                    chat += (i.val()["Trainer"],)
+            elif username == i.val()["Trainer"]:
+                print("trainer acc found")
+                keys = list(i.val().keys())
+                if "Messages" in keys:
+                    chat += (i.val()["Username"],)
+        if chat:
+            print(chat)
+            return chat
+        else:
+            return None
+    else:
+        return None
+
+
+# to save message into database permanently
+def save_msg(room, message, sender, date):
+    chats = database.child("Chats").get()
+    print("trying to save msg")
+    if chats.each():
+        for i in chats.each():
+            if room == i.val()["Room Number"]:
+                print("found room")
+                print(room)
+                msgs = database.child("Chats").child(
+                    room).child("Messages").get()
+                index = 0
+                if msgs.each():
+                    for i in msgs.each():
+                        index += 1
+                counter = index + 1
+                msgname = "Message " + str(counter)
+                msg = {"Content": message, "Sender": sender, "Date": date}
+                database.child("Chats").child(room).child(
+                    "Messages").child(msgname).set(msg)
+
+
+# to view individual trainer info
+@app.route('/trainers/<trainer_email>/')
+def viewtrainerprofile(trainer_email):
+    trainer = get_trainer(trainer_email)
+    if trainer:
+        return render_template('ViewTrainer.html', trainer=trainer)
+    else:
+        return "Trainer not found", 404
+
+
+@app.route('/viewChat')
+def viewChat():
+    if "username" in session:
+        email = request.args.get("email")
+        if session["check"] == "User":
+            print("user logged in")
+            trainer = get_trainer(email)
+            trainername = trainer[5]
+            username = str(session["username"])
+            name = get_user_name(username)
+            test = check_chats(username, email)
+
+            roomnum = check_roomnum(username, email)
+            if test:
+                if test == "No messages":
+                    return render_template('ViewChat.html', username=name, room=roomnum, trainer=trainername)
+                else:
+                    return render_template("ViewChat.html", username=name, room=roomnum, messages=test, trainer=trainername)
+            else:
+                # if not open new chat room
+                chats = database.child("Chats").get()
+                index = 0
+                for i in chats.each():
+                    index += 1
+                counter = index + 1
+                roomname = "Room " + str(counter)
+                data = {"Username": username,
+                        "Trainer": email, "Room Number": roomname}
+                database.child("Chats").child(roomname).set(data)
+                return render_template('ViewChat.html', username=name, room=roomname, trainer=trainername)
+        else:
+            # trainer logged in
+            print("trainer logged in")
+            trainer = str(session["username"])
+            username = get_user_name(email)
+            test = check_chats(trainer, email)
+            roomnum = check_roomnum(trainer, email)
+            trainertuple = get_trainer(trainer)
+            trainername = trainertuple[5]
+            if test:
+                if test == "No messages":
+                    return render_template('TrainerViewChat.html', username=trainername, room=roomnum, trainer=username)
+                else:
+                    return render_template("TrainerViewChat.html", username=trainername, room=roomnum, messages=test, trainer=username)
+            else:
+                # if not open new chat room
+                print("no existing room")
+                chats = database.child("Chats").get()
+                index = 0
+                for i in chats.each():
+                    index += 1
+                counter = index + 1
+                roomname = "Room " + str(counter)
+                data = {"Username": email, "Trainer": trainer,
+                        "Room Number": roomname}
+                database.child("Chats").child(roomname).set(data)
+                return render_template('TrainerViewChat.html', username=trainername, room=roomname, trainer=username)
+    else:
+        return render_template("HomePage.html")
+
+
+@app.route('/allChats')
+def allChats():
+    if "username" in session:
+        username = str(session["username"])
+        print("trying to find all chats")
+        chat_hist = get_chat(username)
+        names = ()
+        if session["check"] == "User":
+            print("logged in as user")
+            for chat in chat_hist:
+                names += (get_trainer(chat)[5],)
+        else:
+            print("logged in as trainer")
+            for chat in chat_hist:
+                names += (get_user_name(chat),)
+        combined = ()
+        index = 0
+        for i in chat_hist:
+            combined += (((chat_hist[index]), (names[index])),)
+            index += 1
+        return render_template("AllChats.html", chats=combined)
+    else:
+        return render_template("HomePage.html")
+
+
+@socketio.on('send_message')
+def handle_send_message_event(data):
+    app.logger.info("{} has sent message to the room {}: {}".format(data['username'],
+                                                                    data['room'],
+                                                                    data['message']))
+    data['created_at'] = datetime.now().strftime("%d %b, %H:%M")
+    save_msg(data['room'], data['message'],
+             data['username'], data['created_at'])
+    socketio.emit('receive_message', data, room=data['room'])
+
+
+@socketio.on('join_room')
+def handle_join_room_event(data):
+    app.logger.info("{} has joined the room {}".format(
+        data['username'], data['room']))
+    join_room(data['room'])
+    socketio.emit('join_room_announcement', data, room=data['room'])
+
+
+@socketio.on('leave_room')
+def handle_leave_room_event(data):
+    app.logger.info("{} has left the room {}".format(
+        data['username'], data['room']))
+    leave_room(data['room'])
+    socketio.emit('leave_room_announcement', data, room=data['room'])
+
+
 if __name__ == "__main__":
-    app.run()
+    # app.run()
+    socketio.run(app, debug=True)
 
 # email = input("Please enter your email\n")
 
