@@ -1,5 +1,5 @@
+from os import path
 import pyrebase
-
 from flask import *
 from datetime import datetime, timedelta, date
 from dateutil.relativedelta import relativedelta
@@ -16,15 +16,18 @@ config = {
     "projectId": "trainers-r-us",
     "databaseURL": "https://trainers-r-us-default-rtdb.asia-southeast1.firebasedatabase.app/",
     "storageBucket": "trainers-r-us.appspot.com",
+    "serviceAccount": "trainers-r-us/serviceAccountKey.json",
     "messagingSenderId": "128175027453",
     "appId": "1:128175027453:web:4b91f00815ac01c4747a94",
     "measurementId": "G-6JY1N1W5ZY"
 }
 
 firebase = pyrebase.initialize_app(config)
-
 auth = firebase.auth()
 database = firebase.database()
+storage = firebase.storage()
+all_files = storage.list_files()
+# storage.child("images/foo.jpg").download("myface.jpg")
 
 # need to fix the part where the email is not valid or
 # he did not use a proper email
@@ -56,6 +59,7 @@ def memberLogin():
             user = auth.sign_in_with_email_and_password(username, password)
             print(successful)
             session["username"] = usernameTwo
+            session["userToken"] = user
             session["check"] = "User"
             return redirect(url_for("memberHome"))
         except:
@@ -82,6 +86,7 @@ def trainerLogin():
             user = auth.sign_in_with_email_and_password(email, password)
             print(successful)
             session["username"] = usernameTwo
+            session["userToken"] = user
             session["check"] = "Trainer"
             return redirect(url_for("trainerHome"))
         except:
@@ -115,20 +120,22 @@ def createNewMember():
         try:
             # getting the email and pw
             email = str(request.form["email"])
-            pw = str(request.form["userpassword"])
-            name = str(request.form["membername"])
-            number = str(request.form["number"])
-            gender = str(request.form["gender"])
-            trglvl = str(request.form["trglvl"])
-            trgtype = str(request.form["trgtype"])
-            print('test')
             print(email)
+            pw = str(request.form["userpassword"])
             print(pw)
+            name = str(request.form["membername"])
             print(name)
+            number = str(request.form["number"])
             print(number)
+            gender = str(request.form["gender"])
             print(gender)
+            trglvl = str(request.form["trglvl"])
             print(trglvl)
+            trgtype = str(request.form["trgtype"])
             print(trgtype)
+            pic = request.files["picture"]
+            print(pic)
+            print('test')            
             if len(pw) < 6:
                 flash("Password too short please try a new one")
                 return render_template("CreateNewMember.html")
@@ -141,6 +148,9 @@ def createNewMember():
                 data = {"Email": emailTwo, "Name": name, "Number": number,
                         "Gender": gender, "Training Level": trglvl, "Training Type": trgtype}
                 database.child("Users").child(emailTwo).set(data)
+                print("Successfully uploaded personal details")
+                path_on_cloud = "member_images/" + str(emailTwo) + ".jpg"
+                storage.child(path_on_cloud).put(pic)
                 print("data has been created")
         except:
             print("went to except")
@@ -156,16 +166,28 @@ def createNewTrainer():
     if request.method == "POST":
         try:
             email = str(request.form["email"])
+            print(email)
             pw = str(request.form["trainerpw"])
+            print(pw)
             name = request.form["trainername"]
+            print(name)
             number = request.form["contact"]
+            print(number)
             gender = request.form["gender"]
+            print(gender)
             description = request.form["description"]
+            print(description)
             location = request.form["location"]
+            print(location)
             experience = request.form["experience"]
+            print(experience)
             trgtype = request.form["trgtype"]
+            print(trgtype)
             # need to allow the users to click multiple values
             pricerange = request.form["pricerange"]
+            print(pricerange)
+            pic = request.files["picture"]
+            print(pic)
 
             if len(pw) < 6:
                 flash("Password too short please try a new one")
@@ -180,6 +202,8 @@ def createNewTrainer():
                         "Gender": gender, "Description": description, "Experience": experience, "Training Type": trgtype, "Price Range": pricerange}
                 # rmb to try to create a range slider for the price range
                 database.child("Trainers").child(emailTwo).set(data)
+                path_on_cloud = "trainer_images/" + str(emailTwo) + ".jpg"
+                storage.child(path_on_cloud).put(pic)
                 print("data has been created")
         except:
             print("went to except")
@@ -192,43 +216,55 @@ def createNewTrainer():
 # Details Pages
 
 
-@app.route('/memberDetails', methods=["GET"])
+@app.route('/memberDetails', methods=["POST","GET"])
 def memberDetails():
-    if "username" in session:
+    if "username" and "userToken" in session:
         username = str(session["username"])
+        user = session["userToken"]
         dict = database.child("Users").child(username).get()
         lst = []
+        usernameTwo = username.replace("_DOT_", ".")
         for value in dict.val().values():
-            lst.append(value)
+            if value == username:
+                lst.append(usernameTwo)
+            else:
+                lst.append(value)
         print(lst)
-    return render_template("MemberDetails.html", details=lst)
-
-
-@app.route('/trainerDetails', methods=["POST", "GET"])
-def trainerDetails():
-    if "username" in session:
-        print("user in session")
-        username = str(session["username"])
-        dict = database.child("Trainers").child(username).get()
-        lst = []
-        for value in dict.val().values():
-            lst.append(value)
-        print(lst)
-    return render_template("TrainerDetails.html", details=lst)
-
-# Update Pages
-
-
-@app.route("/memberDetailUpdate", methods=["POST", "GET"])
-def memberDetailUpdate():
-    if "username" in session:
-        username = str(session["username"])
-        new = request.form.get("new")
-        print(new)
-        print(type(new))
-        old = request.form.get("old")
-        print(old)
-        print(type(old))
+        all_files = storage.list_files()
+        for file in all_files:
+            usernameTwo = "member_images/" + username + ".jpg"
+            # only allow jpg files
+            print(usernameTwo)
+            if usernameTwo == file.name:
+                print("there is a file with the same name")
+                print(file.name)
+                url = storage.child(file.name).get_url(user["idToken"])
+                # need to deal w the case where the person has no profile image i think
+                break
+        oldEmail = request.form.get("oldEmail")
+        print(oldEmail)
+        newEmail = request.form.get("newEmail")
+        print(newEmail)
+        oldName = request.form.get("oldName")
+        print(oldName)
+        newName = request.form.get("newName")
+        print(newName)
+        oldNumber = request.form.get("oldNumber")
+        print(oldNumber)
+        newNumber = request.form.get("newNumber")
+        print(newNumber)
+        oldGender = request.form.get("oldGender")
+        print(oldGender)
+        newGender = request.form.get("newGender")
+        print(newGender)
+        oldTrgLvl = request.form.get("oldTrgLvl")
+        print(oldTrgLvl)
+        newTrgLvl = request.form.get("newTrgLvl")
+        print(newTrgLvl)
+        oldTrgType = request.form.get("oldTrgType")
+        print(oldTrgType)
+        newTrgType = request.form.get("newTrgType")
+        print(newTrgType)
         dict = database.child("Users").child(username).get().val()
         valLst = []
         keyLst = []
@@ -237,41 +273,175 @@ def memberDetailUpdate():
             keyLst.append(key)
         print(keyLst)
         for key, value in dict.items():
-            if old == value:
-                database.child("Users").child(username).update({key: new})
-                flash("Please refresh page to see changes")
-                break
-    return render_template("MemberDetailUpdate.html", valDetails=valLst, keyDetails=keyLst)
+            if oldEmail == value:
+                database.child("Users").child(username).update({key: newEmail})
+            elif oldName == value:
+                database.child("Users").child(username).update({key: newName})
+            elif oldNumber == value:
+                database.child("Users").child(username).update({key: newNumber})
+            elif oldGender == value:
+                if newGender:
+                    database.child("Users").child(username).update({key: newGender})
+            elif oldTrgLvl == value:
+                if newTrgLvl:
+                    database.child("Users").child(username).update({key: newTrgLvl})
+            elif oldTrgType == value:
+                if newTrgType:                
+                    database.child("Users").child(username).update({key: newTrgType})
+    return render_template("MemberDetails.html", details=lst, profileImage = url, valDetails=valLst, keyDetails=keyLst)
 
 
-@app.route("/trainerDetailUpdate", methods=["POST", "GET"])
-def trainerDetailUpdate():
-    if "username" in session:
+@app.route('/trainerDetails', methods=["POST", "GET"])
+def trainerDetails():
+    if "username" and "userToken" in session:
         username = str(session["username"])
-        new = request.form.get("new")
-        print(new)
-        print(type(new))
-        old = request.form.get("old")
-        print(old)
-        print(type(old))
+        user = session["userToken"]
+        dict = database.child("Trainers").child(username).get()
+        lst = []
+        usernameTwo = username.replace("_DOT_", ".")
+        for value in dict.val().values():
+            if value == username:
+                lst.append(usernameTwo)
+            else:
+                lst.append(value)
+        print(lst)
+        all_files = storage.list_files()
+        for file in all_files:
+            usernameTwo = "trainer_images/" + username + ".jpg"
+            # only allow jpg files
+            print(usernameTwo)
+            if usernameTwo == file.name:
+                print("there is a file with the same name")
+                print(file.name)
+                url = storage.child(file.name).get_url(user["idToken"])
+                # need to deal w the case where the person has no profile image i think
+                break
+
+        oldEmail = request.form.get("oldEmail")
+        print(oldEmail)
+        newEmail = request.form.get("newEmail")
+        print(newEmail)
+        oldName = request.form.get("oldName")
+        print(oldName)
+        newName = request.form.get("newName")
+        print(newName)
+        oldNumber = request.form.get("oldNumber")
+        print(oldNumber)
+        newNumber = request.form.get("newNumber")
+        print(newNumber)
+        oldDescrip = request.form.get("oldDescrip")
+        print(oldDescrip)
+        newDescrip = request.form.get("newDescrip")
+        print(newDescrip)
+        oldExp = request.form.get("oldExp")
+        print(oldExp)
+        newExp = request.form.get("newExp")
+        print(newExp)
+        oldLocation = request.form.get("oldLocation")
+        print(oldLocation)
+        newLocation = request.form.get("newLocation")
+        print(newLocation)
+        oldGender = request.form.get("oldGender")
+        print(oldGender)
+        newGender = request.form.get("newGender")
+        print(newGender)
+        oldPriceRange = request.form.get("oldPriceRange")
+        print(oldPriceRange)
+        newPriceRange = request.form.get("newPriceRange")
+        print(newPriceRange)
+        oldTrgType = request.form.get("oldTrgType")
+        print(oldTrgType)
+        newTrgType = request.form.get("newTrgType")
+        print(newTrgType)
         dict = database.child("Trainers").child(username).get().val()
         valLst = []
         keyLst = []
         for key, value in dict.items():
             valLst.append(value)
             keyLst.append(key)
+        print(keyLst)
         for key, value in dict.items():
-            if old == value:
-                database.child("Trainers").child(username).update({key: new})
-                flash("Please refresh page to see changes")
-                break
-    return render_template("TrainerDetailUpdate.html", valDetails=valLst, keyDetails=keyLst)
+            if oldEmail == value:
+                database.child("Trainers").child(username).update({key: newEmail})
+            elif oldName == value:
+                database.child("Trainers").child(username).update({key: newName})
+            elif oldNumber == value:
+                database.child("Trainers").child(username).update({key: newNumber})
+            elif oldDescrip == value:
+                database.child("Trainers").child(username).update({key: newDescrip})
+            elif oldLocation == value:
+                database.child("Trainers").child(username).update({key: newLocation})
+            elif oldExp == value:
+                if newExp:
+                    database.child("Trainers").child(username).update({key: newExp})
+            elif oldGender == value:
+                if newGender:
+                    database.child("Trainers").child(username).update({key: newGender})
+            elif oldPriceRange == value:
+                if newPriceRange:
+                    database.child("Trainers").child(username).update({key: newPriceRange})
+            elif oldTrgType == value:
+                if newTrgType:                
+                    database.child("Trainers").child(username).update({key: newTrgType})
+    return render_template("TrainerDetails.html", details=lst, profileImage = url, valDetails=valLst, keyDetails=keyLst)
+
+# Update Pages
+
+
+# @app.route("/memberDetailUpdate", methods=["POST", "GET"])
+# def memberDetailUpdate():
+#     if "username" in session:
+#         username = str(session["username"])
+#         new = request.form.get("new")
+#         print(new)
+#         print(type(new))
+#         old = request.form.get("old")
+#         print(old)
+#         print(type(old))
+#         dict = database.child("Users").child(username).get().val()
+#         valLst = []
+#         keyLst = []
+#         for key, value in dict.items():
+#             valLst.append(value)
+#             keyLst.append(key)
+#         print(keyLst)
+#         for key, value in dict.items():
+#             if old == value:
+#                 database.child("Users").child(username).update({key: new})
+#                 flash("Please refresh page to see changes")
+#                 break
+#     return render_template("MemberDetailUpdate.html", valDetails=valLst, keyDetails=keyLst)
+
+
+# @app.route("/trainerDetailUpdate", methods=["POST", "GET"])
+# def trainerDetailUpdate():
+#     if "username" in session:
+#         username = str(session["username"])
+#         new = request.form.get("new")
+#         print(new)
+#         print(type(new))
+#         old = request.form.get("old")
+#         print(old)
+#         print(type(old))
+#         dict = database.child("Trainers").child(username).get().val()
+#         valLst = []
+#         keyLst = []
+#         for key, value in dict.items():
+#             valLst.append(value)
+#             keyLst.append(key)
+#         for key, value in dict.items():
+#             if old == value:
+#                 database.child("Trainers").child(username).update({key: new})
+#                 flash("Please refresh page to see changes")
+#                 break
+#     return render_template("TrainerDetailUpdate.html", valDetails=valLst, keyDetails=keyLst)
 
 
 @app.route("/logout")
 def logout():
     flash(f"You have been logged out")
     session.pop("username", None)
+    session.pop("userToken", None)
     session.pop("check", None)
     return redirect(url_for("homePage"))
 
