@@ -1,11 +1,197 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title> Member Details Page </title>
-    <link rel="stylesheet" type="text/css" href="../static/css/memberDetails.css" />
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Account Details </title>
+    <link rel="stylesheet" type="text/css" href="../static/css/memberDetails.css"/>
 </head>
+<body>
+    <div class = "banner">
+        <div class = "navbar">
+            <img src = "../static/img/trainers_logo_two.png" class = "logo">
+            <ul>
+                <li><a href = "/memberHome">Home</a></li>
+                <li><a href = "/memberDetailUpdate">Update Account</a></li>
+                <li><a href = "/">Logout</a></li>
+            </ul>
+        </div>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="wrapper">
+        <h2>Member Details</h2>
+        <div class="profile-card">
+            <div class="image-container">
+                <img src="{{ profileImage }}" class ="picture" style="width: 300px; height: 300px; -webkit-border-radius: 60px; -webkit-background-clip: padding-box;-moz-border-radius: 60px;-moz-background-clip: padding;
+                border-radius: 10px; background-clip: padding-box; margin: 7px 0 0 5px; float: center; background-size: cover; background-position: center center;"> 
+            </div>
+        </div>
+        <form action="/memberDetails" method="POST" enctype="multipart/form-data">
+            <div class="inputBox">
+                <input type="hidden" value="{{valDetails[0]}}" name="oldEmail">
+                <input type="text" value="{{valDetails[0]}}" name="newEmail">
+            </div>
+            <div class="inputBox">
+                <input type="hidden" value="{{valDetails[2]}}" name="oldName">
+                <input type="text" value="{{valDetails[2]}}" name="newName">
+            </div>
+            <div class="inputBox">
+                <input type="hidden" value="{{valDetails[3]}}" name="oldNumber">
+                <input type="text" value="{{valDetails[3]}}" name="newNumber">
+            </div>
+            <div class="inputBox">
+                <label for="gender">Gender</label> <br>
+                <input type="hidden" value="{{valDetails[1]}}" name="oldGender">
+                <select id="newGender" name = "newGender">
+                    <option value="" disabled selected hidden>{{valDetails[1]}}</option>
+                    <option name="newGender" value="Male">Male</option>
+                    <option name="newGender" value="Female">Female</option>              
+                </select>
+            </div> 
+            <br>
+            <div class="inputBox">
+                <label for="trglvl">Training Level</label> <br>
+                <input type="hidden" value="{{valDetails[4]}}" name="oldTrgLvl">
+                <select id="newTrgLvl" name = "newTrgLvl" value="{{valDetails[4]}}">
+                    <option value="" disabled selected hidden>{{valDetails[4]}}</option>
+                    <option name="newTrgLvl" value="Beginner">Beginner</option> 
+                    <option name="newTrgLvl" value="Intermediate" >Intermediate</option>
+                    <option name="newTrgLvl" value="Advance">Advance</option>
+                </select>
+            </div>
+            <br>
+            <div class="inputBox">
+                <label for="trgtype">Training Type</label> <br>
+                <input type="hidden" value="{{valDetails[5]}}" name="oldTrgType">
+                <select id="newTrgType" name = "newTrgType">
+                    <option value="" disabled selected hidden>{{valDetails[5]}}</option>
+                    <option name="newTrgType" value="Kettlebell">Kettlebell</option>
+                    <option name="newTrgType" value="Body weight" >Body weight</option>
+                    <option name="newTrgType" value="Barbell">Barbell</option>
+                </select>
+            </div>
+            <br>
+            <div class="inputBox">
+                <label for="picture">Photo</label>
+                <input type="file" accept = "image/*" id="picture" name="picture">
+            </div>
+            <div>
+                <button type="submit" class="btn" href="/memberDetails">Update</button>
+        </form>
+        </div>
+    </div>
+    {%with messages = get_flashed_messages()%}
+        {%if messages %}
+            {% for msg in messages%}
+                <b style="color:red; font-size:15px">{{msg}}</b>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</body>
+</html>
+<!-- <html>
+<head>
+    <title> Create New Member </title>
+    <link rel="stylesheet" type="text/css" href="../static/css/createNewUser.css"/>
+</head>
+<body>
+<header>
+    <div class = "banner">
+    <div class = "navbar">
+        <img src = "../static/img/trainers_logo_two.png" class = "logo">
+        <ul>
+            <li><a href = "#">Home</a></li>
+            <li><a href = "#">About Us</a></li>
+        </ul>
+    </div>
+    <center>
+        <br>
+        <br>
+        <br>
+        <h1 style="color:white; font-size:50px">CREATE NEW MEMBER</h1>
+        <br>
+        <p1 style="color:white; font-size:30px">Please enter the respective details</p1>
+        <form action = "#" method = "post" enctype="multipart/form-data">
+        <br>
+        <br>
+        <br>
+        <div class="form">
+            <div class="col-md-12 form-group">
+                <label for="email" style = "color: white; font-size:20px">Email:</label> <br>
+                <input type="email" class="form-control" id="email" placeholder="name@example.com" name="email" style="margin: 20px 0; height:30px; font-size:14pt; ">
+            </div>
+            <div class="col-md-12 form-group">
+                <label for="pwd" style = "color: white; font-size:20px">Password:</label> <br>
+                <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="userpassword" style="margin: 20px 0; height:30px; font-size:14pt;" >
+            </div>
+            <div class="col-md-12 form-group">
+                <label for="name" style = "color: white; font-size:20px">Name:</label> <br>
+                <input type="text" class="form-control" id="name" placeholder="Enter Your Name" name="membername" style="margin: 20px 0; height:30px; font-size:14pt;">
+            </div>
+            <div class="col-md-12 form-group">
+                <label for="name" style = "color: white; font-size:20px">Contact:</label> <br>
+                <input type="text" class="form-control" id="contact" placeholder="9632 XXXX" name="number" style="margin: 20px 0; height:30px; font-size:14pt;">
+            </div>
+            <br>
+            <div class="col-md-12 form-group">
+                <label for="gender" style = "color: white; font-size:20px">Gender:</label> <br>
+                <select class="form-control" id="gender" name = "gender">
+                  <option name="gender" value="Male" style="margin: 20px 0; height:30px; font-size:14pt;">Male</option>
+                  <option name="gender" value="Female" style="margin: 20px 0; height:30px; font-size:14pt;">Female</option>
+                </select>
+            </div>
+            <br>
+            <br>
+            <div class="col-md-12 form-group">
+                <label for="gender" style = "color: white; font-size:20px">Level of Training:</label> <br>
+                <select class="form-control" id="trglvl" name = "trglvl">
+                  <option name="trglvl" value="Beginner" style="margin: 20px 0; height:30px; font-size:14pt;">Beginner</option>
+                  <option name="trglvl" value="Intermediate" style="margin: 20px 0; height:30px; font-size:14pt;">Intermediate</option>
+                  <option name="trglvl" value="Advance" style="margin: 20px 0; height:30px; font-size:14pt;">Advance</option>
+                </select>
+            </div>
+            <br>
+            <br>
+            <div class="col-md-12 form-group">
+                <label for="gender" style = "color: white; font-size:20px">Type of Training:</label> <br>
+                <select class="form-control" id="trgtype" name = "trgtype">
+                  <option name="trgtype" value="Kettlebell" style="margin: 20px 0; height:30px; font-size:14pt;">Kettlebell</option>
+                  <option name="trgtype" value="Body weight" style="margin: 20px 0; height:30px; font-size:14pt;">Body weight</option>
+                  <option name="trgtype" value="Barbell" style="margin: 20px 0; height:30px; font-size:14pt;">Barbell</option>
+                </select>
+            </div>
+            <br>
+            <div class="col-md-12 form-group">
+                <label for="picture" style = "margin: 20px 0; color: white; font-size:20px">Profile Picture:</label> <br>
+                <input type="file" class="form-control-file" id="picture" name="picture" style="margin: 20px 0; height:30px; font-size:14pt; color: white;">
+            </div>
+            <div>
+                <input type="submit" value="Submit" class="btn btn-block btn-primary" >
+            </div>
+        </div>
+        </form>
+    </center>
+    {%with messages = get_flashed_messages()%}
+        {%if messages %}
+            {% for msg in messages%}
+                <b style="color:red; font-size:15px">{{msg}}</b>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</body>
+</html> -->
+<!-- 
+<html>
+    <head>
+    <title> Member Details Page </title>
+    <link rel="stylesheet" type="text/css" href="../static/css/createNewUser.css" />
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+    </head>
 <body>
     <div class = "banner">
         <div class = "navbar">
@@ -14,59 +200,38 @@
                 <li><a href = "http://127.0.0.1:5000/memberHome">Home</a></li>
                 <li><a href = "http://127.0.0.1:5000/memberDetailUpdate">Update Account</a></li>
                 <li><a href = "http://127.0.0.1:5000/">Logout</a></li>
-            </ul>
+          </ul>
         </div>
         <center>
-            <style> 
-                table, th, td {
-                    border: 5px solid white;
-                }
-            </style>
-            <form method="post">
-                <div class="simple-search-container">
-                    <h1 style="color:white; font-size:70px"> Member Details </h1>
-                    <div class="row">
-                    </div>
-                    <div class="row">
-                    </div>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <h1 style="color:white; font-size:70px"> Member Details </h1>
+            <br>
+            <br>
+            <div class="profile-card">
+                <div class="image-container">
+                    <img src="{{ profileImage }}" class ="picture" style="width: 300px; height: 300px; -webkit-border-radius: 60px; -webkit-background-clip: padding-box;-moz-border-radius: 60px;-moz-background-clip: padding;
+                    border-radius: 10px; background-clip: padding-box; margin: 7px 0 0 5px; float: center; background-size: cover; background-position: center center;"> 
                 </div>
-            
-            </form>
-            <div style ="height:200px;overflow:auto;">
-            <table bordercolor="#f5f5dc"; style="width:100%"> 
-                <tr>
-                    <th style = "color: white; font-size:40px">Name</th>
-                    <th style = "color: white; font-size:40px">Email</th>
-                    <th style = "color: white; font-size:40px">Number</th>
-                    <th style = "color: white; font-size:40px">Gender</th>
-                    <th style = "color: white; font-size:40px">Training Level</th>
-                    <th style = "color: white; font-size:40px">Training Type</th>
-                </tr>
-                <tr>
-                    <td style = "color: white; font-size:30px">
-                        <b>{{details[2]}}</b>
-                    </td>
-                    <td style = "color: white; font-size:30px">
-                        <b>{{details[0]}}</b>
-                    </td>
-                    <td style = "color: white; font-size:30px">
-                        <b>{{details[3]}}</b>
-                    </td>
-                     </td>
-                    <td style = "color: white; font-size:30px">
-                        <b>{{details[1]}}</b>
-                    </td>
-                     </td>
-                    <td style = "color: white; font-size:30px">
-                        <b>{{details[4]}}</b>
-                    </td>
-                     </td>
-                    <td style = "color: white; font-size:30px">
-                        <b>{{details[5]}}</b>
-                    </td>
-                </tr>
+
+            </div>
+            <div class = "main-container">
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <p style = "color: white; font-size:30px"><i class="fas fa-user"></i> {{details[2]}} </p> <br>
+                <p style = "color: white; font-size:30px"><i class="fas fa-envelope"></i> {{details[0]}} </p> <br>
+                <p style = "color: white; font-size:30px"><i class="fas fa-phone-alt"></i> {{details[3]}} </p> <br>
+                <p style = "color: white; font-size:30px"><i class="fas fa-venus-mars"></i> {{details[1]}} </p> <br>
+                <p style = "color: white; font-size:30px"><i class="fas fa-layer-group"></i> {{details[4]}} </p> <br>
+                <p style = "color: white; font-size:30px"><i class="fas fa-dumbbell"></i> {{details[5]}} </p>
+
             </div>
         </center>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
 </body>
-</html>
+</html>  -->

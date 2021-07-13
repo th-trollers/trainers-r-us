@@ -1,116 +1,212 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title> Create Trainer </title>
-    <link rel="stylesheet" type="text/css" href="../static/css/memberDetails.css" />
-    </head>
-    <body>
-        <div class = "banner">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Create New Trainer </title>
+    <link rel="stylesheet" type="text/css" href="../static/css/createNewUser.css"/>
+</head>
+<body>
+    <div class = "banner">
         <div class = "navbar">
             <img src = "../static/img/trainers_logo_two.png" class = "logo">
             <ul>
-                <li><a href = "http://127.0.0.1:5000/">Home</a></li>
-                <li><a href = "http://127.0.0.1:5000/trainerLogin">Login Page</a></li>
+                <li><a href = "/">Home</a></li>
+                <li><a href = "/trainerLogin">Login Page</a></li>
             </ul>
         </div>
-        <center>
-            <h1 style="color:white; font-size:60px">TRAINER DETAILS</h1>
-            <p1 style="color:white; font-size:40px">Please enter the details down below </p1>
-            <form action = "#" method = "post">
-            {%with messages = get_flashed_messages()%}
-            {%if messages %}
-                {% for msg in messages%}
-                    <b style="color:red; font-size:20px">{{msg}}</b>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="wrapper">
+        <h2>Create New Trainer</h2>
+        <form action="#" method="POST" enctype="multipart/form-data">
+            <div class="inputBox">
+                <input type="text" id="email" name="email" placeholder="Email Address">
+            </div>
+            <div class="inputBox">
+                <input type="text" id="pwd" name="trainerpw" placeholder="Password">
+            </div>
+            <div class="inputBox">
+                <input type="text" id="name" name="trainername" placeholder="Full Name">
+            </div>
+            <div class="inputBox">
+                <input type="text" id="contact" name="contact" placeholder="Contact Number">
+            </div>
+            <div class="inputBox">
+                <input type="text" id="location" name="location" placeholder="Location">
+            </div>
+            <div class="inputBox">
+                <input type="text" id="description" name="description" placeholder="Short Description">
+            </div>
+            <div class="inputBox">
+                <label for="gender">Gender</label> <br>
+                <select id="gender" name = "gender">
+                    <option value="" disabled selected hidden>Choose your gender</option>
+                    <option name="gender" value="Male">Male</option>
+                    <option name="gender" value="Female">Female</option>
+                </select>
+            </div> 
             <br>
+            <div class="inputBox">
+                <label for="trgyears">Years of Training</label> <br>
+                <select id="experience" name = "experience">
+                    <option value="" disabled selected hidden>Choose your years of training</option>
+                    <option name="experience" value="0 to 3">0 - 3 years</option>
+                    <option name="experience" value="4 to 10"> 4 - 10 years</option>
+                    <option name="experience" value="More than 10">More than 10 years</option>
+                </select>
+            </div>
             <br>
+            <div class="inputBox">
+                <label for="trgtype">Training Type</label> <br>
+                <select id="trgtype" name = "trgtype">
+                    <option value="" disabled selected hidden>Choose your training type</option>
+                    <option name="trgtype" value="Kettlebell">Kettlebell</option>
+                    <option name="trgtype" value="Body weight" >Body weight</option>
+                    <option name="trgtype" value="Barbell">Barbell</option>
+                </select>
+            </div>
             <br>
+            <div class="inputBox">
+                <label for="pricerange">Price Range:</label> <br>
+                <select id="pricerange" name = "pricerange">
+                    <option value="" disabled selected hidden>Choose your price range</option>
+                    <option name="pricerange" value="$0 to $50">$0 - $50 per hour</option>
+                    <option name="pricerange" value="$51 to $100">$51 - $100 per hour</option>
+                    <option name="pricerange" value="More than $101"> More than $101 per hour</option>
+                </select>
+            </div>
             <br>
-                <table>
-                <tr>
-                        <td style = "color: white; font-size:30px">Email: </td>
-                        <td>
-                        <input type = "text" name = "email">
-                        </td>
-                    </tr>
-
-                     <tr>
-                        <td style = "color: white; font-size:30px"> Password: </td>
-                        <td>
-                            <input type="password" name="trainerpw">
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td style = "color: white; font-size:30px">Name: </td>
-                        <td>
-                        <input type = "text" name = "trainername">
-                        </td>
-                    </tr>
-                    
-                    <tr>
-                        <td style = "color: white; font-size:30px">Contact Number: </td>
-                        <td>
-                        <input type = "text" name = "contact">
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td style = "color: white; font-size:30px">Gender: (M/F) </td>
-                        <td style = "color: white; font-size:20px">
-                        <input type="checkbox" name="gender" value="Male">
-                        <label for="Male"> Male</label><br>
-                        <input type="checkbox" name="gender" value="Female">
-                        <label for="Female"> Female</label><br>
-                    </tr>
-
-                    <tr>
-                        <td style = "color: white; font-size:30px">Years of Experience: </td>
-                        <td>
-                        <input type = "text" name = "experience">
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td style = "color: white; font-size:30px">Short Description: </td>
-                        <td>
-                        <input type = "text" name = "description">
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td style = "color: white; font-size:30px">Location: </td>
-                        <td>
-                        <input type = "text" name = "location">
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td style = "color: white; font-size:30px">Type of Training: </td>
-                        <td style = "color: white; font-size:20px">
-                        <input type="checkbox" name="trgtype" value="Kettlebell">
-                        <label for="Kettlebell"> Kettlebell</label><br>
-                        <input type="checkbox" name="trgtype" value="Body weight">
-                        <label for="Body Weight"> Body Weight</label><br>
-                        <input type="checkbox" name="trgtype" value="Barbell" checked>
-                        <label for="Barbell"> Barbell </label><br><br>
-                    </tr>
-
-                    <tr>
-                        <td style = "color: white; font-size:30px">Price Range: </td>
-                        <td>
-                        <input type = "text" name = "pricerange">
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            <input type= "submit" name= "submit" value = "Create New User">
-                        </td>
-                    </tr>
-                </table>
-            </form>
-        </center>
-    </body>
+            <div class="inputBox">
+                <label for="picture">Photo</label>
+                <input type="file" accept = "image/*" id="picture" name="picture">
+            </div>
+            <div>
+                <button type="submit" class="btn">Create New User</button>
+        </form>
+        </div>
+    </div>
+    {%with messages = get_flashed_messages()%}
+        {%if messages %}
+            {% for msg in messages%}
+                <b style="color:red; font-size:15px">{{msg}}</b>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</body>
 </html>
+<!-- <html>
+<head>
+    <title> Create New Trainer </title>
+    <link rel="stylesheet" type="text/css" href="../static/css/createNewUser.css"/>
+</head>
+<body>
+<header>
+    <div class = "banner">
+    <div class = "navbar">
+        <img src = "../static/img/trainers_logo_two.png" class = "logo">
+        <ul>
+            <li><a href = "http://127.0.0.1:5000/">Home</a></li>
+            <li><a href = "http://127.0.0.1:5000/trainerLogin">Login Page</a></li>
+        </ul>
+    </div>
+    <center>
+        <br>
+        <br>
+        <br>
+        <h1 style="color:white; font-size:50px">CREATE NEW TRAINER</h1>
+        <br>
+        <p1 style="color:white; font-size:30px">Please enter the respective details</p1>
+        <form action = "#" method = "post" enctype="multipart/form-data">
+        <br>
+        <br>
+        <br>
+        <div class="form">
+            <div class="form-group">
+                <label for="email" style = "color: white; font-size:20px">Email:</label> <br>
+                <input type="email" class="form-control" id="email" placeholder="name@example.com" name="email" style="margin: 20px 0; height:30px; font-size:14pt; ">
+            </div>
+            <div class="form-group">
+                <label for="pwd" style = "color: white; font-size:20px">Password:</label> <br>
+                <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="trainerpw" style="margin: 20px 0; height:30px; font-size:14pt;" >
+            </div>
+            <div class="form-group">
+                <label for="name" style = "color: white; font-size:20px">Name:</label> <br>
+                <input type="text" class="form-control" id="name" placeholder="Enter Your Name" name="trainername" style="margin: 20px 0; height:30px; font-size:14pt;">
+            </div>
+            <div class="form-group">
+                <label for="name" style = "color: white; font-size:20px">Contact:</label> <br>
+                <input type="text" class="form-control" id="contact" placeholder="9632 XXXX" name="contact" style="margin: 20px 0; height:30px; font-size:14pt;">
+            </div>
+            <div class="form-group">
+                <label for="name" style = "color: white; font-size:20px">Location:</label> <br>
+                <input type="text" class="form-control" id="location" placeholder="Serangoon" name="location" style="margin: 20px 0; height:30px; font-size:14pt;">
+            </div>
+            <div class="form-group">
+                <label for="name" style = "color: white; font-size:20px">Short Description:</label> <br>
+                <input type="text" class="form-control" id="description" placeholder="Short description" name="description" style="margin: 20px 0; height:30px; font-size:14pt;">
+            </div>
+            <br>
+            <div class="form-group">
+                <label for="gender" style = "color: white; font-size:20px">Gender:</label> <br>
+                <select class="form-control" id="gender" name = "gender">
+                  <option name="gender" value="Male" style="margin: 20px 0; height:30px; font-size:14pt;">Male</option>
+                  <option name="gender" value="Female" style="margin: 20px 0; height:30px; font-size:14pt;">Female</option>
+                </select>
+            </div>
+            <br>
+            <br>
+            <div class="form-group">
+                <label for="gender" style = "color: white; font-size:20px">Years of Training</label> <br>
+                <select class="form-control" id="experience" name = "experience">
+                  <option name="experience" value="0 to 3" style="margin: 20px 0; height:30px; font-size:14pt;">0 - 3 years</option>
+                  <option name="experience" value="4 to 10" style="margin: 20px 0; height:30px; font-size:14pt;"> 4 - 10 years</option>
+                  <option name="experience" value="More than 10" style="margin: 20px 0; height:30px; font-size:14pt;">More than 10 years</option>
+                </select>
+            </div>
+            <br>
+            <br>
+            <div class="form-group">
+                <label for="gender" style = "color: white; font-size:20px">Type of Training:</label> <br>
+                <select class="form-control" id="trgtype" name = "trgtype">
+                  <option name="trgtype" value="Kettlebell" style="margin: 20px 0; height:30px; font-size:14pt;">Kettlebell</option>
+                  <option name="trgtype" value="Body weight" style="margin: 20px 0; height:30px; font-size:14pt;">Body weight</option>
+                  <option name="trgtype" value="Barbell" style="margin: 20px 0; height:30px; font-size:14pt;">Barbell</option>
+                </select>
+            </div>
+            <br>
+            <br>
+            <div class="form-group">
+                <label for="gender" style = "color: white; font-size:20px">Price Range:</label> <br>
+                <select class="form-control" id="pricerange" name = "pricerange">
+                  <option name="pricerange" value="$0 to $50" style="margin: 20px 0; height:30px; font-size:14pt;">$0 - $50 per hour</option>
+                  <option name="pricerange" value="$51 to $100" style="margin: 20px 0; height:30px; font-size:14pt;">$51 - $100 per hour</option>
+                  <option name="pricerange" value="More than $101" style="margin: 20px 0; height:30px; font-size:14pt;"> More than $101 per hour</option>
+                </select>
+            </div>
+            <br>
+            <div class="form-group">
+                <label for="picture" style = "margin: 20px 0; color: white; font-size:20px">Profile Picture:</label> <br>
+                <input type="file" class="form-control-file" id="picture" name="picture" style="margin: 20px 0; height:30px; font-size:14pt; color: white;">
+            </div>
+            <div>
+                <input class="btn btn-primary" type="submit" value="Submit">
+            </div>
+        </div>
+
+        </form>
+    </center>
+    {%with messages = get_flashed_messages()%}
+        {%if messages %}
+            {% for msg in messages%}
+                <b style="color:red; font-size:15px">{{msg}}</b>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</body>
+</html> -->

@@ -1,101 +1,177 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title> Create Member </title>
-    <link rel="stylesheet" type="text/css" href="../static/css/memberDetails.css" />
-    </head>
-    <body>
-        <div class = "banner">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Create New Member </title>
+    <link rel="stylesheet" type="text/css" href="../static/css/createNewUser.css"/>
+</head>
+<body>
+    <div class = "banner">
         <div class = "navbar">
             <img src = "../static/img/trainers_logo_two.png" class = "logo">
             <ul>
-                <li><a href = "http://127.0.0.1:5000/">Home</a></li>
-                <li><a href = "http://127.0.0.1:5000/memberLogin">Login Page</a></li>
+                <li><a href = "/">Home</a></li>
+                <li><a href = "/memberLogin">Login Page</a></li>
             </ul>
         </div>
-        <center>
-            <h1 style="color:white; font-size:60px">CREATE NEW MEMBER</h1>
-            <p1 style="color:white; font-size:40px">Please enter the respective details</p1>
-            <form action = "#" method = "post">
-            {%with messages = get_flashed_messages()%}
-            {%if messages %}
-                {% for msg in messages%}
-                    <b style="color:red; font-size:20px">{{msg}}</b>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="wrapper">
+        <h2>Create New Member</h2>
+        <form action="#" method="POST" enctype="multipart/form-data">
+            <div class="inputBox">
+                <input type="text" id="email" name="email" placeholder="Email Address">
+            </div>
+            <div class="inputBox">
+                <input type="text" id="pwd" name="userpassword" placeholder="Password">
+            </div>
+            <div class="inputBox">
+                <input type="text" id="name" name="membername" placeholder="Full Name">
+            </div>
+            <div class="inputBox">
+                <input type="text" id="contact" name="number" placeholder="Contact Number">
+            </div>
+            <div class="inputBox">
+                <label for="gender">Gender</label> <br>
+                <select id="gender" name = "gender">
+                    <option value="" disabled selected hidden>Choose your gender</option>
+                    <option name="gender" value="Male">Male</option>
+                    <option name="gender" value="Female">Female</option>
+                </select>
+            </div> 
             <br>
+            <div class="inputBox">
+                <label for="trglvl">Training Level</label> <br>
+                <select id="trglvl" name = "trglvl">
+                    <option value="" disabled selected hidden>Choose your training level</option>
+                    <option name="trglvl" value="Beginner">Beginner</option>
+                    <option name="trglvl" value="Intermediate" >Intermediate</option>
+                    <option name="trglvl" value="Advance">Advance</option>
+                </select>
+            </div>
             <br>
+            <div class="inputBox">
+                <label for="trgtype">Training Type</label> <br>
+                <select id="trgtype" name = "trgtype">
+                    <option value="" disabled selected hidden>Choose your training type</option>
+                    <option name="trgtype" value="Kettlebell">Kettlebell</option>
+                    <option name="trgtype" value="Body weight" >Body weight</option>
+                    <option name="trgtype" value="Barbell">Barbell</option>
+                </select>
+            </div>
             <br>
-            <br>
-                <table>
-                    <tr>
-                        <td style = "color: white; font-size:30px">Email: </td>
-                        <td>
-                        <input type = "text" name = "email">
-                        </td>
-                    </tr>
-                    
-
-                    <tr>
-                        <td style = "color: white; font-size:30px"> Password: </td>
-                        <td>
-                            <input type="password" name="userpassword">
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td style = "color: white; font-size:30px">Name: </td>
-                        <td>
-                        <input type = "text" name = "membername">
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td style = "color: white; font-size:30px">Gender: </td>
-                        <td style = "color: white; font-size:20px">
-                        <input type="checkbox" name="gender" value="Male">
-                        <label for="Male"> Male</label><br>
-                        <input type="checkbox" name="gender" value="Female">
-                        <label for="Female"> Female</label><br>
-                    </tr>
-
-                    <tr>
-                        <td style = "color: white; font-size:30px">Number: </td>
-                        <td>
-                        <input type = "text" name = "number">
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td style = "color: white; font-size:30px">Level of Training: </td>
-                        <td style = "color: white; font-size:20px">
-                        <input type="checkbox" name="trglvl" value="Beginner">
-                        <label for="Beginner"> Beginner</label><br>
-                        <input type="checkbox" name="trglvl" value="Intermediate">
-                        <label for="Intermediate"> Intermediate</label><br>
-                        <input type="checkbox" name="trglvl" value="Advance" checked>
-                        <label for="Advance"> Advance </label><br><br>
-                    </tr>
-
-                    <tr>
-                        <td style = "color: white; font-size:30px">Type of Training: </td>
-                        <td style = "color: white; font-size:20px">
-                        <input type="checkbox" name="trgtype" value="Kettlebell">
-                        <label for="Kettlebell"> Kettlebell</label><br>
-                        <input type="checkbox" name="trgtype" value="Body weight">
-                        <label for="Body Weight"> Body Weight</label><br>
-                        <input type="checkbox" name="trgtype" value="Barbell" checked>
-                        <label for="Barbell"> Barbell </label><br><br>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            <input type= "submit" name= "submit" value = "Create New User">
-                        </td>
-                    </tr>
-                    
-                </table>
-            </form>
-        </center>
-    </body>
+            <div class="inputBox">
+                <label for="picture">Photo</label>
+                <input type="file" accept = "image/*" id="picture" name="picture">
+            </div>
+            <div>
+                <button type="submit" class="btn">Create New User</button>
+        </form>
+        </div>
+    </div>
+    {%with messages = get_flashed_messages()%}
+        {%if messages %}
+            {% for msg in messages%}
+                <b style="color:red; font-size:15px">{{msg}}</b>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</body>
 </html>
+<!-- <html>
+<head>
+    <title> Create New Member </title>
+    <link rel="stylesheet" type="text/css" href="../static/css/createNewUser.css"/>
+</head>
+<body>
+<header>
+    <div class = "banner">
+    <div class = "navbar">
+        <img src = "../static/img/trainers_logo_two.png" class = "logo">
+        <ul>
+            <li><a href = "#">Home</a></li>
+            <li><a href = "#">About Us</a></li>
+        </ul>
+    </div>
+    <center>
+        <br>
+        <br>
+        <br>
+        <h1 style="color:white; font-size:50px">CREATE NEW MEMBER</h1>
+        <br>
+        <p1 style="color:white; font-size:30px">Please enter the respective details</p1>
+        <form action = "#" method = "post" enctype="multipart/form-data">
+        <br>
+        <br>
+        <br>
+        <div class="form">
+            <div class="col-md-12 form-group">
+                <label for="email" style = "color: white; font-size:20px">Email:</label> <br>
+                <input type="email" class="form-control" id="email" placeholder="name@example.com" name="email" style="margin: 20px 0; height:30px; font-size:14pt; ">
+            </div>
+            <div class="col-md-12 form-group">
+                <label for="pwd" style = "color: white; font-size:20px">Password:</label> <br>
+                <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="userpassword" style="margin: 20px 0; height:30px; font-size:14pt;" >
+            </div>
+            <div class="col-md-12 form-group">
+                <label for="name" style = "color: white; font-size:20px">Name:</label> <br>
+                <input type="text" class="form-control" id="name" placeholder="Enter Your Name" name="membername" style="margin: 20px 0; height:30px; font-size:14pt;">
+            </div>
+            <div class="col-md-12 form-group">
+                <label for="name" style = "color: white; font-size:20px">Contact:</label> <br>
+                <input type="text" class="form-control" id="contact" placeholder="9632 XXXX" name="number" style="margin: 20px 0; height:30px; font-size:14pt;">
+            </div>
+            <br>
+            <div class="col-md-12 form-group">
+                <label for="gender" style = "color: white; font-size:20px">Gender:</label> <br>
+                <select class="form-control" id="gender" name = "gender">
+                  <option name="gender" value="Male" style="margin: 20px 0; height:30px; font-size:14pt;">Male</option>
+                  <option name="gender" value="Female" style="margin: 20px 0; height:30px; font-size:14pt;">Female</option>
+                </select>
+            </div>
+            <br>
+            <br>
+            <div class="col-md-12 form-group">
+                <label for="gender" style = "color: white; font-size:20px">Level of Training:</label> <br>
+                <select class="form-control" id="trglvl" name = "trglvl">
+                  <option name="trglvl" value="Beginner" style="margin: 20px 0; height:30px; font-size:14pt;">Beginner</option>
+                  <option name="trglvl" value="Intermediate" style="margin: 20px 0; height:30px; font-size:14pt;">Intermediate</option>
+                  <option name="trglvl" value="Advance" style="margin: 20px 0; height:30px; font-size:14pt;">Advance</option>
+                </select>
+            </div>
+            <br>
+            <br>
+            <div class="col-md-12 form-group">
+                <label for="gender" style = "color: white; font-size:20px">Type of Training:</label> <br>
+                <select class="form-control" id="trgtype" name = "trgtype">
+                  <option name="trgtype" value="Kettlebell" style="margin: 20px 0; height:30px; font-size:14pt;">Kettlebell</option>
+                  <option name="trgtype" value="Body weight" style="margin: 20px 0; height:30px; font-size:14pt;">Body weight</option>
+                  <option name="trgtype" value="Barbell" style="margin: 20px 0; height:30px; font-size:14pt;">Barbell</option>
+                </select>
+            </div>
+            <br>
+            <div class="col-md-12 form-group">
+                <label for="picture" style = "margin: 20px 0; color: white; font-size:20px">Profile Picture:</label> <br>
+                <input type="file" class="form-control-file" id="picture" name="picture" style="margin: 20px 0; height:30px; font-size:14pt; color: white;">
+            </div>
+            <div>
+                <input type="submit" value="Submit" class="btn btn-block btn-primary" >
+            </div>
+        </div>
+        </form>
+    </center>
+    {%with messages = get_flashed_messages()%}
+        {%if messages %}
+            {% for msg in messages%}
+                <b style="color:red; font-size:15px">{{msg}}</b>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</body>
+</html> -->
