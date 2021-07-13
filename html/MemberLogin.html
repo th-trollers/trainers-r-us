@@ -15,14 +15,15 @@
             <a href = "#"> Lost your password? </a><br>
             </form>
             <a href="http://127.0.0.1:5000/" ><button type="button" class="btn btn-primary">Back</button></a>
+            <a href="http://127.0.0.1:5000/createNewMember" ><button type="button" class="btn btn-primary">Create New User</button></a>
+            <br>
             {%with messages = get_flashed_messages()%}
-            {%if messages %}
-                {% for msg in messages%}
-                    <b style="color:red; font-size:20px">{{msg}}</b>
+                {%if messages %}
+                    {% for msg in messages%}
+                        <b style="color:red; font-size:15px">{{msg}}</b>
                     {% endfor %}
                 {% endif %}
             {% endwith %}
-    <a href="http://127.0.0.1:5000/createNewMember" ><button type="button" class="btn btn-primary">Create New User</button></a>
     </div>
 </body>
 </head>
