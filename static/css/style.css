@@ -82,3 +82,19 @@ h1 {
 {
     color: #ffc107;
 }
+
+.loginbox button
+{
+    border: none;
+    background: #508dff;
+    outline: none;
+    height: 30px;
+    color: #fff;
+    font-size: 14px;
+    border-radius: 10px;
+}
+
+.loginbox button:hover 
+{
+    color: #ffc107;
+}
