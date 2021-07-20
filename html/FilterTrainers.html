@@ -1,7 +1,107 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Filter Trainers </title>
+    <link rel="stylesheet" type="text/css" href="../static/css/memberDetails.css"/>
+</head>
+<body>
+    <div class = "banner">
+        <div class = "navbar">
+            <img src = "../static/img/trainers_logo_two.png" class = "logo">
+            <ul>
+                <li><a href = "http://127.0.0.1:5000/memberHome">Home</a></li>
+                <li><a href = "http://127.0.0.1:5000/">Logout</a></li>
+            </ul>
+        </div>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="wrapper">
+        <h2>Filter Details</h2>
+        <form action="#" method="POST" enctype="multipart/form-data">
+            <div class="inputBox">
+                <label for="pricerange">Price Range:</label> <br>
+                <select id="pricerange" name = "pricerange">
+                    <option value="" disabled selected hidden>Choose your price range</option>
+                    <option name="pricerange" value="$0 to $50">$0 - $50 per hour</option>
+                    <option name="pricerange" value="$51 to $100">$51 - $100 per hour</option>
+                    <option name="pricerange" value="More than $101"> More than $101 per hour</option>
+                    <option name="pricerange" value="More than $101"> More than $101 per hour</option>
+                </select>
+            </div>
+            <div class="inputBox">
+                <label for="gender">Gender</label> <br>
+                <select id="gender" name = "gender">
+                    <option value="" disabled selected hidden>Choose your gender</option>
+                    <option name="gender" value="Male">Male</option>
+                    <option name="gender" value="Female">Female</option>
+                </select>
+            </div> 
+            <br>
+            <div class="inputBox">
+                <label for="location">Location:</label> <br>
+                <select id="location" name = "location">
+                    <option value="" disabled selected hidden>Choose your Location</option>
+                    <option name="location" value="North">North</option>
+                    <option name="location" value="South">South</option>
+                    <option name="location" value="East"> East</option>
+                    <option name="location" value="West"> West</option>
+                </select>
+            </div>
+            <br>
+            <div class="inputBox">
+                <label for="trgtype">Training Type</label> <br>
+                <select id="trgtype" name = "trgtype">
+                    <option value="" disabled selected hidden>Choose your training type</option>
+                    <option name="trgtype" value="Kettlebell">Kettlebell</option>
+                    <option name="trgtype" value="Body weight" >Body weight</option>
+                    <option name="trgtype" value="Barbell">Barbell</option>
+                </select>
+            </div>
+            <div>
+                <button type="submit" class="btn" href="/filterTrainers">Filter</button>
+            </div>
+        </form>
+        </div>
+    </div>
+    
+    {%with messages = get_flashed_messages()%}
+        {%if messages %}
+            {% for msg in messages%}
+                <b style="color:red; font-size:15px">{{msg}}</b>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <table> 
+        <tr >
+            {% for header in headings %}
+            <th "color: white; font-size:20px">{{ header }}</th>
+            {% endfor %}
+        </tr>
+        {% for row in data %}
+        <tr>
+            <li><a href="/trainers/{{row[1]}}/"">{{row[5]}}</a></li>
+            {% for cell in row %}
+            <td "color: white; font-size:20px">{{ cell }}</td>
+            {% endfor %}
+        </tr>
+            
+        {% endfor %}
+            
+    </table>
+</body>
+</html>
+<!-- <html>
 <head>
     <title> Filer Trainers </title>
-    <link rel="stylesheet" type="text/css" href="../static/img791.jpg" />
+    <link rel="stylesheet" type="text/css" href="../static/css/memberDetails.css"/>
 </head>
 <body>
     <div class = "banner">
@@ -12,7 +112,6 @@
         <h1 style="color:white; font-size:60px">FILTER TRAINERS</h1>
         <p1 style="color:white; font-size:40px">Please tick the boxes</p1>
         <form method="POST" action="/filterTrainers">
-
             <tr>
                 <td "color: white; font-size:30px">Gender: </td>
                 <td "color: white; font-size:20px">
@@ -101,4 +200,4 @@
             
     </center>
 </body>
-</html>
+</html> -->

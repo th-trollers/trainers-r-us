@@ -546,7 +546,7 @@ header::after {
     width: 100%;
 } 
 
-/* button {
+button {
     width: 200px;
     padding: 15px 0;
     text-align: center;
@@ -579,7 +579,27 @@ button:hover span {
 
 button:hover {
     border: none;
-} */
+}
+
+.content {
+    width: 100%;    
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    text-align: center;
+    color: #fff;
+}
+
+.content h1 {
+    font-size: 40px;
+    margin-top: 80px;
+}
+
+.content p {
+    margin: 20px auto;
+    font-weight: 100;
+    line-height: 25px;
+}
 
 /* .form {
     display: inline-block;
