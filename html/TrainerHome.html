@@ -18,17 +18,26 @@
         <div class = "content">
             <h1> START CREATING YOUR PROFILE </h1>
             <p> Upload and customize your profile pages, <br>to attract your customers!</p>
+            {%with messages = get_flashed_messages()%}
+            {%if messages %}
+                {% for msg in messages%}
+                    <b style="color:red; font-size:20px">{{msg}}</b>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+             
             <div>
                 <button type = "button"><span></span>VIEW ALL CLIENTS</button>
             </div>
             <div>
-                <a href="/allChats"><button type = "button"><span></span>VIEW ALL CHATS</button>
+                <a href="/allChats"><button type = "button"><span></span>VIEW ALL CHATS</button></a>
             </div>
             <div>
-                <a href="/bookings"><button type = "button"><span></span>VIEW ALL BOOKINGS</button>
+                <a href="/trainerbookings"><button type = "button"><span></span>VIEW ALL BOOKINGS</button></a>
             </div>
         </div>
-    </div>
 
+        
+    </div>
 </body>
 </html>

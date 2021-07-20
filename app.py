@@ -83,7 +83,15 @@ def trainerLogin():
             print(successful)
             session["username"] = usernameTwo
             session["check"] = "Trainer"
-            return redirect(url_for("trainerHome"))
+            trainername = get_trainer(usernameTwo)[5]
+            numpending = get_pending(usernameTwo)
+            if numpending == "No Pending Bookings":
+                return redirect(url_for("trainerHome"))
+            else:
+                count = len(numpending)
+                print(count)
+                flash("You have " + str(count) + " pending bookings")
+                return redirect(url_for("trainerHome"))
         except:
             flash(unsuccessful)
             print(unsuccessful)
@@ -330,14 +338,245 @@ def filterTrainers():
 
 # booking module --------------------------------------------------------------------------
 
+# get all bookings for user/trainer (confirm, pending, rejected) (takes in email)
+def get_bookings(username):
+    print("getting bookings")
+    print(username)
+    bookings = database.child("Bookings").get()
+    if bookings.each():
+        booking = ()
+        confirm = ()
+        pending = ()
+        reject = ()
+        for i in bookings.each():
+            if session["check"] == "User":
+                if username == i.val()["User"]:
+                    book = ()
+                    name = get_trainer(i.val()['Trainer'])[5]
+                    book += (i.val()["Bookingnum"],)
+                    book += (name,)
+
+                    book += (i.val()["Date"],)
+                    book += (i.val()["Location"],)
+                    book += (i.val()["Time"],)
+                    book += (i.val()["Status"],)
+                    if i.val()["Status"] == "Confirmed":
+                        confirm += (book,)
+                    elif i.val()["Status"] == "Pending":
+                        pending += (book,)
+                    else:
+                        reject += (book,)
+            else:
+                if username == i.val()["Trainer"]:
+                    book = ()
+                    name = get_user_name(i.val()['User'])
+                    book += (i.val()["Bookingnum"],)
+                    book += (name,)
+
+                    book += (i.val()["Date"],)
+                    book += (i.val()["Location"],)
+                    book += (i.val()["Time"],)
+                    book += (i.val()["Status"],)
+                    if i.val()["Status"] == "Confirmed":
+                        confirm += (book,)
+                    elif i.val()["Status"] == "Pending":
+                        pending += (book,)
+                    else:
+                        reject += (book,)
+        booking += confirm
+        booking += pending
+        booking += reject
+        if booking:
+            return booking
+        else:
+            return "No Bookings"
+    else:
+        return "No Bookings"
+
+
+# requires email
+def get_pending(trainername):
+    print("getting pending")
+    print(trainername)
+    bookings = database.child("Bookings").get()
+    if bookings.each():
+        pending = ()
+        for i in bookings.each():
+            if trainername == i.val()["Trainer"]:
+                book = ()
+                name = get_user_name(i.val()['User'])
+                book += (i.val()["Bookingnum"],)
+                book += (name,)
+
+                book += (i.val()["Date"],)
+                book += (i.val()["Location"],)
+                book += (i.val()["Time"],)
+                if i.val()["Status"] == "Pending":
+                    pending += (book,)
+
+        if pending:
+
+            return pending
+        else:
+            return "No Pending Bookings"
+    else:
+        return "No Pending Bookings"
+
+
+def get_useremail(name):
+    email = ''
+    print('getting user email')
+    print(name)
+    user = database.child("Users").get()
+    if user.each():
+        for i in user.each():
+            if name == i.val()['Name']:
+                email = i.val()['Email']
+                print(email)
+        if email:
+            return email
+        else:
+            return "No Account"
+    else:
+        return "No Account"
+
+
+def get_traineremail(name):
+    email = ''
+    print('getting email')
+    print(name)
+
+    trainer = database.child("Trainers").get()
+    if trainer.each():
+        for i in trainer.each():
+            if name == i.val()['Name']:
+                email = i.val()['Email']
+
+        if email != '':
+            return email
+        else:
+            return "No Account"
+    else:
+        return "No Account"
+
+
+@app.route("/confirmBooking/<num>/", methods=['POST', 'GET'])
+def confirmbooking(num):
+    print(num)
+    print('confirming booking')
+
+    bookings = database.child("Bookings").get()
+    if bookings.each():
+        for i in bookings.each():
+            print('looping')
+            if num == i.val()['Bookingnum']:
+                database.child("Bookings").child(
+                    num).update({"Status": "Confirmed"})
+                print('updated')
+    return redirect(url_for('trainerbookings'))
+
+
+@app.route("/cancelBooking/<num>/", methods=['POST', 'GET'])
+def cancelbooking(num):
+    print(num)
+    print('cancelling booking')
+
+    bookings = database.child("Bookings").get()
+    if bookings.each():
+        for i in bookings.each():
+            print('looping')
+            if num == i.val()['Bookingnum']:
+                booking = database.child("Bookings").child(num).get()
+                if booking.val()["Status"] == "Cancelled":
+                    flash("Booking is already cancelled")
+                    print("booking is already cancelled")
+                else:
+                    database.child("Bookings").child(
+                        num).update({"Status": "Cancelled"})
+                    print('updated')
+    if session["check"] == "User":
+        return redirect(url_for('bookings'))
+    else:
+        return redirect(url_for('trainerbookings'))
+
+
+heading1 = ("Booking Number", "Trainer", "Date", "Location", "Time", "Status")
+heading2 = ("Booking Number", "Client", "Date", "Location", "Time", "Status")
+heading3 = ("Booking Number", "Client", "Date", "Location", "Time")
+
+
 @app.route("/bookings")
 def bookings():
+    if "username" in session:
+        email = str(session["username"])
+
+        bookinglist = get_bookings(email)
+        if bookinglist == "No Bookings":
+            return render_template('Bookings.html')
+        else:
+            return render_template('Bookings.html', headings=heading1, bookings=bookinglist)
     return render_template("Bookings.html")
+
+
+@app.route("/trainerbookings")
+def trainerbookings():
+    if "username" in session:
+        email = str(session["username"])
+        bookinglist = get_bookings(email)
+        print(bookinglist)
+
+        pendinglist = get_pending(email)
+        print(pendinglist)
+        if bookinglist == "No Bookings":
+
+            return render_template('TrainerBookings.html')
+        elif pendinglist == "No Pending Bookings":
+
+            return render_template('TrainerBookings.html', headings=heading2, bookings=bookinglist)
+        else:
+
+            return render_template('TrainerBookings.html', pending=heading3, headings=heading2, bookings=bookinglist, pendinglist=pendinglist)
+    return render_template("TrainerBookings.html")
+
+
+@app.route("/bookTrainer/<trainer_email>/", methods=['POST', 'GET'])
+def bookTrainer(trainer_email):
+
+    if request.method == "POST":
+        # getting the email and pw
+        location = str(request.form["location"])
+        date = str(request.form["date"])
+        timing = str(request.form["timing"])
+
+        print('trying to book trainers')
+
+        if location == "" or date == "" or timing == "":
+            print("went to except")
+            flash("Please enter valid details")
+            return render_template("BookTrainer.html")
+
+        else:
+            user = str(session["username"])
+
+            bookings = database.child("Bookings").get()
+            index = 0
+            if bookings.each():
+                for i in bookings.each():
+                    index += 1
+
+            bookingnum = "Booking " + str(index + 1)
+            data = {"Bookingnum": bookingnum, "Date": date, "Time": timing, "Location": location,
+                    "Trainer": trainer_email, "User": user, "Status": "Pending"}
+            database.child("Bookings").child(bookingnum).set(data)
+            print("booking has been created")
+            return redirect(url_for("bookings"))
+    else:
+        return render_template("BookTrainer.html")
 
 
 # chat functions--------------------------------------------------------------------------------
 
-# get trainer info from his username (returns tuple of info)
+# get trainer info from his email (returns tuple of info)
 def get_trainer(email):
     print("getting trainer")
     print(email)
@@ -457,7 +696,7 @@ def get_user_name(email):
     users = database.child("Users").get()
     if users.each():
         for i in users.each():
-            if email == i.val()["Email"]:
+            if email == i.val()['Email']:
                 return i.val()["Name"]
     else:
         return None
@@ -482,7 +721,6 @@ def get_chat(username):
                 if "Messages" in keys:
                     chat += (i.val()["Username"],)
         if chat:
-            print(chat)
             return chat
         else:
             return None
@@ -537,9 +775,9 @@ def viewChat():
             roomnum = check_roomnum(username, email)
             if test:
                 if test == "No messages":
-                    return render_template('ViewChat.html', username=name, room=roomnum, trainer=trainername)
+                    return render_template('ViewChat.html', username=name, room=roomnum, trainer=trainername, email=email)
                 else:
-                    return render_template("ViewChat.html", username=name, room=roomnum, messages=test, trainer=trainername)
+                    return render_template("ViewChat.html", username=name, room=roomnum, messages=test, trainer=trainername, email=email)
             else:
                 # if not open new chat room
                 chats = database.child("Chats").get()
@@ -551,7 +789,7 @@ def viewChat():
                 data = {"Username": username,
                         "Trainer": email, "Room Number": roomname}
                 database.child("Chats").child(roomname).set(data)
-                return render_template('ViewChat.html', username=name, room=roomname, trainer=trainername)
+                return render_template('ViewChat.html', username=name, room=roomname, trainer=trainername, email=email)
         else:
             # trainer logged in
             print("trainer logged in")
@@ -563,9 +801,9 @@ def viewChat():
             trainername = trainertuple[5]
             if test:
                 if test == "No messages":
-                    return render_template('TrainerViewChat.html', username=trainername, room=roomnum, trainer=username)
+                    return render_template('TrainerViewChat.html', username=trainername, room=roomnum, trainer=username, email=email)
                 else:
-                    return render_template("TrainerViewChat.html", username=trainername, room=roomnum, messages=test, trainer=username)
+                    return render_template("TrainerViewChat.html", username=trainername, room=roomnum, messages=test, trainer=username, email=email)
             else:
                 # if not open new chat room
                 print("no existing room")
@@ -578,7 +816,7 @@ def viewChat():
                 data = {"Username": email, "Trainer": trainer,
                         "Room Number": roomname}
                 database.child("Chats").child(roomname).set(data)
-                return render_template('TrainerViewChat.html', username=trainername, room=roomname, trainer=username)
+                return render_template('TrainerViewChat.html', username=trainername, room=roomname, trainer=username, email=email)
     else:
         return render_template("HomePage.html")
 
