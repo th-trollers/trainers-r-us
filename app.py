@@ -143,23 +143,33 @@ def createNewMember():
             print(trgtype)
             pic = request.files["picture"]
             print(pic)
-            print('test')            
+            print('test')
             if len(pw) < 6:
                 flash("Password too short please try a new one")
                 return render_template("CreateNewMember.html")
+            elif len(number) != 8:
+                flash("Please enter a valid number")
+                return render_template("CreateNewMember.html")
             else:
-                user = auth.create_user_with_email_and_password(email, pw)
-                print("Successfully created an account")
-                flash("Please go to your email to verify your account")
-                auth.send_email_verification(user["idToken"])
-                emailTwo = email.replace(".", "_DOT_")
-                data = {"Email": emailTwo, "Name": name, "Number": number,
-                        "Gender": gender, "Training Level": trglvl, "Training Type": trgtype}
-                database.child("Users").child(emailTwo).set(data)
-                print("Successfully uploaded personal details")
-                path_on_cloud = "member_images/" + str(emailTwo) + ".jpg"
-                storage.child(path_on_cloud).put(pic)
-                print("data has been created")
+                try:
+                    numcheck = int(number)
+                    print(numcheck)
+                    user = auth.create_user_with_email_and_password(email, pw)
+                    print("Successfully created an account")
+                    flash("Please go to your email to verify your account")
+                    auth.send_email_verification(user["idToken"])
+                    emailTwo = email.replace(".", "_DOT_")
+                    data = {"Email": emailTwo, "Name": name, "Number": number,
+                            "Gender": gender, "Training Level": trglvl, "Training Type": trgtype}
+                    database.child("Users").child(emailTwo).set(data)
+                    print("Successfully uploaded personal details")
+                    path_on_cloud = "member_images/" + str(emailTwo) + ".jpg"
+                    storage.child(path_on_cloud).put(pic)
+                    print("data has been created")
+                except:
+                    print("Cannot make number int")
+                    flash("Please enter a valid number")
+                    return render_template("CreateNewMember.html")
         except:
             print("went to except")
             flash("Please enter valid details")
@@ -224,7 +234,7 @@ def createNewTrainer():
 # Details Pages
 
 
-@app.route('/memberDetails', methods=["POST","GET"])
+@app.route('/memberDetails', methods=["POST", "GET"])
 def memberDetails():
     if "username" and "userToken" in session:
         username = str(session["username"])
@@ -286,17 +296,21 @@ def memberDetails():
             elif oldName == value:
                 database.child("Users").child(username).update({key: newName})
             elif oldNumber == value:
-                database.child("Users").child(username).update({key: newNumber})
+                database.child("Users").child(
+                    username).update({key: newNumber})
             elif oldGender == value:
                 if newGender:
-                    database.child("Users").child(username).update({key: newGender})
+                    database.child("Users").child(
+                        username).update({key: newGender})
             elif oldTrgLvl == value:
                 if newTrgLvl:
-                    database.child("Users").child(username).update({key: newTrgLvl})
+                    database.child("Users").child(
+                        username).update({key: newTrgLvl})
             elif oldTrgType == value:
-                if newTrgType:                
-                    database.child("Users").child(username).update({key: newTrgType})
-    return render_template("MemberDetails.html", details=lst, profileImage = url, valDetails=valLst, keyDetails=keyLst)
+                if newTrgType:
+                    database.child("Users").child(
+                        username).update({key: newTrgType})
+    return render_template("MemberDetails.html", details=lst, profileImage=url, valDetails=valLst, keyDetails=keyLst)
 
 
 @app.route('/trainerDetails', methods=["POST", "GET"])
@@ -370,28 +384,37 @@ def trainerDetails():
         print(keyLst)
         for key, value in dict.items():
             if oldEmail == value:
-                database.child("Trainers").child(username).update({key: newEmail})
+                database.child("Trainers").child(
+                    username).update({key: newEmail})
             elif oldName == value:
-                database.child("Trainers").child(username).update({key: newName})
+                database.child("Trainers").child(
+                    username).update({key: newName})
             elif oldNumber == value:
-                database.child("Trainers").child(username).update({key: newNumber})
+                database.child("Trainers").child(
+                    username).update({key: newNumber})
             elif oldDescrip == value:
-                database.child("Trainers").child(username).update({key: newDescrip})
+                database.child("Trainers").child(
+                    username).update({key: newDescrip})
             elif oldLocation == value:
-                database.child("Trainers").child(username).update({key: newLocation})
+                database.child("Trainers").child(
+                    username).update({key: newLocation})
             elif oldExp == value:
                 if newExp:
-                    database.child("Trainers").child(username).update({key: newExp})
+                    database.child("Trainers").child(
+                        username).update({key: newExp})
             elif oldGender == value:
                 if newGender:
-                    database.child("Trainers").child(username).update({key: newGender})
+                    database.child("Trainers").child(
+                        username).update({key: newGender})
             elif oldPriceRange == value:
                 if newPriceRange:
-                    database.child("Trainers").child(username).update({key: newPriceRange})
+                    database.child("Trainers").child(
+                        username).update({key: newPriceRange})
             elif oldTrgType == value:
-                if newTrgType:                
-                    database.child("Trainers").child(username).update({key: newTrgType})
-    return render_template("TrainerDetails.html", details=lst, profileImage = url, valDetails=valLst, keyDetails=keyLst)
+                if newTrgType:
+                    database.child("Trainers").child(
+                        username).update({key: newTrgType})
+    return render_template("TrainerDetails.html", details=lst, profileImage=url, valDetails=valLst, keyDetails=keyLst)
 
 # Update Pages
 
