@@ -910,17 +910,22 @@ def get_chat(username):
     chats = database.child("Chats").get()
     if chats.each():
         chat = ()
-        for i in chats.each():
-            if username == i.val()["Username"]:
-                print("useracc found")
-                keys = list(i.val().keys())
-                if "Messages" in keys:
-                    chat += (i.val()["Trainer"],)
-            elif username == i.val()["Trainer"]:
-                print("trainer acc found")
-                keys = list(i.val().keys())
-                if "Messages" in keys:
-                    chat += (i.val()["Username"],)
+        if session["check"] == "User":
+            print("getting users chats")
+            for i in chats.each():
+                if username == i.val()["Username"]:
+                    print("useracc found")
+                    keys = list(i.val().keys())
+                    print(keys)
+                    if "Messages" in keys:
+                        chat += (i.val()["Trainer"],)
+        else:
+            for i in chats.each():
+                if username == i.val()["Trainer"]:
+                    print("trainer acc found")
+                    keys = list(i.val().keys())
+                    if "Messages" in keys:
+                        chat += (i.val()["Username"],)
         if chat:
             return chat
         else:
@@ -1031,8 +1036,11 @@ def allChats():
         names = ()
         if session["check"] == "User":
             print("logged in as user")
-            for chat in chat_hist:
-                names += (get_trainer(chat)[5],)
+            if chat_hist:
+                for chat in chat_hist:
+                    print(chat)
+                    print(get_trainer(chat)[5])
+                    names += (get_trainer(chat)[5],)
         else:
             print("logged in as trainer")
             for chat in chat_hist:
@@ -1042,7 +1050,10 @@ def allChats():
         for i in chat_hist:
             combined += (((chat_hist[index]), (names[index])),)
             index += 1
-        return render_template("AllChats.html", chats=combined)
+        if session['check'] == "User":
+            return render_template("AllMemberChats.html", chats=combined)
+        else:
+            return render_template("AllTrainerChats.html", chats=combined)
     else:
         return render_template("HomePage.html")
 

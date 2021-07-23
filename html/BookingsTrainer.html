@@ -36,30 +36,6 @@
             {% endif %}
             {% endwith %}
 
-            <h1 style="color:black; font-size:70px"> Pending Table </h1>
-            <table>
-                <tr>
-                    {% for header in pending %}
-                    <th style="color: black; font-size:20px">{{ header }} </th>
-                    {% endfor %}
-                </tr>
-                {% for row in pendinglist %}
-                <tr>
-                    <a href="/confirmBooking/{{row[0]}}/" id="email"><button type="button"><span></span>Confirm
-                            Booking</button></a>
-                    <a href="/cancelBooking/{{row[0]}}/" id="email"><button type="button"><span></span>Reject
-                            Booking</button></a>
-                    {% for cell in row %}
-                    <td style="color: black; font-size:30px">{{ cell }}</td>
-                    {% endfor %}
-                </tr>
-
-                {% endfor %}
-
-            </table>
-
-
-            <h1 style="color:black; font-size:70px"> All Bookings </h1>
             <table>
                 <tr>
                     {% for header in headings %}
@@ -68,11 +44,15 @@
                 </tr>
                 {% for row in bookings %}
                 <tr>
+                    <a href="/cancelBooking/{{row[0]}}/" id="email"><button type="button"><span></span>Cancel
+                            Booking</button></a>
                     {% for cell in row %}
                     <td style="color: black; font-size:30px">{{ cell }}</td>
                     {% endfor %}
                 </tr>
+
                 {% endfor %}
+
             </table>
         </center>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
