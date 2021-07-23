@@ -502,9 +502,13 @@ def filterTrainers():
         # to check if trainers are being filtered
         if request.method == 'POST':
             gender = request.form.getlist("gender")
+            print(gender)
             location = request.form.getlist("location")
-            price = request.form.getlist("price")
+            print(location)
+            price = request.form.getlist("pricerange")
+            print(price)
             trgtype = request.form.getlist("trgtype")
+            print(trgtype)
 
             data1 = ()
             # to read data
@@ -519,10 +523,14 @@ def filterTrainers():
                 if personaldata:
                     data1 += (personaldata,)
             if data1:
+                print(headings)
+                print(data1)
                 return render_template("FilterTrainers.html", headings=headings, data=data1)
             else:
                 flash("No such trainer exists. Please try again!")
                 return render_template("FilterTrainers.html")
+        print(headings)
+        print(data)
         return render_template("FilterTrainers.html", headings=headings, data=data)
     else:
         flash("No trainers in the database!")
