@@ -1,10 +1,11 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title> View All Chats </title>
-    <link rel="stylesheet" type="text/css" href="../static/css/memberDetails.css" />
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Account Details </title>
+    <link rel="stylesheet" type="text/css" href="../static/css/memberDetails.css"/>
 </head>
 <body>
     <div class = "banner">
@@ -12,24 +13,24 @@
             <img src = "../static/img/trainers_logo_two.png" class = "logo">
             <ul>
                 <li><a href = "/memberHome">Home</a></li>
-                <li><a href = "/memberDetailUpdate">Update Account</a></li>
                 <li><a href = "/">Logout</a></li>
             </ul>
         </div>
-        <center>
-            <style> 
-                table, th, td {
-                    border: 5px solid white;
-                }
-            </style>
-
-    {% for row in chats %}
-    <tr>
-        <li><a href="/viewChat?email={{row[0]}}">{{row[1]}}</a></li>
-    </tr>
-    {% endfor %}
-            
-        </center>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="wrapper">
+        <h2 style="text-decoration: underline;">All Chats</h2>
+        <form action="/memberDetails" method="POST" enctype="multipart/form-data">
+            <div class="inputBox">
+            {% for row in chats %}
+                <li><a href="/viewChat?email={{row[0]}}">{{row[1]}}</a></li>
+            {% endfor %}
+        </form>
+        </div>
+    </div>
 </body>
 </html>

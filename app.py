@@ -27,6 +27,8 @@ auth = firebase.auth()
 database = firebase.database()
 storage = firebase.storage()
 all_files = storage.list_files()
+trainerPics = []
+memberPics = []
 # storage.child("images/foo.jpg").download("myface.jpg")
 
 # need to fix the part where the email is not valid or
@@ -452,21 +454,64 @@ def logout():
 
 @app.route('/filterTrainers', methods=['POST', 'GET'])
 def filterTrainers():
+    headings = ('Name','Description', 'Experience', 'Gender', 'Location', 'Price Range', 'Training Type', "Email")
+    if "username" and "userToken" in session:
+        username = str(session["username"])
+        user = session["userToken"]
+        all_files = storage.list_files()
+        trainerPics = []
+        for file in all_files:
+            print(type(file.name))
+            print(file.name[0:15])
+            if file.name[0:15] == "trainer_images/":
+                url = storage.child(file.name).get_url(user["idToken"])
+                trainerPics.append(url)
+    print(trainerPics)
     data = ()
     # to read all trainers
     trainers = database.child("Trainers").get()
     # to check if trainers are present in database
     if trainers.each():
+        # for i in trainers.each():
+        #     print(i)
+        #     headings = ()
+        #     for head in i.val():
+        #         print(head)
+        #         headings += (head,)
+    # ('Description', 'Email', 'Experience', 'Gender', 'Location', 'Name', 'Number', 'Price Range', 'Training Type')
+    # ('Name','Description', 'Experience', 'Gender', 'Location', 'Price Range', 'Training Type',"Email")
         for i in trainers.each():
-            headings = ()
-            for head in i.val():
-                headings += (head,)
-
-        for i in trainers.each():
-            personaldata = ()
+            print(i)
+            personaldata = ['Name','Description', 'Experience', 'Gender', 'Location', 'Price Range', 'Training Type', "Email"]
             for a in i.val():
-                personaldata += (i.val()[a],)
-            data += (personaldata,)
+                print(a)
+                if a == "Name":
+                    personaldata.pop(0)
+                    personaldata.insert(0,i.val()["Name"])
+                elif a == 'Description':
+                    personaldata.pop(1)
+                    personaldata.insert(1,i.val()['Description'])
+                elif a == 'Experience':
+                    personaldata.pop(2)
+                    personaldata.insert(2,i.val()['Experience'])
+                elif a == 'Gender':
+                    personaldata.pop(3)
+                    personaldata.insert(3,i.val()['Gender'])
+                elif a == 'Location':
+                    personaldata.pop(4)
+                    personaldata.insert(4,i.val()['Location'])
+                elif a == 'Price Range':
+                    personaldata.pop(5)
+                    personaldata.insert(5,i.val()['Price Range'])
+                elif a == 'Training Type':
+                    personaldata.pop(6)
+                    personaldata.insert(6,i.val()['Training Type'])
+                elif a == 'Email':
+                    personaldata.pop(7)
+                    personaldata.insert(7,i.val()['Email'])
+            print(personaldata)
+
+            data += (tuple(personaldata),)
 
         # to check if trainers are being filtered
         if request.method == 'POST':
@@ -482,25 +527,48 @@ def filterTrainers():
             data1 = ()
             # to read data
             for i in trainers.each():
-                personaldata = ()
+                personaldata = ['Name','Description', 'Experience', 'Gender', 'Location', 'Price Range', 'Training Type', "Email"]
                 if gender == [] or i.val()['Gender'] in gender:
-                    if location == [] or i.val()['Location'] in location:
-                        # if (i.val()['Price'] == [] or i.val()['Gender'] in trgtype):
-                        if trgtype == [] or i.val()['Training Type'] in trgtype:
-                            for a in i.val():
-                                personaldata += (i.val()[a],)
-                if personaldata:
-                    data1 += (personaldata,)
+                    if trgtype == [] or i.val()['Training Type'] in trgtype:
+                        for a in i.val():
+                            if a == "Name":
+                                personaldata.pop(0)
+                                personaldata.insert(0,i.val()["Name"])
+                            elif a == 'Description':
+                                personaldata.pop(1)
+                                personaldata.insert(1,i.val()['Description'])
+                            elif a == 'Experience':
+                                personaldata.pop(2)
+                                personaldata.insert(2,i.val()['Experience'])
+                            elif a == 'Gender':
+                                personaldata.pop(3)
+                                personaldata.insert(3,i.val()['Gender'])
+                            elif a == 'Location':
+                                personaldata.pop(4)
+                                personaldata.insert(4,i.val()['Location'])
+                            elif a == 'Price Range':
+                                personaldata.pop(5)
+                                personaldata.insert(5,i.val()['Price Range'])
+                            elif a == 'Training Type':
+                                personaldata.pop(6)
+                                personaldata.insert(6,i.val()['Training Type'])
+                            elif a == 'Email':
+                                personaldata.pop(7)
+                                personaldata.insert(7,i.val()['Email'])
+                if personaldata != ['Name','Description', 'Experience', 'Gender', 'Location', 'Price Range', 'Training Type', "Email"]:
+                    data1 += (tuple(personaldata),)
+                    print(data1)
             if data1:
+                print("data1")
                 print(headings)
                 print(data1)
-                return render_template("FilterTrainers.html", headings=headings, data=data1)
+                return render_template("FilterTrainers.html", headings=headings, data=data1, trainerPics = trainerPics)
             else:
                 flash("No such trainer exists. Please try again!")
                 return render_template("FilterTrainers.html")
         print(headings)
         print(data)
-        return render_template("FilterTrainers.html", headings=headings, data=data)
+        return render_template("FilterTrainers.html", headings=headings, data=data, trainerPics = trainerPics)
     else:
         flash("No trainers in the database!")
         return render_template("FilterTrainers.html")
@@ -691,11 +759,23 @@ def save_msg(room, message, sender, date):
 
 
 # to view individual trainer info
-@app.route('/trainers/<trainer_email>/')
-def viewtrainerprofile(trainer_email):
-    trainer = get_trainer(trainer_email)
-    if trainer:
-        return render_template('ViewTrainer.html', trainer=trainer)
+@app.route('/trainers')
+def viewtrainerprofile():
+    email = request.args.get("email")
+    trainer = get_trainer(email)
+    print(trainer)
+    if trainer and "userToken" in session:
+        user = session["userToken"]
+        for file in all_files:
+            usernameTwo = "trainer_images/" + trainer[1] + ".jpg"
+            # only allow jpg files
+            print(usernameTwo)
+            if usernameTwo == file.name:
+                print("there is a file with the same name")
+                print(file.name)
+                url = storage.child(file.name).get_url(user["idToken"])
+        print("in view trainer")
+        return render_template('ViewTrainer.html', trainer=trainer, profileImage = url)
     else:
         return "Trainer not found", 404
 

@@ -5,6 +5,116 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> Filter Trainers </title>
+    <link rel="stylesheet" type="text/css" href="../static/css/filterTrainer.css"/>
+</head>
+    <body>
+        <div class = "banner">
+            <div class = "navbar">
+                <img src = "../static/img/trainers_logo_two.png" class = "logo">
+                <ul>
+                    <li><a href = "/memberHome">Home</a></li>
+                    <li><a href = "/memberDetailUpdate">Update Account</a></li>
+                    <li><a href = "/">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+        <!--Main layout-->
+        <main>
+            <div class="items">
+
+                <!--Grid row-->
+                <div class="row mt-5">
+
+                    <div class = "rightsidebar">
+                    <section>
+                        <section class="filters">
+                            <h5>Filters</h5>
+                            <form action="/filterTrainers" method="POST" enctype="multipart/form-data">
+                                <div class="inputBox">
+                                    <label for="gender">Gender</label> <br>
+                                    <select id="gender" name = "gender">
+                                        <option value="" disabled selected hidden>Choose your gender</option>
+                                        <option name="gender" value="Male">Male</option>
+                                        <option name="gender" value="Female">Female</option>
+                                    </select>
+                                </div> 
+                                <br>
+                                <div class="inputBox">
+                                    <label for="trgtype">Training Type</label> <br>
+                                    <select id="trgtype" name = "trgtype">
+                                        <option value="" disabled selected hidden>Choose your training type</option>
+                                        <option name="trgtype" value="Kettlebell">Kettlebell</option>
+                                        <option name="trgtype" value="Body weight" >Body weight</option>
+                                        <option name="trgtype" value="Barbell">Barbell</option>
+                                    </select>
+                                </div>
+                                <br>
+                                <div>
+                                    <button type="submit" class="btn" href = "/filterTrainers">Filter</button>
+                            </form>
+                            </section>
+                        </section>
+                        <section class="pictures">
+                            <h5>Trainers</h5>
+                            <!-- <div class="profile-card">
+                            {% for pic in trainerPics %}
+                                <ul>
+                                    <li><img src="{{pic}}" width="200" height="200" /></li>
+                                    <br>
+                                    <br>
+                                </ul>
+                            {% endfor %}
+                            </div> -->
+                            {%with messages = get_flashed_messages()%}
+                            {%if messages %}
+                                {% for msg in messages%}
+                                    <b style="color:red; font-size:20px">{{msg}}</b>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endwith %}
+                            <table style="color:black; text-align: center; justify-content: center; padding: 10px;
+                            border: 1px solid black;
+                            width: 100%;
+                            border-collapse: collapse;"> 
+                            <h2> Chat Links and Trainer Details</h2>
+                                <tr>
+                                    {% for header in headings %}
+                                        {% if header != "Email" %}
+                                            <th style="color: black; font-size:20px">{{ header }}</th>
+                                        {% endif %}
+                                    {% endfor %}
+                                </tr>
+                                {% for row in data %}
+                            
+                                <tr>
+                                    <li><a href="/trainers?email={{row[7]}}">{{row[0]}}</a></li>
+                                    {% for i in range(8) %}
+                                        {% if i != 7 %}
+                                            <td style = "color: black; font-size:15px">{{ row[i] }}</td>
+                                        {% endif %}
+                                    {% endfor %}
+                                </tr>
+                                    
+                                {% endfor %}
+                                    
+                            </table>
+                        </section>          
+
+                    </section>
+                    </div>
+                  <!--Grid column-->
+                </div>
+            </div>
+        </main>
+  </body>
+</html>
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Filter Trainers </title>
     <link rel="stylesheet" type="text/css" href="../static/css/memberDetails.css"/>
 </head>
 <body>
@@ -22,54 +132,24 @@
     <br>
     <br>
     <br>
-    <div class="wrapper">
-        <h2>Filter Details</h2>
-        <form action="#" method="POST" enctype="multipart/form-data">
-            <div class="inputBox">
-                <label for="pricerange">Price Range:</label> <br>
-                <select id="pricerange" name = "pricerange">
-                    <option value="" disabled selected hidden>Choose your price range</option>
-                    <option name="pricerange" value="$0 to $50">$0 - $50 per hour</option>
-                    <option name="pricerange" value="$51 to $100">$51 - $100 per hour</option>
-                    <option name="pricerange" value="More than $101"> More than $101 per hour</option>
-                    <option name="pricerange" value="More than $101"> More than $101 per hour</option>
-                </select>
+    <main>
+        <div class="container">
+            <div class="row mt-5">
+
+                <div class="col-md-4 mb-4">
+                    <section>
+                        <section class="filters">
+
+                        </section>
+                    </section>
+
+                </div>
+
             </div>
-            <div class="inputBox">
-                <label for="gender">Gender</label> <br>
-                <select id="gender" name = "gender">
-                    <option value="" disabled selected hidden>Choose your gender</option>
-                    <option name="gender" value="Male">Male</option>
-                    <option name="gender" value="Female">Female</option>
-                </select>
-            </div> 
-            <br>
-            <div class="inputBox">
-                <label for="location">Location:</label> <br>
-                <select id="location" name = "location">
-                    <option value="" disabled selected hidden>Choose your Location</option>
-                    <option name="location" value="North">North</option>
-                    <option name="location" value="South">South</option>
-                    <option name="location" value="East"> East</option>
-                    <option name="location" value="West"> West</option>
-                </select>
-            </div>
-            <br>
-            <div class="inputBox">
-                <label for="trgtype">Training Type</label> <br>
-                <select id="trgtype" name = "trgtype">
-                    <option value="" disabled selected hidden>Choose your training type</option>
-                    <option name="trgtype" value="Kettlebell">Kettlebell</option>
-                    <option name="trgtype" value="Body weight" >Body weight</option>
-                    <option name="trgtype" value="Barbell">Barbell</option>
-                </select>
-            </div>
-            <div>
-                <button type="submit" class="btn" href="/filterTrainers">Filter</button>
-            </div>
-        </form>
+
         </div>
-    </div>
+    </main>
+    
     
     {%with messages = get_flashed_messages()%}
         {%if messages %}
@@ -97,7 +177,7 @@
             
     </table>
 </body>
-</html>
+</html> -->
 <!-- <html>
 <head>
     <title> Filer Trainers </title>

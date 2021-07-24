@@ -1,4 +1,87 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> View Trainer </title>
+    <link rel="stylesheet" type="text/css" href="../static/css/memberDetails.css"/>
+</head>
+<body>
+    <div class = "banner">
+        <div class = "navbar">
+            <img src = "../static/img/trainers_logo_two.png" class = "logo">
+            <ul>
+                <li><a href = "/memberHome">Home</a></li>
+                <li><a href = "/">Logout</a></li>
+            </ul>
+        </div>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="wrapper">
+        <h2>{{trainer[5]}}'s Details</h2>
+        <div class="profile-card">
+            <div class="image-container">
+                <img src="{{ profileImage }}" class ="picture" style="width: 300px; height: 300px; -webkit-border-radius: 60px; -webkit-background-clip: padding-box;-moz-border-radius: 60px;-moz-background-clip: padding;
+                border-radius: 10px; background-clip: padding-box; margin: 7px 0 0 5px; float: center; background-size: cover; background-position: center center;"> 
+            </div>
+        </div>
+        <form action="#" method="POST" enctype="multipart/form-data">
+            <div class="inputBox">
+                <label for="Name">Name</label> <br>
+                <input type="text" value="{{trainer[5]}}" name="Name" readonly="readonly">
+            </div>
+            <br>
+            <div class="inputBox">
+                <label for="Descrip">Description</label> <br>
+                <input type= "text" value="{{trainer[0]}}" name="Descrip" readonly="readonly">
+            </div>
+            <br>
+            <div class="inputBox">
+                <label for="Location">Location</label> <br>
+                <input type= "text" value="{{trainer[4]}}" name="Location" readonly="readonly">
+            </div>
+            <br>
+            <div class="inputBox">
+                <label for="gender">Gender</label> <br>
+                <input type="text" value="{{trainer[3]}}" name="Gender" readonly="readonly">
+            </div> 
+            <br>
+            <div class="inputBox">
+                <label for="trgyrs">Years of Training</label> <br>
+                <input type="text" value="{{trainer[2]}}" name="trgyrs" readonly="readonly">
+            </div>
+            <br>
+            <div class="inputBox">
+                <label for="pricerange">Price Range</label> <br>
+                <input type="text" value="{{trainer[7]}}" name="PriceRange" readonly="readonly">
+            </div>
+            <br>
+            <div class="inputBox">
+                <label for="trgtype">Training Type</label> <br>
+                <input type="text" value="{{trainer[8]}}" name="trgtype" readonly="readonly"> 
+            </div>
+            <br>
+        </form>
+        <div>
+            <a href="/viewChat?email={{trainer[1]}}" id="test"><button type = "button" class="btn"><span></span>Chat</button>
+        </div>
+        </div>
+    </div>
+    {%with messages = get_flashed_messages()%}
+        {%if messages %}
+            {% for msg in messages%}
+                <b style="color:red; font-size:15px">{{msg}}</b>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</body>
+</html>
+<!-- <html>
 <head>
     <title> View Trainer Profile </title>
     <link rel="stylesheet" type="text/css" href="../static/css/memberDetails.css" />
@@ -83,4 +166,4 @@
         </center>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
 </body>   
-</html>
+</html> -->
