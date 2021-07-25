@@ -54,7 +54,7 @@ def memberLogin():
         password = request.form["pass"]
         usernameTwo = username.replace(".", "_DOT_")
         if database.child("Users").child(usernameTwo).get().val() == None:
-            flash("You do not have an account with us")
+            flash(unsuccessful)
             print("You do not have an account with us")
             return redirect(url_for("memberLogin"))
         try:
@@ -81,7 +81,7 @@ def trainerLogin():
         password = request.form["pass"]
         usernameTwo = email.replace(".", "_DOT_")
         if database.child("Trainers").child(usernameTwo).get().val() == None:
-            flash("You do not have an account with us")
+            flash(unsuccessful)
             print("You do not have an account with us")
             return redirect(url_for("trainerLogin"))
         try:
@@ -110,6 +110,11 @@ def trainerLogin():
 
 @app.route('/memberHome', methods=["POST", "GET"])
 def memberHome():
+    if "username" in session:
+        print("username in session")
+        username = str(session["username"])
+        flash("Welcome User " +
+              database.child("Users").child(username).get().val()["Name"])
     return render_template("MemberHome.html")
 
 
@@ -149,7 +154,7 @@ def createNewMember():
             if len(pw) < 6:
                 flash("Password too short please try a new one")
                 return render_template("CreateNewMember.html")
-            elif len(number) != 8:
+            elif len(number) != 8 or number[0] != "6" or number[0] != "9" or number[0] != "8":
                 flash("Please enter a valid number")
                 return render_template("CreateNewMember.html")
             else:
@@ -174,7 +179,7 @@ def createNewMember():
                     return render_template("CreateNewMember.html")
         except:
             print("went to except")
-            flash("Please enter valid details")
+            flash("Please fill in all your details")
             return render_template("CreateNewMember.html")
         return redirect(url_for("memberLogin"))
     else:

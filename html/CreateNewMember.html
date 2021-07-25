@@ -29,19 +29,13 @@
                 <input type="text" id="email" name="email" placeholder="Email Address">
             </div>
             <div class="inputBox">
-                <input type="text" id="pwd" name="trainerpw" placeholder="Password">
+                <input type="text" id="pwd" name="userpassword" placeholder="Password">
             </div>
             <div class="inputBox">
-                <input type="text" id="name" name="trainername" placeholder="Full Name">
+                <input type="text" id="name" name="membername" placeholder="Full Name">
             </div>
             <div class="inputBox">
-                <input type="text" id="contact" name="contact" placeholder="Contact Number">
-            </div>
-            <div class="inputBox">
-                <input type="text" id="location" name="location" placeholder="Location">
-            </div>
-            <div class="inputBox">
-                <input type="text" id="description" name="description" placeholder="Short Description">
+                <input type="text" id="number" name="number" placeholder="Contact Number eg. 96321534">
             </div>
             <div class="inputBox">
                 <label for="gender">Gender</label> <br>
@@ -50,15 +44,15 @@
                     <option name="gender" value="Male">Male</option>
                     <option name="gender" value="Female">Female</option>
                 </select>
-            </div> 
+            </div>            
             <br>
             <div class="inputBox">
-                <label for="trgyears">Years of Training</label> <br>
-                <select id="experience" name = "experience">
-                    <option value="" disabled selected hidden>Choose your years of training</option>
-                    <option name="experience" value="0 to 3">0 - 3 years</option>
-                    <option name="experience" value="4 to 10"> 4 - 10 years</option>
-                    <option name="experience" value="More than 10">More than 10 years</option>
+                <label for="trglvl">Training Level:</label> <br>
+                <select id="trglvl" name = "trglvl">
+                    <option value="" disabled selected hidden>Choose your training level</option>
+                    <option name="trglvl" value="Beginner">Beginner</option>
+                    <option name="trglvl" value="Intermediate">Intermediate</option>
+                    <option name="trglvl" value="Advanced"> Advanced </option>
                 </select>
             </div>
             <br>
@@ -69,16 +63,6 @@
                     <option name="trgtype" value="Kettlebell">Kettlebell</option>
                     <option name="trgtype" value="Body weight" >Body weight</option>
                     <option name="trgtype" value="Barbell">Barbell</option>
-                </select>
-            </div>
-            <br>
-            <div class="inputBox">
-                <label for="pricerange">Price Range:</label> <br>
-                <select id="pricerange" name = "pricerange">
-                    <option value="" disabled selected hidden>Choose your price range</option>
-                    <option name="pricerange" value="$0 to $50">$0 - $50 per hour</option>
-                    <option name="pricerange" value="$51 to $100">$51 - $100 per hour</option>
-                    <option name="pricerange" value="More than $101"> More than $101 per hour</option>
                 </select>
             </div>
             <br>
