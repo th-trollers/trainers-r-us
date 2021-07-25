@@ -12,7 +12,7 @@ input {
 }
 
 .btn {
-  width: 275px;
+  width: 90px;
   background-color: #5995fd;
   border: none;
   outline: none;
@@ -64,6 +64,7 @@ input {
     text-align: center;
     font-size: 2rem;
     margin-bottom: 1rem;
+    text-decoration: underline;
 }
 
 .filters .inputBox {
@@ -119,7 +120,7 @@ input {
 }    */
 
 html { 
-    background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)),url(../img/workout5.jpg) no-repeat center center fixed; 
+    background: #fff no-repeat center center fixed; 
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -259,6 +260,7 @@ button:hover {
     text-align: center;
     font-size: 2rem;
     margin-bottom: 1rem;
+    text-decoration: underline;
 }
 
 
@@ -291,7 +293,10 @@ button:hover {
     text-align: center;
     font-size: 2rem;
     margin-bottom: 1rem;
+}
 
+.pictures h2 {
+    text-decoration: underline;
 }
   /* .pictures .preloader-wrapper {
     position: fixed;

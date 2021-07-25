@@ -1,4 +1,54 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Book Trainer </title>
+    <link rel="stylesheet" type="text/css" href="../static/css/memberDetails.css" />
+</head>
+
+<body>
+    <div class="banner">
+        <div class="navbar">
+            <img src="../static/img/trainers_logo_two.png" class="logo">
+            <ul>
+                <li><a href="/memberHome">Home</a></li>
+                <li><a href="/">Logout</a></li>
+            </ul>
+        </div>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="wrapper">
+        <h2>Booking Details</h2>
+        <form action="#" method="POST" enctype="multipart/form-data">
+            <div class="inputBox">
+                <input type="text" id="location" name="Location" placeholder="Location">
+            </div>
+            <div class="inputBox">
+                <input type="date" id="date" name="date" placeholder="Date">
+            </div>
+            <div class="inputBox">
+                <input type="time" id="timing" name="timing" placeholder="Timing">
+            </div>
+            <div>
+                <button type="submit" class="btn">Book Trainer</button>
+        </form>
+    </div>
+    {%with messages = get_flashed_messages()%}
+    {%if messages %}
+    {% for msg in messages%}
+    <b style="color:red; font-size:15px">{{msg}}</b>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+</body>
+</html>
+<!-- <html>
 <head>
     <title> Book Trainer </title>
     <link rel="stylesheet" type="text/css" href="../static/css/memberDetails.css" />
@@ -62,4 +112,4 @@
             </form>
         </center>
     </body>
-</html>
+</html> -->

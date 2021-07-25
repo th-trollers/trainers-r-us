@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> View Trainer </title>
-    <link rel="stylesheet" type="text/css" href="../static/css/memberDetails.css"/>
+    <link rel="stylesheet" type="text/css" href="../static/css/viewTrainer.css"/>
 </head>
 <body>
     <div class = "banner">
@@ -13,6 +13,7 @@
             <img src = "../static/img/trainers_logo_two.png" class = "logo">
             <ul>
                 <li><a href = "/memberHome">Home</a></li>
+                <li><a href = "/filterTrainers">Filter Trainer</a></li>
                 <li><a href = "/">Logout</a></li>
             </ul>
         </div>
@@ -68,7 +69,10 @@
             <br>
         </form>
         <div>
-            <a href="/viewChat?email={{trainer[1]}}" id="test"><button type = "button" class="btn"><span></span>Chat</button>
+            <a href="/viewChat?email={{trainer[1]}}" id="test"><button type = "button" class="btn">CHAT</button>
+        </div>
+        <div>
+            <a href="/bookTrainer?email={{trainer[1]}}"><button type = "button" class="btn">BOOK TRAINER</button>
         </div>
         </div>
     </div>

@@ -291,28 +291,30 @@ def memberDetails():
         for key, value in dict.items():
             valLst.append(value)
             keyLst.append(key)
+        print(valLst)
         print(keyLst)
         for key, value in dict.items():
             if oldEmail == value:
-                database.child("Users").child(username).update({key: newEmail})
+                print(newEmail)
+                new_Email = newEmail.replace("_DOT_", ".")
+                print(new_Email)
+                database.child("Users").child(username).update({key: new_Email})
             elif oldName == value:
                 database.child("Users").child(username).update({key: newName})
             elif oldNumber == value:
-                database.child("Users").child(
-                    username).update({key: newNumber})
+                database.child("Users").child(username).update({key: newNumber})
             elif oldGender == value:
                 if newGender:
-                    database.child("Users").child(
-                        username).update({key: newGender})
+                    database.child("Users").child(username).update({key: newGender})
             elif oldTrgLvl == value:
                 if newTrgLvl:
-                    database.child("Users").child(
-                        username).update({key: newTrgLvl})
+                    database.child("Users").child(username).update({key: newTrgLvl})
             elif oldTrgType == value:
                 if newTrgType:
-                    database.child("Users").child(
-                        username).update({key: newTrgType})
-    return render_template("MemberDetails.html", details=lst, profileImage=url, valDetails=valLst, keyDetails=keyLst)
+                    database.child("Users").child(username).update({key: newTrgType})
+        return render_template("MemberDetails.html", details=lst, profileImage=url, valDetails=valLst, keyDetails=keyLst)
+    else:
+        return render_template("MemberDetails.html")
 
 
 @app.route('/trainerDetails', methods=["POST", "GET"])
@@ -808,14 +810,17 @@ def trainerbookings():
     return render_template("TrainerBookings.html")
 
 
-@app.route("/bookTrainer/<trainer_email>/", methods=['POST', 'GET'])
-def bookTrainer(trainer_email):
-
+@app.route("/bookTrainer", methods=['POST','GET'])
+def bookTrainer():
     if request.method == "POST":
         # getting the email and pw
-        location = str(request.form["location"])
+        email = request.args.get("email")
+        location = str(request.form["Location"])
+        print(location)
         date = str(request.form["date"])
+        print(date)
         timing = str(request.form["timing"])
+        print(timing)
 
         print('trying to book trainers')
 
@@ -835,7 +840,7 @@ def bookTrainer(trainer_email):
 
             bookingnum = "Booking " + str(index + 1)
             data = {"Bookingnum": bookingnum, "Date": date, "Time": timing, "Location": location,
-                    "Trainer": trainer_email, "User": user, "Status": "Pending"}
+                    "Trainer": email, "User": user, "Status": "Pending"}
             database.child("Bookings").child(bookingnum).set(data)
             print("booking has been created")
             return redirect(url_for("bookings"))
@@ -1029,17 +1034,21 @@ def save_msg(room, message, sender, date):
 def viewtrainerprofile():
     email = request.args.get("email")
     trainer = get_trainer(email)
+    all_files = storage.list_files()
     print(trainer)
     if trainer and "userToken" in session:
         user = session["userToken"]
         for file in all_files:
-            usernameTwo = "trainer_images/" + trainer[1] + ".jpg"
+            usernameTwo = "trainer_images/" + str(trainer[1]) + ".jpg"
             # only allow jpg files
             print(usernameTwo)
             if usernameTwo == file.name:
                 print("there is a file with the same name")
                 print(file.name)
                 url = storage.child(file.name).get_url(user["idToken"])
+                print(url)
+                print(type(url))
+                break
         print("in view trainer")
         return render_template('ViewTrainer.html', trainer=trainer, profileImage = url)
     else:
