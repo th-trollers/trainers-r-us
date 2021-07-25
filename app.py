@@ -298,20 +298,25 @@ def memberDetails():
                 print(newEmail)
                 new_Email = newEmail.replace("_DOT_", ".")
                 print(new_Email)
-                database.child("Users").child(username).update({key: new_Email})
+                database.child("Users").child(
+                    username).update({key: new_Email})
             elif oldName == value:
                 database.child("Users").child(username).update({key: newName})
             elif oldNumber == value:
-                database.child("Users").child(username).update({key: newNumber})
+                database.child("Users").child(
+                    username).update({key: newNumber})
             elif oldGender == value:
                 if newGender:
-                    database.child("Users").child(username).update({key: newGender})
+                    database.child("Users").child(
+                        username).update({key: newGender})
             elif oldTrgLvl == value:
                 if newTrgLvl:
-                    database.child("Users").child(username).update({key: newTrgLvl})
+                    database.child("Users").child(
+                        username).update({key: newTrgLvl})
             elif oldTrgType == value:
                 if newTrgType:
-                    database.child("Users").child(username).update({key: newTrgType})
+                    database.child("Users").child(
+                        username).update({key: newTrgType})
         return render_template("MemberDetails.html", details=lst, profileImage=url, valDetails=valLst, keyDetails=keyLst)
     else:
         return render_template("MemberDetails.html")
@@ -487,7 +492,8 @@ def logout():
 
 @app.route('/filterTrainers', methods=['POST', 'GET'])
 def filterTrainers():
-    headings = ('Name','Description', 'Experience', 'Gender', 'Location', 'Price Range', 'Training Type', "Email")
+    headings = ('Name', 'Description', 'Experience', 'Gender',
+                'Location', 'Price Range', 'Training Type', "Email")
     if "username" and "userToken" in session:
         username = str(session["username"])
         user = session["userToken"]
@@ -511,37 +517,38 @@ def filterTrainers():
         #     for head in i.val():
         #         print(head)
         #         headings += (head,)
-    # ('Description', 'Email', 'Experience', 'Gender', 'Location', 'Name', 'Number', 'Price Range', 'Training Type')
-    # ('Name','Description', 'Experience', 'Gender', 'Location', 'Price Range', 'Training Type',"Email")
+        # ('Description', 'Email', 'Experience', 'Gender', 'Location', 'Name', 'Number', 'Price Range', 'Training Type')
+        # ('Name','Description', 'Experience', 'Gender', 'Location', 'Price Range', 'Training Type',"Email")
         for i in trainers.each():
             print(i)
-            personaldata = ['Name','Description', 'Experience', 'Gender', 'Location', 'Price Range', 'Training Type', "Email"]
+            personaldata = ['Name', 'Description', 'Experience', 'Gender',
+                            'Location', 'Price Range', 'Training Type', "Email"]
             for a in i.val():
                 print(a)
                 if a == "Name":
                     personaldata.pop(0)
-                    personaldata.insert(0,i.val()["Name"])
+                    personaldata.insert(0, i.val()["Name"])
                 elif a == 'Description':
                     personaldata.pop(1)
-                    personaldata.insert(1,i.val()['Description'])
+                    personaldata.insert(1, i.val()['Description'])
                 elif a == 'Experience':
                     personaldata.pop(2)
-                    personaldata.insert(2,i.val()['Experience'])
+                    personaldata.insert(2, i.val()['Experience'])
                 elif a == 'Gender':
                     personaldata.pop(3)
-                    personaldata.insert(3,i.val()['Gender'])
+                    personaldata.insert(3, i.val()['Gender'])
                 elif a == 'Location':
                     personaldata.pop(4)
-                    personaldata.insert(4,i.val()['Location'])
+                    personaldata.insert(4, i.val()['Location'])
                 elif a == 'Price Range':
                     personaldata.pop(5)
-                    personaldata.insert(5,i.val()['Price Range'])
+                    personaldata.insert(5, i.val()['Price Range'])
                 elif a == 'Training Type':
                     personaldata.pop(6)
-                    personaldata.insert(6,i.val()['Training Type'])
+                    personaldata.insert(6, i.val()['Training Type'])
                 elif a == 'Email':
                     personaldata.pop(7)
-                    personaldata.insert(7,i.val()['Email'])
+                    personaldata.insert(7, i.val()['Email'])
             print(personaldata)
 
             data += (tuple(personaldata),)
@@ -560,48 +567,50 @@ def filterTrainers():
             data1 = ()
             # to read data
             for i in trainers.each():
-                personaldata = ['Name','Description', 'Experience', 'Gender', 'Location', 'Price Range', 'Training Type', "Email"]
+                personaldata = ['Name', 'Description', 'Experience', 'Gender',
+                                'Location', 'Price Range', 'Training Type', "Email"]
                 if gender == [] or i.val()['Gender'] in gender:
                     if trgtype == [] or i.val()['Training Type'] in trgtype:
                         for a in i.val():
                             if a == "Name":
                                 personaldata.pop(0)
-                                personaldata.insert(0,i.val()["Name"])
+                                personaldata.insert(0, i.val()["Name"])
                             elif a == 'Description':
                                 personaldata.pop(1)
-                                personaldata.insert(1,i.val()['Description'])
+                                personaldata.insert(1, i.val()['Description'])
                             elif a == 'Experience':
                                 personaldata.pop(2)
-                                personaldata.insert(2,i.val()['Experience'])
+                                personaldata.insert(2, i.val()['Experience'])
                             elif a == 'Gender':
                                 personaldata.pop(3)
-                                personaldata.insert(3,i.val()['Gender'])
+                                personaldata.insert(3, i.val()['Gender'])
                             elif a == 'Location':
                                 personaldata.pop(4)
-                                personaldata.insert(4,i.val()['Location'])
+                                personaldata.insert(4, i.val()['Location'])
                             elif a == 'Price Range':
                                 personaldata.pop(5)
-                                personaldata.insert(5,i.val()['Price Range'])
+                                personaldata.insert(5, i.val()['Price Range'])
                             elif a == 'Training Type':
                                 personaldata.pop(6)
-                                personaldata.insert(6,i.val()['Training Type'])
+                                personaldata.insert(
+                                    6, i.val()['Training Type'])
                             elif a == 'Email':
                                 personaldata.pop(7)
-                                personaldata.insert(7,i.val()['Email'])
-                if personaldata != ['Name','Description', 'Experience', 'Gender', 'Location', 'Price Range', 'Training Type', "Email"]:
+                                personaldata.insert(7, i.val()['Email'])
+                if personaldata != ['Name', 'Description', 'Experience', 'Gender', 'Location', 'Price Range', 'Training Type', "Email"]:
                     data1 += (tuple(personaldata),)
                     print(data1)
             if data1:
                 print("data1")
                 print(headings)
                 print(data1)
-                return render_template("FilterTrainers.html", headings=headings, data=data1, trainerPics = trainerPics)
+                return render_template("FilterTrainers.html", headings=headings, data=data1, trainerPics=trainerPics)
             else:
                 flash("No such trainer exists. Please try again!")
                 return render_template("FilterTrainers.html")
         print(headings)
         print(data)
-        return render_template("FilterTrainers.html", headings=headings, data=data, trainerPics = trainerPics)
+        return render_template("FilterTrainers.html", headings=headings, data=data, trainerPics=trainerPics)
     else:
         flash("No trainers in the database!")
         return render_template("FilterTrainers.html")
@@ -810,7 +819,7 @@ def trainerbookings():
     return render_template("TrainerBookings.html")
 
 
-@app.route("/bookTrainer", methods=['POST','GET'])
+@app.route("/bookTrainer", methods=['POST', 'GET'])
 def bookTrainer():
     if request.method == "POST":
         # getting the email and pw
@@ -968,7 +977,9 @@ def check_roomnum(user, trainer):
 # given user's email return his name for display
 def get_user_name(email):
     users = database.child("Users").get()
+    print(users.each())
     if users.each():
+        print("in users.each")
         for i in users.each():
             if email == i.val()['Email']:
                 return i.val()["Name"]
@@ -1050,7 +1061,7 @@ def viewtrainerprofile():
                 print(type(url))
                 break
         print("in view trainer")
-        return render_template('ViewTrainer.html', trainer=trainer, profileImage = url)
+        return render_template('ViewTrainer.html', trainer=trainer, profileImage=url)
     else:
         return "Trainer not found", 404
 
@@ -1133,6 +1144,8 @@ def allChats():
         else:
             print("logged in as trainer")
             for chat in chat_hist:
+                print(chat)
+                print(get_user_name(chat))
                 names += (get_user_name(chat),)
         combined = ()
         index = 0
