@@ -1,20 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> Account Details </title>
-    <link rel="stylesheet" type="text/css" href="../static/css/memberDetails.css"/>
+    <link rel="stylesheet" type="text/css" href="../static/css/memberDetails.css" />
 </head>
+
 <body>
-    <div class = "banner">
-        <div class = "navbar">
-            <img src = "../static/img/trainers_logo_two.png" class = "logo">
+    <div class="banner">
+        <div class="navbar">
+            <img src="../static/img/trainers_logo_two.png" class="logo">
             <ul>
-                <li><a href = "/memberHome">Home</a></li>
-                <li><a href = "/memberDetailUpdate">Update Account</a></li>
-                <li><a href = "/">Logout</a></li>
+                <li><a href="/memberHome">Home</a></li>
+                <li><a href="/memberDetails">Update Account</a></li>
+                <li><a href="/">Logout</a></li>
             </ul>
         </div>
     </div>
@@ -27,8 +29,9 @@
         <h2>Member Details</h2>
         <div class="profile-card">
             <div class="image-container">
-                <img src="{{ profileImage }}" class ="picture" style="width: 300px; height: 300px; -webkit-border-radius: 60px; -webkit-background-clip: padding-box;-moz-border-radius: 60px;-moz-background-clip: padding;
-                border-radius: 10px; background-clip: padding-box; margin: 7px 0 0 5px; float: center; background-size: cover; background-position: center center;"> 
+                <img src="{{ profileImage }}" class="picture"
+                    style="width: 300px; height: 300px; -webkit-border-radius: 60px; -webkit-background-clip: padding-box;-moz-border-radius: 60px;-moz-background-clip: padding;
+                border-radius: 10px; background-clip: padding-box; margin: 7px 0 0 5px; float: center; background-size: cover; background-position: center center;">
             </div>
         </div>
         <form action="/memberDetails" method="POST" enctype="multipart/form-data">
@@ -47,20 +50,20 @@
             <div class="inputBox">
                 <label for="gender">Gender</label> <br>
                 <input type="hidden" value="{{valDetails[1]}}" name="oldGender">
-                <select id="newGender" name = "newGender">
+                <select id="newGender" name="newGender">
                     <option value="" disabled selected hidden>{{valDetails[1]}}</option>
                     <option name="newGender" value="Male">Male</option>
-                    <option name="newGender" value="Female">Female</option>              
+                    <option name="newGender" value="Female">Female</option>
                 </select>
-            </div> 
+            </div>
             <br>
             <div class="inputBox">
                 <label for="trglvl">Training Level</label> <br>
                 <input type="hidden" value="{{valDetails[4]}}" name="oldTrgLvl">
-                <select id="newTrgLvl" name = "newTrgLvl" value="{{valDetails[4]}}">
+                <select id="newTrgLvl" name="newTrgLvl" value="{{valDetails[4]}}">
                     <option value="" disabled selected hidden>{{valDetails[4]}}</option>
-                    <option name="newTrgLvl" value="Beginner">Beginner</option> 
-                    <option name="newTrgLvl" value="Intermediate" >Intermediate</option>
+                    <option name="newTrgLvl" value="Beginner">Beginner</option>
+                    <option name="newTrgLvl" value="Intermediate">Intermediate</option>
                     <option name="newTrgLvl" value="Advance">Advance</option>
                 </select>
             </div>
@@ -68,31 +71,32 @@
             <div class="inputBox">
                 <label for="trgtype">Training Type</label> <br>
                 <input type="hidden" value="{{valDetails[5]}}" name="oldTrgType">
-                <select id="newTrgType" name = "newTrgType">
+                <select id="newTrgType" name="newTrgType">
                     <option value="" disabled selected hidden>{{valDetails[5]}}</option>
                     <option name="newTrgType" value="Kettlebell">Kettlebell</option>
-                    <option name="newTrgType" value="Body weight" >Body weight</option>
+                    <option name="newTrgType" value="Body weight">Body weight</option>
                     <option name="newTrgType" value="Barbell">Barbell</option>
                 </select>
             </div>
             <br>
             <div class="inputBox">
                 <label for="picture">Photo</label>
-                <input type="file" accept = "image/*" id="picture" name="picture">
+                <input type="file" accept="image/*" id="picture" name="picture">
             </div>
             <div>
                 <button type="submit" class="btn" href="/memberDetails">Update</button>
         </form>
-        </div>
+    </div>
     </div>
     {%with messages = get_flashed_messages()%}
-        {%if messages %}
-            {% for msg in messages%}
-                <b style="color:red; font-size:15px">{{msg}}</b>
-            {% endfor %}
-        {% endif %}
+    {%if messages %}
+    {% for msg in messages%}
+    <b style="color:red; font-size:15px">{{msg}}</b>
+    {% endfor %}
+    {% endif %}
     {% endwith %}
 </body>
+
 </html>
 <!-- <html>
 <head>

@@ -1,7 +1,7 @@
 <html>
 
 <head>
-    <title> View All Bookings </title>
+    <title> View All Chats </title>
     <link rel="stylesheet" type="text/css" href="../static/css/memberDetails.css" />
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -24,36 +24,16 @@
                 table,
                 th,
                 td {
-                    border: 5px solid black;
+                    border: 5px solid white;
                 }
             </style>
 
-            {%with messages = get_flashed_messages()%}
-            {%if messages %}
-            {% for msg in messages%}
-            <b style="color:red; font-size:20px">{{msg}}</b>
+            {% for row in chats %}
+            <tr>
+                <li><a href="/viewChat?email={{row[0]}}">{{row[1]}}</a></li>
+            </tr>
             {% endfor %}
-            {% endif %}
-            {% endwith %}
 
-            <table>
-                <tr>
-                    {% for header in headings %}
-                    <th style="color: black; font-size:20px">{{ header }} </th>
-                    {% endfor %}
-                </tr>
-                {% for row in bookings %}
-                <tr>
-                    <a href="/cancelBooking/{{row[0]}}/" id="email"><button type="button"><span></span>Cancel
-                            Booking</button></a>
-                    {% for cell in row %}
-                    <td style="color: black; font-size:30px">{{ cell }}</td>
-                    {% endfor %}
-                </tr>
-
-                {% endfor %}
-
-            </table>
         </center>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"

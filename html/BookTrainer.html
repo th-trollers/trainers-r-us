@@ -1,0 +1,65 @@
+<html>
+<head>
+    <title> Book Trainer </title>
+    <link rel="stylesheet" type="text/css" href="../static/css/memberDetails.css" />
+    </head>
+    <body>
+        <div class = "banner">
+        <div class = "navbar">
+            <img src = "../static/img/trainers_logo_two.png" class = "logo">
+            <ul>
+                <li><a href = "/memberHome">Home</a></li>
+                <li><a href = "/memberLogin">Login Page</a></li>
+            </ul>
+        </div>
+        <center>
+            <h1 style="color:white; font-size:60px">BOOK TRAINER</h1>
+            <p1 style="color:white; font-size:40px">Please enter the respective details</p1>
+            <form action = "#" method = "post">
+            {%with messages = get_flashed_messages()%}
+            {%if messages %}
+                {% for msg in messages%}
+                    <b style="color:red; font-size:20px">{{msg}}</b>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            <br>
+            <br>
+            <br>
+            <br>
+                <table>
+                    <tr>
+                        <td style = "color:black; font-size:30px">Location: </td>
+                        <td>
+                        <input type = "text" name = "location">
+                        </td>
+                    </tr>
+                    
+
+                    <tr>
+                        <td style = "color:black; font-size:30px">Date: </td>
+                        <td>
+                            <input type="date" name="date">
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style = "color:black; font-size:30px">Timing: </td>
+                        <td>
+                        <input type = "time" name = "timing">
+                        </td>
+                    </tr>
+
+                  
+
+                    <tr>
+                        <td>
+                            <input type= "submit" name= "submit" value = "Book Trainer">
+                        </td>
+                    </tr>
+                    
+                </table>
+            </form>
+        </center>
+    </body>
+</html>
