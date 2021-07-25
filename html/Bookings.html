@@ -1,4 +1,72 @@
-<html>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Account Details </title>
+    <link rel="stylesheet" type="text/css" href="../static/css/trainerBookings.css" />
+</head>
+
+<body>
+    <div class="banner">
+        <div class="navbar">
+            <img src="../static/img/trainers_logo_two.png" class="logo">
+            <ul>
+                <li><a href="/memberHome">Home</a></li>
+                <li><a href="/">Logout</a></li>
+            </ul>
+        </div>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="wrapper">
+        <form action="/bookings" method="POST" enctype="multipart/form-data">
+            <style>
+                table,
+                th,
+                td {
+                    border: 5px solid black;
+                    border-collapse: collapse;
+                }
+            </style>
+
+            <h1 style="color:black; font-size:70px; text-decoration: underline;"> All Bookings </h1>
+            <table>
+                <tr>
+                    {% for header in headings %}
+                    <th style="color: black; font-size:20px">{{ header }} </th>
+                    {% endfor %}
+                </tr>
+                {% for row in bookings %}
+                <tr>
+                    {% for cell in row %}
+                    <td style="color: black; font-size:30px">{{ cell }}</td>
+                    {% endfor %}
+                    <td><a href="/cancelBooking/{{row[0]}}/" id="email">Cancel Booking</a></td>
+                </tr>
+
+                {% endfor %}
+
+            </table>
+        </form>
+    </div>
+    </div>
+    {%with messages = get_flashed_messages()%}
+    {%if messages %}
+    {% for msg in messages%}
+    <b style="color:red; font-size:15px">{{msg}}</b>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+</body>
+</html>
+<!-- <html>
 
 <head>
     <title> View All Bookings </title>
@@ -48,7 +116,8 @@
                             Booking</button></a>
                     {% for cell in row %}
                     <td style="color: black; font-size:30px">{{ cell }}</td>
-                    {% endfor %}
+                    {% endfor %}}
+                    <td><a href="/cancelBooking/{{row[0]}}/" id="email">Cancel Booking</a></td>
                 </tr>
 
                 {% endfor %}
@@ -60,4 +129,4 @@
             crossorigin="anonymous"></script>
 </body>
 
-</html>
+</html>  -->

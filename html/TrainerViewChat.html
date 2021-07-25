@@ -2,26 +2,38 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Chat Page</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Chat Page </title>
+    <link rel="stylesheet" type="text/css" href="../static/css/chatPage.css"/>
 </head>
 <body>
-<h1>Chat with {{trainer}}</h1>
-
-
-<div id="messages">
-    {% for message in messages %}
-        <div><b>{{ message[1] }}&nbsp;[{{ message[2] }}]:&nbsp;</b> {{ message[0] }}</div>
-    {% endfor %}
-</div>
-
-<form id="message_input_form">
-    <input type="text" id="message_input" placeholder="Enter your message here">
-    <button type="submit">Send</button>
-</form>
-
-
-<a href="/trainerHome"><button type = "button"><span></span>BACK</button>
-<a href="/allChats"><button type = "button"><span></span>VIEW ALL CHATS</button>
+    <div class = "banner">
+        <div class = "navbar">
+            <img src = "../static/img/trainers_logo_two.png" class = "logo">
+            <ul>
+                <li><a href = "/trainerHome">BACK</a></li>
+                <li><a href = "/allChats">VIEW ALL CHATS</a></li>
+            </ul>
+        </div>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="container">
+        <h1>Chat with {{trainer}}</h1>
+        <div class="messages" id = "messages">
+            {% for message in messages %}
+                <div><b>{{ message[1] }}&nbsp;[{{ message[2] }}]:&nbsp;</b> {{ message[0] }}</div>
+            {% endfor %}
+        </div>
+        <form id="message_input_form" class="message_input_form">
+            <input type="text" id="message_input" placeholder="Enter your message here">
+            <button type="submit" class="btn">Send</button>
+        </form>
+    </div>
 
 
 </body>
