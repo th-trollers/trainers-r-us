@@ -16,7 +16,7 @@ config = {
     "projectId": "trainers-r-us",
     "databaseURL": "https://trainers-r-us-default-rtdb.asia-southeast1.firebasedatabase.app/",
     "storageBucket": "trainers-r-us.appspot.com",
-    "serviceAccount": "trainers-r-us/serviceAccountKey.json",
+    "serviceAccount": "serviceAccountKey.json",
     "messagingSenderId": "128175027453",
     "appId": "1:128175027453:web:4b91f00815ac01c4747a94",
     "measurementId": "G-6JY1N1W5ZY"
