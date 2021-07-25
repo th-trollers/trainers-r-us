@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Account Details </title>
+    <title> Trainer Account Details </title>
     <link rel="stylesheet" type="text/css" href="../static/css/memberDetails.css"/>
 </head>
 <body>
@@ -22,6 +22,13 @@
     <br>
     <br>
     <br>
+    {%with messages = get_flashed_messages()%}
+    {%if messages %}
+        {% for msg in messages%}
+            <b style="color:red; font-size:15px">{{msg}}</b>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}   
     <div class="wrapper">
         <h2>Trainer Details</h2>
         <div class="profile-card">
@@ -32,25 +39,29 @@
         </div>
         <form action="#" method="POST" enctype="multipart/form-data">
             <div class="inputBox">
-                <input type="hidden" value="{{valDetails[1]}}" name="oldEmail">
-                <input type="text" value="{{valDetails[1]}}" name="newEmail">
-            </div>
-            <div class="inputBox">
+                <label for="name">Name</label> <br>
                 <input type="hidden" value="{{valDetails[5]}}" name="oldName">
                 <input type="text" value="{{valDetails[5]}}" name="newName">
             </div>
+            <br>
             <div class="inputBox">
+                <label for="number">Number</label> <br>
                 <input type="hidden" value="{{valDetails[6]}}" name="oldNumber">
                 <input type="text" value="{{valDetails[6]}}" name="newNumber">
             </div>
+            <br>
             <div class="inputBox">
+                <label for="descrip">Description</label> <br>
                 <input type="hidden" value="{{valDetails[0]}}" name="oldDescrip">
                 <input type= "text" value="{{valDetails[0]}}" name="newDescrip">
             </div>
+            <br>
             <div class="inputBox">
+                <label for="location">Location</label> <br>
                 <input type="hidden" value="{{valDetails[4]}}" name="oldLocation">
                 <input type= "text" value="{{valDetails[4]}}" name="newLocation">
             </div>
+            <br>
             <div class="inputBox">
                 <label for="gender">Gender</label> <br>
                 <input type="hidden" value="{{valDetails[3]}}" name="oldGender">
@@ -94,21 +105,12 @@
                 </select>
             </div>
             <br>
-            <div class="inputBox">
-                <label for="picture">Photo</label>
-                <input type="file" accept = "image/*" id="picture" name="picture">
-            </div>
             <div>
                 <button type="submit" class="btn">Update</button>
+            <br>
+            <h5>After pressing "Update" please refresh your page to see your updated details</h5>
         </form>
         </div>
     </div>
-    {%with messages = get_flashed_messages()%}
-        {%if messages %}
-            {% for msg in messages%}
-                <b style="color:red; font-size:15px">{{msg}}</b>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
 </body>
 </html>
