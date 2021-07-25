@@ -1,3 +1,4 @@
+import os
 from os import path
 import pyrebase
 from flask import *
@@ -22,6 +23,8 @@ config = {
     "measurementId": "G-6JY1N1W5ZY"
 }
 
+app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024
+app.config['UPLOAD_EXTENSIONS'] = ['.jpg']
 firebase = pyrebase.initialize_app(config)
 auth = firebase.auth()
 database = firebase.database()
@@ -59,15 +62,23 @@ def memberLogin():
             return redirect(url_for("memberLogin"))
         try:
             user = auth.sign_in_with_email_and_password(username, password)
+            # return redirect(url_for("memberLogin"))
             print(successful)
             session["username"] = usernameTwo
             session["userToken"] = user
             session["check"] = "User"
-            return redirect(url_for("memberHome"))
         except:
             flash(unsuccessful)
             print(unsuccessful)
             return redirect(url_for("memberLogin"))
+        if auth.get_account_info(user["idToken"])["users"][0]['emailVerified'] == True:
+            return redirect(url_for("memberHome"))
+        else:
+            flash("Email has not been verified, you have been sent another verification email.")
+            auth.send_email_verification(user["idToken"])
+            print("Email has not been verified, you have been sent another verification email.")
+            return redirect(url_for("memberLogin"))
+        
     return render_template("MemberLogin.html")
 
 
@@ -92,17 +103,29 @@ def trainerLogin():
             session["check"] = "Trainer"
             trainername = get_trainer(usernameTwo)[5]
             numpending = get_pending(usernameTwo)
-            if numpending == "No Pending Bookings":
-                return redirect(url_for("trainerHome"))
-            else:
-                count = len(numpending)
-                print(count)
-                flash("You have " + str(count) + " pending bookings")
-                return redirect(url_for("trainerHome"))
         except:
             flash(unsuccessful)
             print(unsuccessful)
             return redirect(url_for("trainerLogin"))
+        if auth.get_account_info(user["idToken"])["users"][0]['emailVerified'] == True:
+            if numpending == "No Pending Bookings":
+                flash("You have no pending bookings")
+                return redirect(url_for("trainerHome"))
+            else:
+                count = len(numpending)
+                if count == 1:
+                    print(count)
+                    flash("You have " + str(count) + " pending booking")
+                else:
+                    print(count)
+                    flash("You have " + str(count) + " pending bookings")
+                return redirect(url_for("trainerHome"))
+        else:
+            flash("Email has not been verified, you have been sent another verification email.")
+            auth.send_email_verification(user["idToken"])
+            print("Email has not been verified, you have been sent another verification email.")
+            return redirect(url_for("trainerLogin"))   
+        
     return render_template("TrainerLogin.html")
 
 # Member and Trainer Home Page
@@ -110,21 +133,11 @@ def trainerLogin():
 
 @app.route('/memberHome', methods=["POST", "GET"])
 def memberHome():
-    if "username" in session:
-        print("username in session")
-        username = str(session["username"])
-        flash("Welcome User " +
-              database.child("Users").child(username).get().val()["Name"])
     return render_template("MemberHome.html")
 
 
 @app.route('/trainerHome', methods=["POST", "GET"])
 def trainerHome():
-    if "username" in session:
-        print("username in session")
-        username = str(session["username"])
-        flash("Welcome trainer " +
-              database.child("Trainers").child(username).get().val()["Name"])
     return render_template("TrainerHome.html")
 
 
@@ -149,13 +162,18 @@ def createNewMember():
             trgtype = str(request.form["trgtype"])
             print(trgtype)
             pic = request.files["picture"]
+            filename = pic.filename
+            file_ext = os.path.splitext(filename)[1]
             print(pic)
             print('test')
             if len(pw) < 6:
                 flash("Password too short please try a new one")
                 return render_template("CreateNewMember.html")
-            elif len(number) != 8 or number[0] != "6" or number[0] != "9" or number[0] != "8":
+            elif len(number) != 8 or number[0] != "6" and number[0] != "9" and number[0] != "8":
                 flash("Please enter a valid number")
+                return render_template("CreateNewMember.html")
+            elif file_ext not in current_app.config['UPLOAD_EXTENSIONS']:
+                flash("Please only upload jpg format files")
                 return render_template("CreateNewMember.html")
             else:
                 try:
@@ -172,7 +190,7 @@ def createNewMember():
                     print("Successfully uploaded personal details")
                     path_on_cloud = "member_images/" + str(emailTwo) + ".jpg"
                     storage.child(path_on_cloud).put(pic)
-                    print("data has been created")
+                    return redirect(url_for("memberLogin"))
                 except:
                     print("Cannot make number int")
                     flash("Please enter a valid number")
@@ -181,7 +199,6 @@ def createNewMember():
             print("went to except")
             flash("Please fill in all your details")
             return render_template("CreateNewMember.html")
-        return redirect(url_for("memberLogin"))
     else:
         return render_template("CreateNewMember.html")
 
@@ -213,33 +230,48 @@ def createNewTrainer():
             print(pricerange)
             pic = request.files["picture"]
             print(pic)
-
+            filename = pic.filename
+            file_ext = os.path.splitext(filename)[1]
             if len(pw) < 6:
                 flash("Password too short please try a new one")
                 return render_template("CreateNewTrainer.html")
+            elif len(number) != 8 or number[0] != "6" and number[0] != "9" and number[0] != "8":
+                flash("Please enter a valid number")
+                return render_template("CreateNewTrainer.html")
+            elif len(str(description)) > 300:
+                flash("Please enter less than 90 words")
+                return render_template("CreateNewTrainer.html")
+            elif file_ext not in current_app.config['UPLOAD_EXTENSIONS']:
+                flash("Please only upload jpg format files")
+                return render_template("CreateNewTrainer.html")
             else:
-                user = auth.create_user_with_email_and_password(email, pw)
-                print("Successfully created an account")
-                flash("Please go to your email to verify your account")
-                auth.send_email_verification(user["idToken"])
-                emailTwo = email.replace(".", "_DOT_")
-                data = {"Email": emailTwo, "Name": name, "Number": number, "Location": location,
-                        "Gender": gender, "Description": description, "Experience": experience, "Training Type": trgtype, "Price Range": pricerange}
-                # rmb to try to create a range slider for the price range
-                database.child("Trainers").child(emailTwo).set(data)
-                path_on_cloud = "trainer_images/" + str(emailTwo) + ".jpg"
-                storage.child(path_on_cloud).put(pic)
-                print("data has been created")
+                try:
+                    numcheck = int(number)
+                    print(numcheck)
+                    user = auth.create_user_with_email_and_password(email, pw)
+                    print("Successfully created an account")
+                    flash("Please go to your email to verify your account")
+                    auth.send_email_verification(user["idToken"])
+                    emailTwo = email.replace(".", "_DOT_")
+                    data = {"Email": emailTwo, "Name": name, "Number": number, "Location": location,
+                            "Gender": gender, "Description": description, "Experience": experience, "Training Type": trgtype, "Price Range": pricerange}
+                    database.child("Trainers").child(emailTwo).set(data)
+                    path_on_cloud = "trainer_images/" + str(emailTwo) + ".jpg"
+                    storage.child(path_on_cloud).put(pic)
+                    print("data has been created")
+                    return redirect(url_for("trainerLogin"))
+                except:
+                    print("Cannot make number int")
+                    flash("Please enter a valid number")
+                    return render_template("CreateNewTrainer.html")
         except:
             print("went to except")
             flash("Please enter valid details")
             return render_template("CreateNewTrainer.html")
-        return redirect(url_for("trainerLogin"))
     else:
         return render_template("CreateNewTrainer.html")
 
-# Details Pages
-
+# Account Update and Details Pages
 
 @app.route('/memberDetails', methods=["POST", "GET"])
 def memberDetails():
@@ -266,10 +298,10 @@ def memberDetails():
                 url = storage.child(file.name).get_url(user["idToken"])
                 # need to deal w the case where the person has no profile image i think
                 break
-        oldEmail = request.form.get("oldEmail")
-        print(oldEmail)
-        newEmail = request.form.get("newEmail")
-        print(newEmail)
+        # oldEmail = request.form.get("oldEmail")
+        # print(oldEmail)
+        # newEmail = request.form.get("newEmail")
+        # print(newEmail)
         oldName = request.form.get("oldName")
         print(oldName)
         newName = request.form.get("newName")
@@ -298,31 +330,31 @@ def memberDetails():
             keyLst.append(key)
         print(valLst)
         print(keyLst)
-        for key, value in dict.items():
-            if oldEmail == value:
-                print(newEmail)
-                new_Email = newEmail.replace("_DOT_", ".")
-                print(new_Email)
-                database.child("Users").child(
-                    username).update({key: new_Email})
-            elif oldName == value:
-                database.child("Users").child(username).update({key: newName})
-            elif oldNumber == value:
-                database.child("Users").child(
-                    username).update({key: newNumber})
-            elif oldGender == value:
-                if newGender:
-                    database.child("Users").child(
-                        username).update({key: newGender})
-            elif oldTrgLvl == value:
-                if newTrgLvl:
-                    database.child("Users").child(
-                        username).update({key: newTrgLvl})
-            elif oldTrgType == value:
-                if newTrgType:
-                    database.child("Users").child(
-                        username).update({key: newTrgType})
-        return render_template("MemberDetails.html", details=lst, profileImage=url, valDetails=valLst, keyDetails=keyLst)
+        if newNumber != None:
+            if len(newNumber) != 8 or newNumber[0] != "6" and newNumber[0] != "9" and newNumber[0] != "8":
+                flash("Please enter a valid number")
+                return render_template("MemberDetails.html", profileImage=url, valDetails=valLst, keyDetails=keyLst)
+            else:
+                for key, value in dict.items():
+                    # if oldEmail == value:
+                    #     print(newEmail)
+                    #     new_Email = newEmail.replace("_DOT_", ".")
+                    #     print(new_Email)
+                    #     database.child("Users").child(username).update({key: new_Email})
+                    if oldName == value:
+                        database.child("Users").child(username).update({key: newName})
+                    elif oldNumber == value:
+                        database.child("Users").child(username).update({key: newNumber})
+                    elif oldGender == value:
+                        if newGender:
+                            database.child("Users").child(username).update({key: newGender})
+                    elif oldTrgLvl == value:
+                        if newTrgLvl:
+                            database.child("Users").child(username).update({key: newTrgLvl})
+                    elif oldTrgType == value:
+                        if newTrgType:
+                            database.child("Users").child(username).update({key: newTrgType})
+        return render_template("MemberDetails.html", profileImage=url, valDetails=valLst, keyDetails=keyLst)
     else:
         return render_template("MemberDetails.html")
 
@@ -353,10 +385,10 @@ def trainerDetails():
                 # need to deal w the case where the person has no profile image i think
                 break
 
-        oldEmail = request.form.get("oldEmail")
-        print(oldEmail)
-        newEmail = request.form.get("newEmail")
-        print(newEmail)
+        # oldEmail = request.form.get("oldEmail")
+        # print(oldEmail)
+        # newEmail = request.form.get("newEmail")
+        # print(newEmail)
         oldName = request.form.get("oldName")
         print(oldName)
         newName = request.form.get("newName")
@@ -396,39 +428,49 @@ def trainerDetails():
             valLst.append(value)
             keyLst.append(key)
         print(keyLst)
-        for key, value in dict.items():
-            if oldEmail == value:
-                database.child("Trainers").child(
-                    username).update({key: newEmail})
-            elif oldName == value:
-                database.child("Trainers").child(
-                    username).update({key: newName})
-            elif oldNumber == value:
-                database.child("Trainers").child(
-                    username).update({key: newNumber})
-            elif oldDescrip == value:
-                database.child("Trainers").child(
-                    username).update({key: newDescrip})
-            elif oldLocation == value:
-                database.child("Trainers").child(
-                    username).update({key: newLocation})
-            elif oldExp == value:
-                if newExp:
-                    database.child("Trainers").child(
-                        username).update({key: newExp})
-            elif oldGender == value:
-                if newGender:
-                    database.child("Trainers").child(
-                        username).update({key: newGender})
-            elif oldPriceRange == value:
-                if newPriceRange:
-                    database.child("Trainers").child(
-                        username).update({key: newPriceRange})
-            elif oldTrgType == value:
-                if newTrgType:
-                    database.child("Trainers").child(
-                        username).update({key: newTrgType})
-    return render_template("TrainerDetails.html", details=lst, profileImage=url, valDetails=valLst, keyDetails=keyLst)
+        if newNumber != None:
+            if len(newNumber) != 8 or newNumber[0] != "6" and newNumber[0] != "9" and newNumber[0] != "8":
+                flash("Please enter a valid number")
+                return render_template("TrainerDetails.html", profileImage=url, valDetails=valLst, keyDetails=keyLst)
+            elif len(str(newDescrip)) > 300:
+                flash("Please enter less than 90 words")
+                return render_template("TrainerDetails.html", profileImage=url, valDetails=valLst, keyDetails=keyLst)
+            else:
+                for key, value in dict.items():
+                    # if oldEmail == value:
+                    #     database.child("Trainers").child(
+                    #         username).update({key: newEmail})
+                    if oldName == value:
+                        database.child("Trainers").child(
+                            username).update({key: newName})
+                    elif oldNumber == value:
+                        database.child("Trainers").child(
+                            username).update({key: newNumber})
+                    elif oldDescrip == value:
+                        database.child("Trainers").child(
+                            username).update({key: newDescrip})
+                    elif oldLocation == value:
+                        database.child("Trainers").child(
+                            username).update({key: newLocation})
+                    elif oldExp == value:
+                        if newExp:
+                            database.child("Trainers").child(
+                                username).update({key: newExp})
+                    elif oldGender == value:
+                        if newGender:
+                            database.child("Trainers").child(
+                                username).update({key: newGender})
+                    elif oldPriceRange == value:
+                        if newPriceRange:
+                            database.child("Trainers").child(
+                                username).update({key: newPriceRange})
+                    elif oldTrgType == value:
+                        if newTrgType:
+                            database.child("Trainers").child(
+                                username).update({key: newTrgType})
+        return render_template("TrainerDetails.html", details=lst, profileImage=url, valDetails=valLst, keyDetails=keyLst)
+    else:
+        return render_template("TrainerDetails.html")
 
 # Update Pages
 
@@ -827,10 +869,17 @@ def trainerbookings():
 @app.route("/bookTrainer", methods=['POST', 'GET'])
 def bookTrainer():
     if request.method == "POST":
+        now = datetime.today().date()
+        print(now)
+        print(type(now))
+        print(str(now))
         # getting the email and pw
         email = request.args.get("email")
         location = str(request.form["Location"])
         print(location)
+        date2 = request.form["date"]
+        print(date2)
+        print(type(date2))
         date = str(request.form["date"])
         print(date)
         timing = str(request.form["timing"])
@@ -842,7 +891,10 @@ def bookTrainer():
             print("went to except")
             flash("Please enter valid details")
             return render_template("BookTrainer.html")
-
+        elif date <= str(now):
+            print("Must book at least a day in advance")
+            flash("Must book at least a day in advance")
+            return render_template("BookTrainer.html")
         else:
             user = str(session["username"])
 
