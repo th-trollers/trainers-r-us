@@ -17,7 +17,7 @@ config = {
     "projectId": "trainers-r-us",
     "databaseURL": "https://trainers-r-us-default-rtdb.asia-southeast1.firebasedatabase.app/",
     "storageBucket": "trainers-r-us.appspot.com",
-    "serviceAccount": "trainers-r-us/serviceAccountKey.json",
+    "serviceAccount": "serviceAccountKey.json",
     "messagingSenderId": "128175027453",
     "appId": "1:128175027453:web:4b91f00815ac01c4747a94",
     "measurementId": "G-6JY1N1W5ZY"
@@ -74,11 +74,13 @@ def memberLogin():
         if auth.get_account_info(user["idToken"])["users"][0]['emailVerified'] == True:
             return redirect(url_for("memberHome"))
         else:
-            flash("Email has not been verified, you have been sent another verification email.")
+            flash(
+                "Email has not been verified, you have been sent another verification email.")
             auth.send_email_verification(user["idToken"])
-            print("Email has not been verified, you have been sent another verification email.")
+            print(
+                "Email has not been verified, you have been sent another verification email.")
             return redirect(url_for("memberLogin"))
-        
+
     return render_template("MemberLogin.html")
 
 
@@ -104,7 +106,7 @@ def trainerLogin():
             session["check"] = "Trainer"
             session["pendingBookings"] = numpending
             trainername = get_trainer(usernameTwo)[5]
-            
+
         except:
             flash(unsuccessful)
             print(unsuccessful)
@@ -123,11 +125,13 @@ def trainerLogin():
             #         flash("You have " + str(count) + " pending bookings")
             return redirect(url_for("trainerHome"))
         else:
-            flash("Email has not been verified, you have been sent another verification email.")
+            flash(
+                "Email has not been verified, you have been sent another verification email.")
             auth.send_email_verification(user["idToken"])
-            print("Email has not been verified, you have been sent another verification email.")
-            return redirect(url_for("trainerLogin"))   
-        
+            print(
+                "Email has not been verified, you have been sent another verification email.")
+            return redirect(url_for("trainerLogin"))
+
     return render_template("TrainerLogin.html")
 
 # Member and Trainer Home Page
@@ -288,6 +292,7 @@ def createNewTrainer():
 
 # Account Update and Details Pages
 
+
 @app.route('/memberDetails', methods=["POST", "GET"])
 def memberDetails():
     if "username" and "userToken" in session:
@@ -357,18 +362,23 @@ def memberDetails():
                     #     print(new_Email)
                     #     database.child("Users").child(username).update({key: new_Email})
                     if oldName == value:
-                        database.child("Users").child(username).update({key: newName})
+                        database.child("Users").child(
+                            username).update({key: newName})
                     elif oldNumber == value:
-                        database.child("Users").child(username).update({key: newNumber})
+                        database.child("Users").child(
+                            username).update({key: newNumber})
                     elif oldGender == value:
                         if newGender:
-                            database.child("Users").child(username).update({key: newGender})
+                            database.child("Users").child(
+                                username).update({key: newGender})
                     elif oldTrgLvl == value:
                         if newTrgLvl:
-                            database.child("Users").child(username).update({key: newTrgLvl})
+                            database.child("Users").child(
+                                username).update({key: newTrgLvl})
                     elif oldTrgType == value:
                         if newTrgType:
-                            database.child("Users").child(username).update({key: newTrgType})
+                            database.child("Users").child(
+                                username).update({key: newTrgType})
         return render_template("MemberDetails.html", profileImage=url, valDetails=valLst, keyDetails=keyLst)
     else:
         return render_template("MemberDetails.html")
