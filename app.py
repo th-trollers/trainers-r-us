@@ -17,7 +17,7 @@ config = {
     "projectId": "trainers-r-us",
     "databaseURL": "https://trainers-r-us-default-rtdb.asia-southeast1.firebasedatabase.app/",
     "storageBucket": "trainers-r-us.appspot.com",
-    "serviceAccount": "serviceAccountKey.json",
+    "serviceAccount": "trainers-r-us/serviceAccountKey.json",
     "messagingSenderId": "128175027453",
     "appId": "1:128175027453:web:4b91f00815ac01c4747a94",
     "measurementId": "G-6JY1N1W5ZY"
@@ -91,6 +91,7 @@ def trainerLogin():
         email = request.form["name"]
         password = request.form["pass"]
         usernameTwo = email.replace(".", "_DOT_")
+        numpending = get_pending(usernameTwo)
         if database.child("Trainers").child(usernameTwo).get().val() == None:
             flash(unsuccessful)
             print("You do not have an account with us")
@@ -101,25 +102,26 @@ def trainerLogin():
             session["username"] = usernameTwo
             session["userToken"] = user
             session["check"] = "Trainer"
+            session["pendingBookings"] = numpending
             trainername = get_trainer(usernameTwo)[5]
-            numpending = get_pending(usernameTwo)
+            
         except:
             flash(unsuccessful)
             print(unsuccessful)
             return redirect(url_for("trainerLogin"))
         if auth.get_account_info(user["idToken"])["users"][0]['emailVerified'] == True:
-            if numpending == "No Pending Bookings":
-                flash("You have no pending bookings")
-                return redirect(url_for("trainerHome"))
-            else:
-                count = len(numpending)
-                if count == 1:
-                    print(count)
-                    flash("You have " + str(count) + " pending booking")
-                else:
-                    print(count)
-                    flash("You have " + str(count) + " pending bookings")
-                return redirect(url_for("trainerHome"))
+            # if numpending == "No Pending Bookings":
+            #     flash("You have no pending bookings")
+            #     return redirect(url_for("trainerHome"))
+            # else:
+            #     count = len(numpending)
+            #     if count == 1:
+            #         print(count)
+            #         flash("You have " + str(count) + " pending booking")
+            #     else:
+            #         print(count)
+            #         flash("You have " + str(count) + " pending bookings")
+            return redirect(url_for("trainerHome"))
         else:
             flash("Email has not been verified, you have been sent another verification email.")
             auth.send_email_verification(user["idToken"])
@@ -138,6 +140,19 @@ def memberHome():
 
 @app.route('/trainerHome', methods=["POST", "GET"])
 def trainerHome():
+    if "username" and "pendingBookings" in session:
+        pendingBookings = session["pendingBookings"]
+        if pendingBookings == "No Pending Bookings":
+            flash("You have no pending bookings")
+            return render_template("TrainerHome.html")
+        else:
+            count = len(session["pendingBookings"])
+            if count == 1:
+                print(count)
+                flash("You have " + str(count) + " pending booking")
+            else:
+                print(count)
+                flash("You have " + str(count) + " pending bookings")
     return render_template("TrainerHome.html")
 
 
@@ -530,6 +545,7 @@ def logout():
     session.pop("username", None)
     session.pop("userToken", None)
     session.pop("check", None)
+    session.pop("pendingBookings", None)
     return redirect(url_for("homePage"))
 
 
@@ -847,21 +863,24 @@ def bookings():
 
 @app.route("/trainerbookings")
 def trainerbookings():
-    if "username" in session:
+    if "username" and "pendingBookings" in session:
         email = str(session["username"])
+        usernameTwo = email.replace(".", "_DOT_")
         bookinglist = get_bookings(email)
         print(bookinglist)
-
         pendinglist = get_pending(email)
         print(pendinglist)
         if bookinglist == "No Bookings":
-
+            numpending = get_pending(usernameTwo)
+            session["pendingBookings"] = numpending
             return render_template('TrainerBookings.html')
         elif pendinglist == "No Pending Bookings":
-
+            numpending = get_pending(usernameTwo)
+            session["pendingBookings"] = numpending
             return render_template('TrainerBookings.html', headings=heading2, bookings=bookinglist)
         else:
-
+            numpending = get_pending(usernameTwo)
+            session["pendingBookings"] = numpending
             return render_template('TrainerBookings.html', pending=heading3, headings=heading2, bookings=bookinglist, pendinglist=pendinglist)
     return render_template("TrainerBookings.html")
 
