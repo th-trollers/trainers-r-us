@@ -5,7 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> Trainer Home </title>
-    <link rel="stylesheet" type="text/css" href="../static/css/memberDetails.css"/>
+    <link rel="stylesheet" type="text/css" href="../static/css/trainerHome.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 </head>
 <body>
     <div class = "banner">
@@ -19,13 +21,20 @@
         </div>
     </div>
     <br>
-    <br>
-    <br>
-    <br>
-    <br>
+    <div class="notifications">
+        <h1> Notifications </h1>
+        <i class="fas fa-exclamation-triangle"></i>
+        {%with messages = get_flashed_messages()%}
+            {%if messages %}
+                {% for msg in messages%}
+                <b style="color:black; font-size: 13px;">{{msg}}
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
     <div class = "content">
         <h1> START CREATING YOUR PROFILE </h1>
-        <p> Upload and customize your profile pages, <br>to attract your customers!</p>
+        <p> Upload and customise your profile pages <br>to attract your customers!</p>
         <div>
             <a href="/allChats"><button type = "button"><span></span>VIEW ALL CHATS</button>
         </div>
@@ -33,13 +42,6 @@
             <a href="/trainerbookings"><button type = "button"><span></span>VIEW ALL BOOKINGS</button>
         </div>
     </div>
-    {%with messages = get_flashed_messages()%}
-        {%if messages %}
-            {% for msg in messages%}
-                <b style="color:red; font-size:15px">{{msg}}</b>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
 </body>
 </html>
 <!-- <html>

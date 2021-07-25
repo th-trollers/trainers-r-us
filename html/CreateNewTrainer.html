@@ -23,6 +23,13 @@
     <br>
     <br>
     <div class="wrapper">
+        {%with messages = get_flashed_messages()%}
+        {%if messages %}
+            {% for msg in messages%}
+                <b style="color:red; font-size:15px">{{msg}}</b>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
         <h2>Create New Trainer</h2>
         <form action="#" method="POST" enctype="multipart/form-data">
             <div class="inputBox">
@@ -84,20 +91,13 @@
             <br>
             <div class="inputBox">
                 <label for="picture">Photo</label>
-                <input type="file" accept = "image/*" id="picture" name="picture">
+                <input type="file" id="picture" name="picture">
             </div>
             <div>
                 <button type="submit" class="btn">Create New User</button>
         </form>
         </div>
     </div>
-    {%with messages = get_flashed_messages()%}
-        {%if messages %}
-            {% for msg in messages%}
-                <b style="color:red; font-size:15px">{{msg}}</b>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
 </body>
 </html>
 <!-- <html>
