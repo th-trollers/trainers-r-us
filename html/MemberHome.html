@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> Member Account Details </title>
-    <link rel="stylesheet" type="text/css" href="../static/css/memberDetails.css" />
+    <link rel="stylesheet" type="text/css" href="../static/css/trainerHome.css" />
 </head>
 
 <body>
@@ -21,22 +21,10 @@
         </div>
     </div>
     <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    {%with messages = get_flashed_messages()%}
-        {%if messages %}
-            {% for msg in messages%}
-            <b style="color:red; font-size:15px; text-align: center;">{{msg}}</b>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-    <br>
-    <br>
-    <br>
-    <br>
+    <div class="empty">
+    </div>
     <div class = "content">
+        <br>
         <h1> CONNECTING YOU TO YOUR<br> PERFECT PERSONAL TRAINER </h1>
         <p> Easily compare and view the available trainers! <br>To find out more please click view all trainers </p>
         <div>
