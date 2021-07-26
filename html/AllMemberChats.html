@@ -24,6 +24,7 @@
     <br>
     <br>
     <div class="wrapper">
+        <h2 style="text-decoration: underline;">All Chats</h2>
         {%with messages = get_flashed_messages()%}
             {%if messages %}
                 {% for msg in messages%}
@@ -31,7 +32,6 @@
                 {% endfor %}
             {% endif %}
         {% endwith %}
-        <h2 style="text-decoration: underline;">All Chats</h2>
         <form action="#" method="POST" enctype="multipart/form-data">
             <div class="inputBox">
             {% for row in chats %}
