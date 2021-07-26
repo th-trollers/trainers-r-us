@@ -885,6 +885,7 @@ def bookings():
 
         bookinglist = get_bookings(email)
         if bookinglist == "No Bookings":
+            flash("No Current Bookings")
             return render_template('Bookings.html')
         else:
             return render_template('Bookings.html', headings=heading1, bookings=bookinglist)
@@ -903,10 +904,12 @@ def trainerbookings():
         if bookinglist == "No Bookings":
             numpending = get_pending(usernameTwo)
             session["pendingBookings"] = numpending
+            flash("No Current Bookings")
             return render_template('TrainerBookings.html')
         elif pendinglist == "No Pending Bookings":
             numpending = get_pending(usernameTwo)
             session["pendingBookings"] = numpending
+            flash("No Pending Bookings")
             return render_template('TrainerBookings.html', headings=heading2, bookings=bookinglist)
         else:
             numpending = get_pending(usernameTwo)
@@ -1196,8 +1199,9 @@ def viewChat():
                     # if not open new chat room
                     chats = database.child("Chats").get()
                     index = 0
-                    for i in chats.each():
-                        index += 1
+                    if chats.each():
+                        for i in chats.each():
+                            index += 1
                     counter = index + 1
                     roomname = "Room " + str(counter)
                     data = {"Username": username,
@@ -1224,8 +1228,9 @@ def viewChat():
                     print("no existing room")
                     chats = database.child("Chats").get()
                     index = 0
-                    for i in chats.each():
-                        index += 1
+                    if chats.each():
+                        for i in chats.each():
+                            index += 1
                     counter = index + 1
                     roomname = "Room " + str(counter)
                     data = {"Username": email, "Trainer": trainer,
@@ -1233,7 +1238,7 @@ def viewChat():
                     database.child("Chats").child(roomname).set(data)
                     return render_template('TrainerViewChat.html', username=trainername, room=roomname, trainer=username, email=email)
         else:
-            print("no chats found")
+            print("No Chats Found")
             if session["check"] == "User":
                 return render_template("ViewChat.html")
             else:
@@ -1258,10 +1263,11 @@ def allChats():
                     names += (get_trainer(chat)[5],)
         else:
             print("logged in as trainer")
-            for chat in chat_hist:
-                print(chat)
-                print(get_user_name(chat))
-                names += (get_user_name(chat),)
+            if chat_hist:
+                for chat in chat_hist:
+                    print(chat)
+                    print(get_user_name(chat))
+                    names += (get_user_name(chat),)
         combined = ()
         index = 0
         if chat_hist:
