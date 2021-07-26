@@ -1,5 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Member Account Details </title>
+    <link rel="stylesheet" type="text/css" href="../static/css/memberDetails.css" />
+</head>
+
+<body>
+    <div class="banner">
+        <div class="navbar">
+            <img src="../static/img/trainers_logo_two.png" class="logo">
+            <ul>
+                <li><a href = "/memberHome">Home</a></li>
+                <li><a href = "/memberDetails">Account Details</a></li>
+                <li><a href = "/">Logout</a></li>
+            </ul>
+        </div>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    {%with messages = get_flashed_messages()%}
+        {%if messages %}
+            {% for msg in messages%}
+            <b style="color:red; font-size:15px; text-align: center;">{{msg}}</b>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <div class = "content">
+        <h1> CONNECTING YOU TO YOUR<br> PERFECT PERSONAL TRAINER </h1>
+        <p> Easily compare and view the available trainers! <br>To find out more please click view all trainers </p>
+        <div>
+            <a href="/filterTrainers"><button type = "button"><span></span>VIEW ALL TRAINERS</button>
+        </div>
+        <div>
+            <a href="/allChats"><button type = "button"><span></span>VIEW ALL CHATS</button>
+        </div>
+        <div>
+            <a href="/bookings"><button type = "button"><span></span>VIEW ALL BOOKINGS</button>
+        </div>
+    </div>
+</body>
+</html>
+<!-- <!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -23,11 +72,19 @@
     <br>
     <br>
     <br>
+    {%with messages = get_flashed_messages()%}
+        {%if messages %}
+            {% for msg in messages%}
+                <b style="color:red; font-size:15px">{{msg}}</b>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <br>
     <div class = "content">
         <h1> CONNECTING YOU TO YOUR<br> PERFECT PERSONAL TRAINER </h1>
-        <p> Easily compare and view the available trainers! <br>To find out more please click view all trainers. </p>
+        <p> Easily compare and view the available trainers! <br>To find out more please click filter trainers. </p>
         <div>
-            <a href="/filterTrainers"><button type = "button"><span></span>FILTER TRAINERS</button>
+            <a href="/filterTrainers"><button type = "button"><span></span>VIEW ALL TRAINERS</button>
         </div>
         <div>
             <a href="/allChats"><button type = "button"><span></span>VIEW ALL CHATS</button>
@@ -36,48 +93,5 @@
             <a href="/bookings"><button type = "button"><span></span>VIEW ALL BOOKINGS</button>
         </div>
     </div>
-    {%with messages = get_flashed_messages()%}
-        {%if messages %}
-            {% for msg in messages%}
-                <b style="color:red; font-size:15px">{{msg}}</b>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
 </body>
 </html>
-<!-- <html>
-<head>
-    <title> Member Home Page </title>
-    <link rel="stylesheet" type="text/css" href="../static/css/memberHome.css" />
-</head>
-
-<body>
-    <div class="banner">
-        <div class="navbar">
-            <img src="../static/img/trainers_logo_two.png" class="logo">
-            <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">About Us</a></li>
-                <li><a href="/memberDetails">Account Details</a></li>
-                <li><a href="/">Logout</a></li>
-            </ul>
-        </div>
-
-        <div class = "content">
-            <h1> CONNECTING YOU TO YOUR<br> PERFECT PERSONAL TRAINER </h1>
-            <p> Easily compare and view the available trainers! <br>To find out more please click view all trainers. </p>
-            <div>
-                <a href="/filterTrainers"><button type="button"><span></span>FILTER TRAINERS</button>
-            </div>
-            <div>
-                <a href="/allChats"><button type="button"><span></span>VIEW ALL CHATS</button>
-            </div>
-            <div>
-                <a href="/bookings"><button type="button"><span></span>VIEW ALL BOOKINGS</button>
-            </div>
-        </div>
-
-    </div>
-
-</body>
-</html> -->

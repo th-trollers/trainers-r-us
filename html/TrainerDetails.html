@@ -22,14 +22,15 @@
     <br>
     <br>
     <br>
-    {%with messages = get_flashed_messages()%}
-    {%if messages %}
-        {% for msg in messages%}
-            <b style="color:red; font-size:15px">{{msg}}</b>
-        {% endfor %}
-    {% endif %}
-    {% endwith %}   
+     
     <div class="wrapper">
+        {%with messages = get_flashed_messages()%}
+            {%if messages %}
+                {% for msg in messages%}
+                    <b style="color:red; font-size:15px">{{msg}}</b>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}  
         <h2>Trainer Details</h2>
         <div class="profile-card">
             <div class="image-container">
