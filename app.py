@@ -188,7 +188,7 @@ def createNewMember():
             if len(pw) < 6:
                 flash("Password too short please try a new one")
                 return render_template("CreateNewMember.html")
-            elif len(number) != 8 or number[0] != "6" and number[0] != "9" and number[0] != "8":
+            elif len(number) != 8 or number[0] != "6" or number[0] != "9" or number[0] != "8":
                 flash("Please enter a valid number")
                 return render_template("CreateNewMember.html")
             elif file_ext not in current_app.config['UPLOAD_EXTENSIONS']:
@@ -566,7 +566,7 @@ def logout():
 @app.route('/filterTrainers', methods=['POST', 'GET'])
 def filterTrainers():
     headings = ('Name', 'Description', 'Experience', 'Gender',
-                'Location', 'Price Range', 'Training Type', "Email","CLICK HERE TO VIEW TRAINER PROFILE")
+                'Location', 'Price Range', 'Training Type', "Email", "CLICK HERE TO VIEW TRAINER PROFILE")
     if "username" and "userToken" in session:
         username = str(session["username"])
         user = session["userToken"]
@@ -1156,60 +1156,68 @@ def viewtrainerprofile():
 @app.route('/viewChat')
 def viewChat():
     if "username" in session:
-        email = request.args.get("email")
-        if session["check"] == "User":
-            print("user logged in")
-            trainer = get_trainer(email)
-            trainername = trainer[5]
-            username = str(session["username"])
-            name = get_user_name(username)
-            test = check_chats(username, email)
+        if request.args.get("email"):
+            email = request.args.get("email")
+            if session["check"] == "User":
+                print("user logged in")
+                trainer = get_trainer(email)
+                trainername = trainer[5]
+                username = str(session["username"])
+                name = get_user_name(username)
+                test = check_chats(username, email)
 
-            roomnum = check_roomnum(username, email)
-            if test:
-                if test == "No messages":
-                    return render_template('ViewChat.html', username=name, room=roomnum, trainer=trainername, email=email)
+                roomnum = check_roomnum(username, email)
+                if test:
+                    if test == "No messages":
+                        return render_template('ViewChat.html', username=name, room=roomnum, trainer=trainername, email=email)
+                    else:
+                        return render_template("ViewChat.html", username=name, room=roomnum, messages=test, trainer=trainername, email=email)
                 else:
-                    return render_template("ViewChat.html", username=name, room=roomnum, messages=test, trainer=trainername, email=email)
+                    # if not open new chat room
+                    chats = database.child("Chats").get()
+                    index = 0
+                    for i in chats.each():
+                        index += 1
+                    counter = index + 1
+                    roomname = "Room " + str(counter)
+                    data = {"Username": username,
+                            "Trainer": email, "Room Number": roomname}
+                    database.child("Chats").child(roomname).set(data)
+                    return render_template('ViewChat.html', username=name, room=roomname, trainer=trainername, email=email)
+
             else:
-                # if not open new chat room
-                chats = database.child("Chats").get()
-                index = 0
-                for i in chats.each():
-                    index += 1
-                counter = index + 1
-                roomname = "Room " + str(counter)
-                data = {"Username": username,
-                        "Trainer": email, "Room Number": roomname}
-                database.child("Chats").child(roomname).set(data)
-                return render_template('ViewChat.html', username=name, room=roomname, trainer=trainername, email=email)
+                # trainer logged in
+                print("trainer logged in")
+                trainer = str(session["username"])
+                username = get_user_name(email)
+                test = check_chats(trainer, email)
+                roomnum = check_roomnum(trainer, email)
+                trainertuple = get_trainer(trainer)
+                trainername = trainertuple[5]
+                if test:
+                    if test == "No messages":
+                        return render_template('TrainerViewChat.html', username=trainername, room=roomnum, trainer=username, email=email)
+                    else:
+                        return render_template("TrainerViewChat.html", username=trainername, room=roomnum, messages=test, trainer=username, email=email)
+                else:
+                    # if not open new chat room
+                    print("no existing room")
+                    chats = database.child("Chats").get()
+                    index = 0
+                    for i in chats.each():
+                        index += 1
+                    counter = index + 1
+                    roomname = "Room " + str(counter)
+                    data = {"Username": email, "Trainer": trainer,
+                            "Room Number": roomname}
+                    database.child("Chats").child(roomname).set(data)
+                    return render_template('TrainerViewChat.html', username=trainername, room=roomname, trainer=username, email=email)
         else:
-            # trainer logged in
-            print("trainer logged in")
-            trainer = str(session["username"])
-            username = get_user_name(email)
-            test = check_chats(trainer, email)
-            roomnum = check_roomnum(trainer, email)
-            trainertuple = get_trainer(trainer)
-            trainername = trainertuple[5]
-            if test:
-                if test == "No messages":
-                    return render_template('TrainerViewChat.html', username=trainername, room=roomnum, trainer=username, email=email)
-                else:
-                    return render_template("TrainerViewChat.html", username=trainername, room=roomnum, messages=test, trainer=username, email=email)
+            print("no chats found")
+            if session["check"] == "User":
+                return render_template("ViewChat.html")
             else:
-                # if not open new chat room
-                print("no existing room")
-                chats = database.child("Chats").get()
-                index = 0
-                for i in chats.each():
-                    index += 1
-                counter = index + 1
-                roomname = "Room " + str(counter)
-                data = {"Username": email, "Trainer": trainer,
-                        "Room Number": roomname}
-                database.child("Chats").child(roomname).set(data)
-                return render_template('TrainerViewChat.html', username=trainername, room=roomname, trainer=username, email=email)
+                return render_template('TrainerViewChat.html')
     else:
         return render_template("HomePage.html")
 
