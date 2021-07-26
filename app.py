@@ -182,22 +182,35 @@ def createNewMember():
             print(trgtype)
             pic = request.files["picture"]
             filename = pic.filename
+            print(filename)
             file_ext = os.path.splitext(filename)[1]
             print(pic)
             print('test')
             if len(pw) < 6:
                 flash("Password too short please try a new one")
                 return render_template("CreateNewMember.html")
-            elif len(number) != 8 or number[0] != "6" or number[0] != "9" or number[0] != "8":
+            elif len(number) != 8:
+                print("number is too short or too long")
                 flash("Please enter a valid number")
                 return render_template("CreateNewMember.html")
+            elif not (number[0] == "6" or number[0] == "9" or number[0] == "8"):
+                print("first digit is not legit")
+                flash("Please enter a valid number")
+                return render_template("CreateNewMember.html")
+            elif not number.isnumeric():
+                print("not all the characters are numbers")
+                flash("Please enter a valid number")
+                return render_template("CreateNewMember.html")
+            # elif filename[-3:] != "jpg":
+            #     print("not a jpg file first catch")
+            #     flash("Please only upload jpg format files")
+            #     return render_template("CreateNewMember.html")
             elif file_ext not in current_app.config['UPLOAD_EXTENSIONS']:
+                print("not a jpg file second catch")
                 flash("Please only upload jpg format files")
                 return render_template("CreateNewMember.html")
             else:
                 try:
-                    numcheck = int(number)
-                    print(numcheck)
                     user = auth.create_user_with_email_and_password(email, pw)
                     print("Successfully created an account")
                     flash("Please go to your email to verify your account")
@@ -211,8 +224,8 @@ def createNewMember():
                     storage.child(path_on_cloud).put(pic)
                     return redirect(url_for("memberLogin"))
                 except:
-                    print("Cannot make number int")
-                    flash("Please enter a valid number")
+                    print("Error 404")
+                    flash("Please try again")
                     return render_template("CreateNewMember.html")
         except:
             print("went to except")
@@ -254,7 +267,16 @@ def createNewTrainer():
             if len(pw) < 6:
                 flash("Password too short please try a new one")
                 return render_template("CreateNewTrainer.html")
-            elif len(number) != 8 or number[0] != "6" and number[0] != "9" and number[0] != "8":
+            elif len(number) != 8:
+                print("number is too short or too long")
+                flash("Please enter a valid number")
+                return render_template("CreateNewTrainer.html")
+            elif not (number[0] == "6" or number[0] == "9" or number[0] == "8"):
+                print("first digit is not legit")
+                flash("Please enter a valid number")
+                return render_template("CreateNewTrainer.html")
+            elif not number.isnumeric():
+                print("not all the characters are numbers")
                 flash("Please enter a valid number")
                 return render_template("CreateNewTrainer.html")
             elif len(str(description)) > 300:
@@ -265,8 +287,6 @@ def createNewTrainer():
                 return render_template("CreateNewTrainer.html")
             else:
                 try:
-                    numcheck = int(number)
-                    print(numcheck)
                     user = auth.create_user_with_email_and_password(email, pw)
                     print("Successfully created an account")
                     flash("Please go to your email to verify your account")
@@ -280,8 +300,8 @@ def createNewTrainer():
                     print("data has been created")
                     return redirect(url_for("trainerLogin"))
                 except:
-                    print("Cannot make number int")
-                    flash("Please enter a valid number")
+                    print("Error 404")
+                    flash("Please try again")
                     return render_template("CreateNewTrainer.html")
         except:
             print("went to except")
