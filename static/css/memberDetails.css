@@ -598,8 +598,9 @@ button:hover {
 }
 
 .content h1 {
-    font-size: 40px;
-    margin-top: 80px;
+    font-size: 30px;
+    margin-top: 70px;
+    top: 2px;
 }
 
 .content p {
