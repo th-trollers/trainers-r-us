@@ -1,4 +1,38 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Home Page </title>
+    <link rel="stylesheet" type="text/css" href="../static/css/homePage.css" />
+</head>
+
+<body>
+    <div class="banner">
+        <div class="navbar">
+            <img src="../static/img/trainers_logo_two.png" class="logo">
+        </div>
+    </div>
+    <div class = "content">
+        <h1> SIGN UP WITH US NOW! </h1>
+        <p> Easily compare and view the available trainers as a member. <br>increase your outreach and gain more clients as a trainer. </p>
+        <div>
+            <a href="/memberLogin"><button type = "button"><span></span>MEMBER</button>
+            <a href="/trainerLogin"><button type = "button"><span></span>TRAINER</button>
+        </div>
+    </div>
+    {%with messages = get_flashed_messages()%}
+        {%if messages %}
+            {% for msg in messages%}
+                <b style="color:red; font-size:15px">{{msg}}</b>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</body>
+</html>
+<!-- <html>
 <head>
     <title> Home Page </title>
     <link rel="stylesheet" type="text/css" href="../static/css/style2.css" />
@@ -26,4 +60,4 @@
         {% endif %}
     {% endwith %}
 </body>
-</html>
+</html> -->

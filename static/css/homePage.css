@@ -434,6 +434,7 @@ form.sign-in-form {
 .wrapper h5 {
   text-align: center;
   margin-bottom: 1rem;
+  
 }
 
 .wrapper .inputBox {
@@ -471,22 +472,11 @@ form.sign-in-form {
     margin-bottom: 0;
 }
 
-
-.wrapper a {
-  width: 275px;
-  background-color: #5995fd;
-  border: none;
-  outline: none;
-  height: 49px;
-  border-radius: .3rem;
-  /* display: block; */
-  color: #fff;
-  text-transform: uppercase;
-  font-weight: 600;
-  margin: 10px 0;
-  cursor: pointer;
-  transition: 0.5s;
-  left: 50%;
+.wrapper button {
+    padding: 0.7rem 2rem;
+    margin-top: 2rem;
+    display: block;
+    width: 100%;
 }
 
 .wrapper form {
@@ -576,7 +566,6 @@ button {
     cursor: pointer;
     position: relative;
     overflow: hidden;
-    text-decoration: none;
 }
 
 span {
@@ -600,7 +589,7 @@ button:hover {
 }
 
 .content {
-    width: 100%;    
+    width: 100%;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -609,7 +598,7 @@ button:hover {
 }
 
 .content h1 {
-    font-size: 40px;
+    font-size: 70px;
     margin-top: 80px;
 }
 
@@ -618,14 +607,3 @@ button:hover {
     font-weight: 100;
     line-height: 25px;
 }
-/* .form {
-    display: inline-block;
-    text-align: center;
-    vertical-align: middle;
-    clear: both;
-} */
-
-/* select {
-    height: 30px;
-    width: 220px;
-}  */
