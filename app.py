@@ -1264,13 +1264,20 @@ def allChats():
                 names += (get_user_name(chat),)
         combined = ()
         index = 0
-        for i in chat_hist:
-            combined += (((chat_hist[index]), (names[index])),)
-            index += 1
-        if session['check'] == "User":
-            return render_template("AllMemberChats.html", chats=combined)
+        if chat_hist:
+            for i in chat_hist:
+                combined += (((chat_hist[index]), (names[index])),)
+                index += 1
+            if session['check'] == "User":
+                return render_template("AllMemberChats.html", chats=combined)
+            else:
+                return render_template("AllTrainerChats.html", chats=combined)
         else:
-            return render_template("AllTrainerChats.html", chats=combined)
+            flash("No Existing Chats")
+            if session['check'] == "User":
+                return render_template("AllMemberChats.html")
+            else:
+                return render_template("AllTrainerChats.html")
     else:
         return render_template("HomePage.html")
 
