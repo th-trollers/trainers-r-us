@@ -207,7 +207,7 @@ def createNewMember():
                     database.child("Users").child(emailTwo).set(data)
                     print("Successfully uploaded personal details")
                     try:
-                        if filename == "":
+                        if filename == "" or filename[-3:] != "jpg":
                             path_on_cloud = "member_images/" + str(emailTwo) + ".jpg"
                             storage.child(path_on_cloud).put("trainers-r-us\static\img\workout3.jpg")
                             print("data has been created")
@@ -297,14 +297,13 @@ def createNewTrainer():
                     database.child("Trainers").child(emailTwo).set(data)
                     print("Successfully uploaded personal details")
                     try:
-                        if filename == "":
+                        if filename == "" or filename[-3:] != "jpg":
                             path_on_cloud = "trainer_images/" + str(emailTwo) + ".jpg"
                             storage.child(path_on_cloud).put("trainers-r-us\static\img\workout3.jpg")
                             print("data has been created")
                         else:
                             path_on_cloud = "trainer_images/" + str(emailTwo) + ".jpg"
                             storage.child(path_on_cloud).put(pic)
-                            storage.child(path_on_cloud).download(pic)
                             print("data has been created")
                         try:
                             user = auth.create_user_with_email_and_password(email, pw)
@@ -364,25 +363,25 @@ def memberDetails():
         # print(oldEmail)
         # newEmail = request.form.get("newEmail")
         # print(newEmail)
-        oldName = str(request.form.get("oldName"))
+        oldName = request.form.get("oldName")
         print(oldName)
-        newName = str(request.form.get("newName"))
+        newName = request.form.get("newName")
         print(newName)
-        oldNumber = str(request.form.get("oldNumber"))
+        oldNumber = request.form.get("oldNumber")
         print(oldNumber)
-        newNumber = str(request.form.get("newNumber"))
+        newNumber = request.form.get("newNumber")
         print(newNumber)
-        oldGender = str(request.form.get("oldGender"))
+        oldGender = request.form.get("oldGender")
         print(oldGender)
-        newGender = str(request.form.get("newGender"))
+        newGender = request.form.get("newGender")
         print(newGender)
-        oldTrgLvl = str(request.form.get("oldTrgLvl"))
+        oldTrgLvl = request.form.get("oldTrgLvl")
         print(oldTrgLvl)
-        newTrgLvl = str(request.form.get("newTrgLvl"))
+        newTrgLvl = request.form.get("newTrgLvl")
         print(newTrgLvl)
-        oldTrgType = str(request.form.get("oldTrgType"))
+        oldTrgType = request.form.get("oldTrgType")
         print(oldTrgType)
-        newTrgType = str(request.form.get("newTrgType"))
+        newTrgType = request.form.get("newTrgType")
         print(newTrgType)
         dict = database.child("Users").child(username).get().val()
         valLst = []
@@ -394,24 +393,18 @@ def memberDetails():
         print(keyLst)
         for key, value in dict.items():
             if oldName == value:
-                database.child("Users").child(
-                    username).update({key: newName})
-            elif oldNumber == value:
-                if len(newNumber) != 8:
-                    print("number is too short or too long")
-                    flash("Please enter a valid number")
-                    return render_template("MemberDetails.html", profileImage=url, valDetails=valLst, keyDetails=keyLst)
-                elif not (newNumber[0] == "6" or newNumber[0] == "9" or newNumber[0] == "8"):
-                    print("first digit is not legit")
-                    flash("Please enter a valid number")
-                    return render_template("MemberDetails.html", profileImage=url, valDetails=valLst, keyDetails=keyLst)
-                elif not newNumber.isnumeric():
-                    print("not all the characters are numbers")
-                    flash("Please enter a valid number")
-                    return render_template("MemberDetails.html", profileImage=url, valDetails=valLst, keyDetails=keyLst)
-                else:
+                if newName:
                     database.child("Users").child(
-                        username).update({key: newNumber})
+                        username).update({key: newName})
+            elif oldNumber == value:
+                if newNumber:
+                    if len(str(newNumber)) != 8 or not (str(newNumber)[0] == "6" or str(newNumber)[0] == "9" or str(newNumber)[0] == "8") or not str(newNumber).isnumeric():
+                        flash("invalid number")
+                        continue
+                    else:
+                        database.child("Users").child(
+                            username).update({key: newNumber})
+                        continue
             elif oldGender == value:
                 if newGender:
                     database.child("Users").child(
@@ -459,37 +452,37 @@ def trainerDetails():
         # print(oldEmail)
         # newEmail = request.form.get("newEmail")
         # print(newEmail)
-        oldName = str(request.form.get("oldName"))
+        oldName = request.form.get("oldName")
         print(oldName)
-        newName = str(request.form.get("newName"))
+        newName = request.form.get("newName")
         print(newName)
-        oldNumber = str(request.form.get("oldNumber"))
+        oldNumber = request.form.get("oldNumber")
         print(oldNumber)
-        newNumber = str(request.form.get("newNumber"))
+        newNumber = request.form.get("newNumber")
         print(newNumber)
-        oldDescrip = str(request.form.get("oldDescrip"))
+        oldDescrip = request.form.get("oldDescrip")
         print(oldDescrip)
-        newDescrip = str(request.form.get("newDescrip"))
+        newDescrip = request.form.get("newDescrip")
         print(newDescrip)
-        oldExp = str(request.form.get("oldExp"))
+        oldExp = request.form.get("oldExp")
         print(oldExp)
-        newExp = str(request.form.get("newExp"))
+        newExp = request.form.get("newExp")
         print(newExp)
-        oldLocation = str(request.form.get("oldLocation"))
+        oldLocation = request.form.get("oldLocation")
         print(oldLocation)
-        newLocation = str(request.form.get("newLocation"))
+        newLocation = request.form.get("newLocation")
         print(newLocation)
-        oldGender = str(request.form.get("oldGender"))
+        oldGender = request.form.get("oldGender")
         print(oldGender)
-        newGender = str(request.form.get("newGender"))
+        newGender = request.form.get("newGender")
         print(newGender)
-        oldPriceRange = str(request.form.get("oldPriceRange"))
+        oldPriceRange = request.form.get("oldPriceRange")
         print(oldPriceRange)
-        newPriceRange = str(request.form.get("newPriceRange"))
+        newPriceRange = request.form.get("newPriceRange")
         print(newPriceRange)
-        oldTrgType = str(request.form.get("oldTrgType"))
+        oldTrgType = request.form.get("oldTrgType")
         print(oldTrgType)
-        newTrgType = str(request.form.get("newTrgType"))
+        newTrgType = request.form.get("newTrgType")
         print(newTrgType)
         dict = database.child("Trainers").child(username).get().val()
         valLst = []
@@ -503,34 +496,31 @@ def trainerDetails():
             #     database.child("Trainers").child(
             #         username).update({key: newEmail})
             if oldName == value:
-                database.child("Trainers").child(
-                    username).update({key: newName})
+                if newName:
+                    database.child("Trainers").child(
+                        username).update({key: newName})
             elif oldNumber == value:
-                if len(newNumber) != 8:
-                    print("number is too short or too long")
-                    flash("Please enter a valid number")
-                    return render_template("TrainerDetails.html", profileImage=url, valDetails=valLst, keyDetails=keyLst)
-                elif not (newNumber[0] == "6" or newNumber[0] == "9" or newNumber[0] == "8"):
-                    print("first digit is not legit")
-                    flash("Please enter a valid number")
-                    return render_template("TrainerDetails.html", profileImage=url, valDetails=valLst, keyDetails=keyLst)
-                elif not newNumber.isnumeric():
-                    print("not all the characters are numbers")
-                    flash("Please enter a valid number")
-                    return render_template("TrainerDetails.html", profileImage=url, valDetails=valLst, keyDetails=keyLst)
-                else:
-                    database.child("Trainers").child(
-                        username).update({key: newNumber})
+                if newNumber:
+                    if len(str(newNumber)) != 8 or not (str(newNumber)[0] == "6" or str(newNumber)[0] == "9" or str(newNumber)[0] == "8") or not str(newNumber).isnumeric():
+                        flash("invalid number")
+                        continue
+                    else:
+                        database.child("Trainers").child(
+                            username).update({key: newNumber})
+                        continue
             elif oldDescrip == value:
-                if len(str(newDescrip)) > 300:
-                    flash("Please enter less than 90 words")
-                    return render_template("TrainerDetails.html", details=lst, profileImage=url, valDetails=valLst, keyDetails=keyLst)
-                else:
-                    database.child("Trainers").child(
-                        username).update({key: newDescrip})
+                if newDescrip:
+                    if len(str(newDescrip)) > 300:
+                        flash("description too long")
+                        continue
+                    else:
+                        database.child("Trainers").child(
+                            username).update({key: newDescrip})
+                        continue
             elif oldLocation == value:
-                database.child("Trainers").child(
-                    username).update({key: newLocation})
+                if newLocation:
+                    database.child("Trainers").child(
+                        username).update({key: newLocation})
             elif oldExp == value:
                 if newExp:
                     database.child("Trainers").child(
