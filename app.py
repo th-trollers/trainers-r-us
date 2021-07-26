@@ -17,7 +17,7 @@ config = {
     "projectId": "trainers-r-us",
     "databaseURL": "https://trainers-r-us-default-rtdb.asia-southeast1.firebasedatabase.app/",
     "storageBucket": "trainers-r-us.appspot.com",
-    "serviceAccount": "trainers-r-us/serviceAccountKey.json",
+    "serviceAccount": "serviceAccountKey.json",
     "messagingSenderId": "128175027453",
     "appId": "1:128175027453:web:4b91f00815ac01c4747a94",
     "measurementId": "G-6JY1N1W5ZY"
@@ -74,11 +74,13 @@ def memberLogin():
         if auth.get_account_info(user["idToken"])["users"][0]['emailVerified'] == True:
             return redirect(url_for("memberHome"))
         else:
-            flash("Email has not been verified, you have been sent another verification email.")
+            flash(
+                "Email has not been verified, you have been sent another verification email.")
             auth.send_email_verification(user["idToken"])
-            print("Email has not been verified, you have been sent another verification email.")
+            print(
+                "Email has not been verified, you have been sent another verification email.")
             return redirect(url_for("memberLogin"))
-        
+
     return render_template("MemberLogin.html")
 
 
@@ -104,7 +106,7 @@ def trainerLogin():
             session["check"] = "Trainer"
             session["pendingBookings"] = numpending
             trainername = get_trainer(usernameTwo)[5]
-            
+
         except:
             flash(unsuccessful)
             print(unsuccessful)
@@ -123,11 +125,13 @@ def trainerLogin():
             #         flash("You have " + str(count) + " pending bookings")
             return redirect(url_for("trainerHome"))
         else:
-            flash("Email has not been verified, you have been sent another verification email.")
+            flash(
+                "Email has not been verified, you have been sent another verification email.")
             auth.send_email_verification(user["idToken"])
-            print("Email has not been verified, you have been sent another verification email.")
-            return redirect(url_for("trainerLogin"))   
-        
+            print(
+                "Email has not been verified, you have been sent another verification email.")
+            return redirect(url_for("trainerLogin"))
+
     return render_template("TrainerLogin.html")
 
 # Member and Trainer Home Page
@@ -308,6 +312,7 @@ def createNewTrainer():
 
 # Account Update and Details Pages
 
+
 @app.route('/memberDetails', methods=["POST", "GET"])
 def memberDetails():
     if "username" and "userToken" in session:
@@ -377,18 +382,23 @@ def memberDetails():
                     #     print(new_Email)
                     #     database.child("Users").child(username).update({key: new_Email})
                     if oldName == value:
-                        database.child("Users").child(username).update({key: newName})
+                        database.child("Users").child(
+                            username).update({key: newName})
                     elif oldNumber == value:
-                        database.child("Users").child(username).update({key: newNumber})
+                        database.child("Users").child(
+                            username).update({key: newNumber})
                     elif oldGender == value:
                         if newGender:
-                            database.child("Users").child(username).update({key: newGender})
+                            database.child("Users").child(
+                                username).update({key: newGender})
                     elif oldTrgLvl == value:
                         if newTrgLvl:
-                            database.child("Users").child(username).update({key: newTrgLvl})
+                            database.child("Users").child(
+                                username).update({key: newTrgLvl})
                     elif oldTrgType == value:
                         if newTrgType:
-                            database.child("Users").child(username).update({key: newTrgType})
+                            database.child("Users").child(
+                                username).update({key: newTrgType})
         return render_template("MemberDetails.html", profileImage=url, valDetails=valLst, keyDetails=keyLst)
     else:
         return render_template("MemberDetails.html")
@@ -576,7 +586,7 @@ def logout():
 @app.route('/filterTrainers', methods=['POST', 'GET'])
 def filterTrainers():
     headings = ('Name', 'Description', 'Experience', 'Gender',
-                'Location', 'Price Range', 'Training Type', "Email","CLICK HERE TO VIEW TRAINER PROFILE")
+                'Location', 'Price Range', 'Training Type', "Email", "CLICK HERE TO VIEW TRAINER PROFILE")
     if "username" and "userToken" in session:
         username = str(session["username"])
         user = session["userToken"]
@@ -875,6 +885,7 @@ def bookings():
 
         bookinglist = get_bookings(email)
         if bookinglist == "No Bookings":
+            flash("No Current Bookings")
             return render_template('Bookings.html')
         else:
             return render_template('Bookings.html', headings=heading1, bookings=bookinglist)
@@ -893,10 +904,12 @@ def trainerbookings():
         if bookinglist == "No Bookings":
             numpending = get_pending(usernameTwo)
             session["pendingBookings"] = numpending
+            flash("No Current Bookings")
             return render_template('TrainerBookings.html')
         elif pendinglist == "No Pending Bookings":
             numpending = get_pending(usernameTwo)
             session["pendingBookings"] = numpending
+            flash("No Pending Bookings")
             return render_template('TrainerBookings.html', headings=heading2, bookings=bookinglist)
         else:
             numpending = get_pending(usernameTwo)
@@ -1166,60 +1179,70 @@ def viewtrainerprofile():
 @app.route('/viewChat')
 def viewChat():
     if "username" in session:
-        email = request.args.get("email")
-        if session["check"] == "User":
-            print("user logged in")
-            trainer = get_trainer(email)
-            trainername = trainer[5]
-            username = str(session["username"])
-            name = get_user_name(username)
-            test = check_chats(username, email)
+        if request.args.get("email"):
+            email = request.args.get("email")
+            if session["check"] == "User":
+                print("user logged in")
+                trainer = get_trainer(email)
+                trainername = trainer[5]
+                username = str(session["username"])
+                name = get_user_name(username)
+                test = check_chats(username, email)
 
-            roomnum = check_roomnum(username, email)
-            if test:
-                if test == "No messages":
-                    return render_template('ViewChat.html', username=name, room=roomnum, trainer=trainername, email=email)
+                roomnum = check_roomnum(username, email)
+                if test:
+                    if test == "No messages":
+                        return render_template('ViewChat.html', username=name, room=roomnum, trainer=trainername, email=email)
+                    else:
+                        return render_template("ViewChat.html", username=name, room=roomnum, messages=test, trainer=trainername, email=email)
                 else:
-                    return render_template("ViewChat.html", username=name, room=roomnum, messages=test, trainer=trainername, email=email)
+                    # if not open new chat room
+                    chats = database.child("Chats").get()
+                    index = 0
+                    if chats.each():
+                        for i in chats.each():
+                            index += 1
+                    counter = index + 1
+                    roomname = "Room " + str(counter)
+                    data = {"Username": username,
+                            "Trainer": email, "Room Number": roomname}
+                    database.child("Chats").child(roomname).set(data)
+                    return render_template('ViewChat.html', username=name, room=roomname, trainer=trainername, email=email)
+
             else:
-                # if not open new chat room
-                chats = database.child("Chats").get()
-                index = 0
-                for i in chats.each():
-                    index += 1
-                counter = index + 1
-                roomname = "Room " + str(counter)
-                data = {"Username": username,
-                        "Trainer": email, "Room Number": roomname}
-                database.child("Chats").child(roomname).set(data)
-                return render_template('ViewChat.html', username=name, room=roomname, trainer=trainername, email=email)
+                # trainer logged in
+                print("trainer logged in")
+                trainer = str(session["username"])
+                username = get_user_name(email)
+                test = check_chats(trainer, email)
+                roomnum = check_roomnum(trainer, email)
+                trainertuple = get_trainer(trainer)
+                trainername = trainertuple[5]
+                if test:
+                    if test == "No messages":
+                        return render_template('TrainerViewChat.html', username=trainername, room=roomnum, trainer=username, email=email)
+                    else:
+                        return render_template("TrainerViewChat.html", username=trainername, room=roomnum, messages=test, trainer=username, email=email)
+                else:
+                    # if not open new chat room
+                    print("no existing room")
+                    chats = database.child("Chats").get()
+                    index = 0
+                    if chats.each():
+                        for i in chats.each():
+                            index += 1
+                    counter = index + 1
+                    roomname = "Room " + str(counter)
+                    data = {"Username": email, "Trainer": trainer,
+                            "Room Number": roomname}
+                    database.child("Chats").child(roomname).set(data)
+                    return render_template('TrainerViewChat.html', username=trainername, room=roomname, trainer=username, email=email)
         else:
-            # trainer logged in
-            print("trainer logged in")
-            trainer = str(session["username"])
-            username = get_user_name(email)
-            test = check_chats(trainer, email)
-            roomnum = check_roomnum(trainer, email)
-            trainertuple = get_trainer(trainer)
-            trainername = trainertuple[5]
-            if test:
-                if test == "No messages":
-                    return render_template('TrainerViewChat.html', username=trainername, room=roomnum, trainer=username, email=email)
-                else:
-                    return render_template("TrainerViewChat.html", username=trainername, room=roomnum, messages=test, trainer=username, email=email)
+            print("No Chats Found")
+            if session["check"] == "User":
+                return render_template("ViewChat.html")
             else:
-                # if not open new chat room
-                print("no existing room")
-                chats = database.child("Chats").get()
-                index = 0
-                for i in chats.each():
-                    index += 1
-                counter = index + 1
-                roomname = "Room " + str(counter)
-                data = {"Username": email, "Trainer": trainer,
-                        "Room Number": roomname}
-                database.child("Chats").child(roomname).set(data)
-                return render_template('TrainerViewChat.html', username=trainername, room=roomname, trainer=username, email=email)
+                return render_template('TrainerViewChat.html')
     else:
         return render_template("HomePage.html")
 
@@ -1240,19 +1263,27 @@ def allChats():
                     names += (get_trainer(chat)[5],)
         else:
             print("logged in as trainer")
-            for chat in chat_hist:
-                print(chat)
-                print(get_user_name(chat))
-                names += (get_user_name(chat),)
+            if chat_hist:
+                for chat in chat_hist:
+                    print(chat)
+                    print(get_user_name(chat))
+                    names += (get_user_name(chat),)
         combined = ()
         index = 0
-        for i in chat_hist:
-            combined += (((chat_hist[index]), (names[index])),)
-            index += 1
-        if session['check'] == "User":
-            return render_template("AllMemberChats.html", chats=combined)
+        if chat_hist:
+            for i in chat_hist:
+                combined += (((chat_hist[index]), (names[index])),)
+                index += 1
+            if session['check'] == "User":
+                return render_template("AllMemberChats.html", chats=combined)
+            else:
+                return render_template("AllTrainerChats.html", chats=combined)
         else:
-            return render_template("AllTrainerChats.html", chats=combined)
+            flash("No Existing Chats")
+            if session['check'] == "User":
+                return render_template("AllMemberChats.html")
+            else:
+                return render_template("AllTrainerChats.html")
     else:
         return render_template("HomePage.html")
 
@@ -1282,6 +1313,7 @@ def handle_leave_room_event(data):
         data['username'], data['room']))
     leave_room(data['room'])
     socketio.emit('leave_room_announcement', data, room=data['room'])
+
 
 if __name__ == "__main__":
     # app.run()
