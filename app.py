@@ -17,7 +17,7 @@ config = {
     "projectId": "trainers-r-us",
     "databaseURL": "https://trainers-r-us-default-rtdb.asia-southeast1.firebasedatabase.app/",
     "storageBucket": "trainers-r-us.appspot.com",
-    "serviceAccount": "serviceAccountKey.json",
+    "serviceAccount": "trainers-r-us/serviceAccountKey.json",
     "messagingSenderId": "128175027453",
     "appId": "1:128175027453:web:4b91f00815ac01c4747a94",
     "measurementId": "G-6JY1N1W5ZY"
@@ -163,6 +163,10 @@ def trainerHome():
 @app.route('/createNewMember', methods=["POST", "GET"])
 def createNewMember():
     if request.method == "POST":
+        pic = request.files["picture"]
+        print(pic)
+        filename = pic.filename
+        file_ext = os.path.splitext(filename)[1]
         try:
             # getting the email and pw
             email = str(request.form["email"])
@@ -179,10 +183,6 @@ def createNewMember():
             print(trglvl)
             trgtype = str(request.form["trgtype"])
             print(trgtype)
-            pic = request.files["picture"]
-            filename = pic.filename
-            print(filename)
-            file_ext = os.path.splitext(filename)[1]
             print(pic)
             print('test')
             if len(pw) < 6:
@@ -199,14 +199,6 @@ def createNewMember():
             elif not number.isnumeric():
                 print("not all the characters are numbers")
                 flash("Please enter a valid number")
-                return render_template("CreateNewMember.html")
-            # elif filename[-3:] != "jpg":
-            #     print("not a jpg file first catch")
-            #     flash("Please only upload jpg format files")
-            #     return render_template("CreateNewMember.html")
-            elif file_ext not in current_app.config['UPLOAD_EXTENSIONS']:
-                print("not a jpg file second catch")
-                flash("Please only upload jpg format files")
                 return render_template("CreateNewMember.html")
             else:
                 try:
@@ -237,6 +229,10 @@ def createNewMember():
 @app.route('/createNewTrainer', methods=["POST", "GET"])
 def createNewTrainer():
     if request.method == "POST":
+        pic = request.files["picture"]
+        print(pic)
+        filename = pic.filename
+        file_ext = os.path.splitext(filename)[1]
         try:
             email = str(request.form["email"])
             print(email)
@@ -259,10 +255,7 @@ def createNewTrainer():
             # need to allow the users to click multiple values
             pricerange = str(request.form["pricerange"])
             print(pricerange)
-            pic = request.files["picture"]
-            print(pic)
-            filename = pic.filename
-            file_ext = os.path.splitext(filename)[1]
+            print('test')
             if len(pw) < 6:
                 flash("Password too short please try a new one")
                 return render_template("CreateNewTrainer.html")
@@ -280,9 +273,6 @@ def createNewTrainer():
                 return render_template("CreateNewTrainer.html")
             elif len(str(description)) > 300:
                 flash("Please enter less than 90 words")
-                return render_template("CreateNewTrainer.html")
-            elif file_ext not in current_app.config['UPLOAD_EXTENSIONS']:
-                flash("Please only upload jpg format files")
                 return render_template("CreateNewTrainer.html")
             else:
                 try:
@@ -370,8 +360,17 @@ def memberDetails():
             keyLst.append(key)
         print(valLst)
         print(keyLst)
-        if newNumber != None:
-            if len(newNumber) != 8 or newNumber[0] != "6" and newNumber[0] != "9" and newNumber[0] != "8":
+        if str(newNumber) != None:
+            if len(str(newNumber)) != 8:
+                print("number is too short or too long")
+                flash("Please enter a valid number")
+                return render_template("MemberDetails.html", profileImage=url, valDetails=valLst, keyDetails=keyLst)
+            elif not (str(newNumber)[0] == "6" or str(newNumber)[0] == "9" or str(newNumber)[0] == "8"):
+                print("first digit is not legit")
+                flash("Please enter a valid number")
+                return render_template("MemberDetails.html", profileImage=url, valDetails=valLst, keyDetails=keyLst)
+            elif not str(newNumber).isnumeric():
+                print("not all the characters are numbers")
                 flash("Please enter a valid number")
                 return render_template("MemberDetails.html", profileImage=url, valDetails=valLst, keyDetails=keyLst)
             else:
@@ -473,8 +472,17 @@ def trainerDetails():
             valLst.append(value)
             keyLst.append(key)
         print(keyLst)
-        if newNumber != None:
-            if len(newNumber) != 8 or newNumber[0] != "6" and newNumber[0] != "9" and newNumber[0] != "8":
+        if str(newNumber) != None:
+            if len(str(newNumber)) != 8:
+                print("number is too short or too long")
+                flash("Please enter a valid number")
+                return render_template("TrainerDetails.html", profileImage=url, valDetails=valLst, keyDetails=keyLst)
+            elif not (str(newNumber)[0] == "6" or str(newNumber)[0] == "9" or str(newNumber)[0] == "8"):
+                print("first digit is not legit")
+                flash("Please enter a valid number")
+                return render_template("TrainerDetails.html", profileImage=url, valDetails=valLst, keyDetails=keyLst)
+            elif not str(newNumber).isnumeric():
+                print("not all the characters are numbers")
                 flash("Please enter a valid number")
                 return render_template("TrainerDetails.html", profileImage=url, valDetails=valLst, keyDetails=keyLst)
             elif len(str(newDescrip)) > 300:
