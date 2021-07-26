@@ -556,7 +556,7 @@ def logout():
 @app.route('/filterTrainers', methods=['POST', 'GET'])
 def filterTrainers():
     headings = ('Name', 'Description', 'Experience', 'Gender',
-                'Location', 'Price Range', 'Training Type', "Email")
+                'Location', 'Price Range', 'Training Type', "Email","CLICK HERE TO VIEW TRAINER PROFILE")
     if "username" and "userToken" in session:
         username = str(session["username"])
         user = session["userToken"]
@@ -667,7 +667,7 @@ def filterTrainers():
                 print("data1")
                 print(headings)
                 print(data1)
-                return render_template("FilterTrainers.html", headings=headings, data=data1, trainerPics=trainerPics)
+                return render_template("FilterTrainers.html", headings=headings, data=data1, trainerPics=trainerPics, )
             else:
                 flash("No such trainer exists. Please try again!")
                 return render_template("FilterTrainers.html")
@@ -1123,8 +1123,9 @@ def viewtrainerprofile():
     trainer = get_trainer(email)
     all_files = storage.list_files()
     print(trainer)
-    if trainer and "userToken" in session:
+    if trainer and "userToken" and "username" in session:
         user = session["userToken"]
+        dotForm = str(session["username"]).replace(".", "_DOT_")
         for file in all_files:
             usernameTwo = "trainer_images/" + str(trainer[1]) + ".jpg"
             # only allow jpg files
