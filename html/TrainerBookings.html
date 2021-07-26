@@ -26,8 +26,15 @@
     <br>
     <br>
     <div class="wrapper">
+        {%with messages = get_flashed_messages()%}
+            {%if messages %}
+                {% for msg in messages%}
+                <b style="color:red; font-size:15px">{{msg}}</b>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
         <form action="/memberDetails" method="POST" enctype="multipart/form-data">
-            <h1 style="color:black; font-size:70px; text-decoration: underline;"> Pending Table </h1>
+            <h1 style="color:black; font-size:70px; text-decoration: underline;"> Pending Bookings </h1>
             <style>
                 table,
                 th,
@@ -59,8 +66,9 @@
                 {% endfor %}
     
             </table>
-    
-    
+            <br>
+            <br>
+            <br>
             <h1 style="color:black; font-size:70px; text-decoration: underline;"> All Bookings </h1>
             <table>
                 <tr>
@@ -79,13 +87,7 @@
         </form>
     </div>
     </div>
-    {%with messages = get_flashed_messages()%}
-    {%if messages %}
-    {% for msg in messages%}
-    <b style="color:red; font-size:15px">{{msg}}</b>
-    {% endfor %}
-    {% endif %}
-    {% endwith %}
+
 </body>
 </html>
 <!-- <html>
