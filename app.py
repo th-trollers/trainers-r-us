@@ -74,8 +74,7 @@ def memberLogin():
         if auth.get_account_info(user["idToken"])["users"][0]['emailVerified'] == True:
             return redirect(url_for("memberHome"))
         else:
-            flash(
-                "Email has not been verified, you have been sent another verification email.")
+            flash("Email has not been verified, you have been sent another verification email.")
             auth.send_email_verification(user["idToken"])
             print(
                 "Email has not been verified, you have been sent another verification email.")
@@ -243,22 +242,22 @@ def createNewTrainer():
             print(email)
             pw = str(request.form["trainerpw"])
             print(pw)
-            name = request.form["trainername"]
+            name = str(request.form["trainername"])
             print(name)
-            number = request.form["contact"]
+            number = str(request.form["contact"])
             print(number)
-            gender = request.form["gender"]
+            gender = str(request.form["gender"])
             print(gender)
-            description = request.form["description"]
+            description = str(request.form["description"])
             print(description)
-            location = request.form["location"]
+            location = str(request.form["location"])
             print(location)
-            experience = request.form["experience"]
+            experience = str(request.form["experience"])
             print(experience)
-            trgtype = request.form["trgtype"]
+            trgtype = str(request.form["trgtype"])
             print(trgtype)
             # need to allow the users to click multiple values
-            pricerange = request.form["pricerange"]
+            pricerange = str(request.form["pricerange"])
             print(pricerange)
             pic = request.files["picture"]
             print(pic)
@@ -295,6 +294,7 @@ def createNewTrainer():
                     data = {"Email": emailTwo, "Name": name, "Number": number, "Location": location,
                             "Gender": gender, "Description": description, "Experience": experience, "Training Type": trgtype, "Price Range": pricerange}
                     database.child("Trainers").child(emailTwo).set(data)
+                    print("Successfully uploaded personal details")
                     path_on_cloud = "trainer_images/" + str(emailTwo) + ".jpg"
                     storage.child(path_on_cloud).put(pic)
                     print("data has been created")
@@ -305,7 +305,7 @@ def createNewTrainer():
                     return render_template("CreateNewTrainer.html")
         except:
             print("went to except")
-            flash("Please enter valid details")
+            flash("Please fill in all your details")
             return render_template("CreateNewTrainer.html")
     else:
         return render_template("CreateNewTrainer.html")
