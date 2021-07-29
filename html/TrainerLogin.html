@@ -17,6 +17,8 @@
             </form>
             <a href="/" ><button type="button" class="btn btn-primary">Back</button></a>
             <a href="/createNewTrainer" ><button type="button" class="btn btn-primary">Create New Trainer</button></a>
+            <br>
+            <br>
             {%with messages = get_flashed_messages()%}
                 {%if messages %}
                     {% for msg in messages%}
